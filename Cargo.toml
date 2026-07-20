@@ -13,7 +13,7 @@ categories = ["no-std", "science"]
 publish = false
 
 [dependencies]
-aequitas = { version = "0.1.0", git = "https://github.com/ryancinsight/aequitas", default-features = false }
+aequitas = { version = "0.1.0", git = "https://github.com/ryancinsight/aequitas", rev = "14a29eda31d312b3254b88cd1d5b48da2a21e59f", default-features = false }
 eunomia = { version = "0.6.0", git = "https://github.com/ryancinsight/eunomia", default-features = false }
 
 [dev-dependencies]
