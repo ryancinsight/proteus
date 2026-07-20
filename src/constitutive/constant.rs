@@ -5,7 +5,7 @@ use eunomia::RealField;
 use crate::{ConstitutiveLaw, ThermophysicalProperties};
 
 /// Zero-sized state for a condition-independent constitutive law.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct NoState;
 
 /// Condition-independent thermophysical constitutive law.

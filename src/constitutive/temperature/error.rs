@@ -4,7 +4,6 @@ use crate::InvalidProperty;
 
 /// Polynomial coefficient whose validity boundary failed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[non_exhaustive]
 pub enum CoefficientOrder {
     /// First-order coefficient with units K⁻¹.
     Linear,
@@ -14,7 +13,6 @@ pub enum CoefficientOrder {
 
 /// Role of a thermodynamic temperature rejected by a constitutive law.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[non_exhaustive]
 pub enum TemperatureRole {
     /// Temperature defining the reference property state.
     Reference,

@@ -2,7 +2,6 @@ use core::fmt;
 
 /// Material property whose validity boundary failed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[non_exhaustive]
 pub enum PropertyKind {
     /// Mass density.
     MassDensity,
@@ -14,7 +13,6 @@ pub enum PropertyKind {
 
 /// Constraint imposed on a material property.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[non_exhaustive]
 pub enum PropertyConstraint {
     /// The value must be finite and at least zero.
     FiniteNonNegative,

@@ -16,7 +16,7 @@ pub trait TemperatureResponse<T: RealField> {
 }
 
 /// Zero-sized temperature-invariant property response.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ConstantResponse;
 
 impl<T: RealField> TemperatureResponse<T> for ConstantResponse {
