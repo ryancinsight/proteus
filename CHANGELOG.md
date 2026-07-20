@@ -6,6 +6,8 @@
 
 - Pin Aequitas to its merged thermal-diffusivity revision so consumers resolve
   one dimensional-type identity across the Proteus boundary.
+- Advance the Aequitas pin to the merged biological-response quantity revision
+  so Proteus and Asclepius share one dimensional-type identity in integrators.
 
 ### Added
 
