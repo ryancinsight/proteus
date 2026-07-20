@@ -9,6 +9,9 @@
 
 ### Added
 
+- Dimensionally typed constant, linear, and quadratic temperature responses;
+  independent thermophysical response composition; and a GAT-based
+  temperature constitutive law with typed state/property failures.
 - Validated mass-density, specific-heat-capacity, and thermal-conductivity
   properties over Aequitas quantities.
 - Thermophysical property composition and the derived thermal-diffusivity law.
