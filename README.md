@@ -1,9 +1,8 @@
 # Proteus
 
 Proteus is the Atlas owner for shared material properties and constitutive-law
-contracts. Phase 1 begins with validated isotropic thermophysical properties:
-mass density, specific heat capacity, thermal conductivity, and the derived
-thermal-diffusivity law.
+contracts. Phase 1 provides validated isotropic thermophysical properties and
+statically dispatched constant, linear, and quadratic temperature response.
 
 The name refers to Proteus, the shape-changing Greek sea god.
 
@@ -14,6 +13,7 @@ Proteus owns:
 - material-property validity boundaries;
 - cohesive material property bundles;
 - named material composition;
+- dimensionally typed temperature-response strategies;
 - statically dispatched constitutive-law evaluation.
 
 Aequitas owns dimensions and units. Eunomia owns scalar representations.
@@ -55,7 +55,11 @@ assert_eq!(evaluated.thermal_diffusivity().into_base(), 1.5e-7);
 src/
 ├── constitutive/
 │   ├── contract.rs       # GAT-based static constitutive seam
-│   └── constant.rs       # constant law and zero-sized state
+│   ├── constant.rs       # constant law and zero-sized state
+│   └── temperature/
+│       ├── response.rs   # constant/linear/quadratic response strategies
+│       ├── law.rs        # independent thermophysical response composition
+│       └── error.rs      # typed coefficient/state/property failures
 ├── material/
 │   └── model.rs          # Cow-backed material identity + law
 ├── property/
@@ -74,6 +78,12 @@ family so state-dependent implementations can borrow solver state. `ConstantLaw`
 uses the zero-sized `NoState`. `Material` uses `Cow<str>` so static catalogs
 borrow names and runtime materials own names through one API.
 
+`TemperatureLaw` borrows the current Aequitas thermodynamic temperature through
+its GAT state. First- and second-order coefficients retain K⁻¹ and K⁻²
+dimensions, respectively. Independent response types monomorphize density,
+heat-capacity, and conductivity behavior without runtime dispatch; invariant
+properties use the zero-sized `ConstantResponse`.
+
 ## Mathematical evidence
 
 For density `rho > 0`, specific heat `c_p > 0`, and conductivity `k >= 0`,
@@ -85,9 +95,10 @@ reduces the result to `L^2/T`. Property tests cover positivity and linear
 conductivity scaling; generic tests instantiate `f32` and `f64`; the codegen
 fixture compares the typed and raw expressions bit-for-bit.
 
-The boundary decision, consumer overlap, proof obligations, and rejected
+The boundary decisions, consumer overlap, proof obligations, and rejected
 alternatives are recorded in
-[ADR 0001](docs/adr/0001-thermophysical-material-boundary.md).
+[ADR 0001](docs/adr/0001-thermophysical-material-boundary.md) and
+[ADR 0002](docs/adr/0002-temperature-response-law.md).
 
 ## Verification
 

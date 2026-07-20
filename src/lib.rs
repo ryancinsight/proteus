@@ -20,7 +20,12 @@ pub mod property;
 /// Cohesive thermophysical property bundles.
 pub mod thermophysical;
 
-pub use constitutive::{ConstantLaw, ConstitutiveLaw, NoState};
+pub use constitutive::{
+    CoefficientOrder, ConstantLaw, ConstantResponse, ConstitutiveLaw,
+    InvalidTemperatureCoefficient, LinearResponse, NoState, QuadraticResponse, ResponseSet,
+    TemperatureLaw, TemperatureLawError, TemperatureResponse, TemperatureRole,
+    ThermophysicalResponseSet,
+};
 pub use material::Material;
 pub use property::{
     InvalidProperty, MassDensity, PropertyConstraint, PropertyKind, SpecificHeatCapacity,
