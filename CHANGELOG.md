@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Changed
+
+- Advance Aequitas to the merged photon-interaction quantity surface so
+  downstream providers share one reciprocal-length, area-per-mass, and
+  energy-per-area type identity.
+
 ### Fixed
 
 - Pin Aequitas to its merged thermal-diffusivity revision so consumers resolve
