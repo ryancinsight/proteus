@@ -1,5 +1,5 @@
 use aequitas::systems::si::quantities::{
-    Dimensionless, ReciprocalTemperature, ReciprocalTemperatureSquared, ThermodynamicTemperature,
+    Dimensionless, ReciprocalTemperature, ReciprocalTemperatureSquared, TemperatureDifference,
 };
 use eunomia::{NumericElement, RealField};
 
@@ -12,7 +12,7 @@ use super::{CoefficientOrder, InvalidTemperatureCoefficient};
 )]
 pub trait TemperatureResponse<T: RealField> {
     /// Evaluate the dimensionless multiplier at `delta_temperature`.
-    fn factor(&self, delta_temperature: ThermodynamicTemperature<T>) -> Dimensionless<T>;
+    fn factor(&self, delta_temperature: TemperatureDifference<T>) -> Dimensionless<T>;
 }
 
 /// Zero-sized temperature-invariant property response.
@@ -21,7 +21,7 @@ pub struct ConstantResponse;
 
 impl<T: RealField> TemperatureResponse<T> for ConstantResponse {
     #[inline]
-    fn factor(&self, _delta_temperature: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn factor(&self, _delta_temperature: TemperatureDifference<T>) -> Dimensionless<T> {
         Dimensionless::from_base(<T as NumericElement>::ONE)
     }
 }
@@ -64,7 +64,7 @@ impl<T> LinearResponse<T> {
 
 impl<T: RealField> TemperatureResponse<T> for LinearResponse<T> {
     #[inline]
-    fn factor(&self, delta_temperature: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn factor(&self, delta_temperature: TemperatureDifference<T>) -> Dimensionless<T> {
         Dimensionless::from_base(
             self.coefficient
                 .as_base()
@@ -125,7 +125,7 @@ impl<T> QuadraticResponse<T> {
 
 impl<T: RealField> TemperatureResponse<T> for QuadraticResponse<T> {
     #[inline]
-    fn factor(&self, delta_temperature: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn factor(&self, delta_temperature: TemperatureDifference<T>) -> Dimensionless<T> {
         let delta = *delta_temperature.as_base();
         let linear_factor = self
             .linear
