@@ -2,8 +2,8 @@
 
 use aequitas::systems::si::quantities::{
     MassDensity as DensityQuantity, ReciprocalTemperature,
-    SpecificHeatCapacity as HeatCapacityQuantity, ThermalConductivity as ConductivityQuantity,
-    ThermodynamicTemperature,
+    SpecificHeatCapacity as HeatCapacityQuantity, TemperatureDifference,
+    ThermalConductivity as ConductivityQuantity,
 };
 use proteus::{
     LinearResponse, MassDensity, SpecificHeatCapacity, TemperatureResponse, ThermalConductivity,
@@ -46,7 +46,7 @@ pub fn raw_linear_response(base: f64, coefficient: f64, delta: f64) -> f64 {
 pub fn typed_linear_response(
     base: f64,
     response: LinearResponse<f64>,
-    delta: ThermodynamicTemperature<f64>,
+    delta: TemperatureDifference<f64>,
 ) -> f64 {
     base * response.factor(delta).into_base()
 }
@@ -88,7 +88,7 @@ fn typed_and_raw_linear_responses_have_identical_value_semantics() {
         .expect("fixture coefficient is finite");
 
     assert_eq!(
-        typed_linear_response(base, response, ThermodynamicTemperature::from_base(delta)).to_bits(),
+        typed_linear_response(base, response, TemperatureDifference::from_base(delta)).to_bits(),
         raw_linear_response(base, coefficient, delta).to_bits()
     );
 }

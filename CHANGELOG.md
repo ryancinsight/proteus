@@ -4,6 +4,10 @@
 
 ### Changed
 
+- Temperature-response laws now consume Aequitas `TemperatureDifference`
+  values for evaluated offsets while retaining absolute thermodynamic
+  temperatures for reference and evaluation states.
+
 - Advance Aequitas to the merged photon-interaction quantity surface so
   downstream providers share one reciprocal-length, area-per-mass, and
   energy-per-area type identity.

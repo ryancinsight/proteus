@@ -1,4 +1,6 @@
-use aequitas::systems::si::quantities::{Dimensionless, ThermodynamicTemperature};
+use aequitas::systems::si::quantities::{
+    Dimensionless, TemperatureDifference, ThermodynamicTemperature,
+};
 use eunomia::{NumericElement, RealField};
 
 use crate::{ConstitutiveLaw, ThermophysicalProperties};
@@ -12,11 +14,11 @@ mod private {
 /// Static strategy supplying independent thermophysical response factors.
 pub trait ThermophysicalResponseSet<T: RealField>: private::Sealed {
     /// Density multiplier.
-    fn density_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T>;
+    fn density_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T>;
     /// Specific-heat-capacity multiplier.
-    fn specific_heat_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T>;
+    fn specific_heat_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T>;
     /// Thermal-conductivity multiplier.
-    fn conductivity_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T>;
+    fn conductivity_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T>;
 }
 
 /// Independent density, heat-capacity, and conductivity responses.
@@ -75,17 +77,17 @@ where
     Conductivity: TemperatureResponse<T>,
 {
     #[inline]
-    fn density_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn density_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T> {
         self.density.factor(delta)
     }
 
     #[inline]
-    fn specific_heat_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn specific_heat_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T> {
         self.heat_capacity.factor(delta)
     }
 
     #[inline]
-    fn conductivity_factor(&self, delta: ThermodynamicTemperature<T>) -> Dimensionless<T> {
+    fn conductivity_factor(&self, delta: TemperatureDifference<T>) -> Dimensionless<T> {
         self.conductivity.factor(delta)
     }
 }
