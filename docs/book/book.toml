@@ -1,0 +1,14 @@
+[book]
+title = "proteus: Material Properties for Atlas"
+authors = ["Ryan Clanton"]
+src = "."
+language = "en"
+[build]
+build-dir = "../../target/book/proteus"
+create-missing = false
+[output.html]
+no-section-label = false
+mathjax-support = false
+site-url = "/proteus/"
+git-repository-url = "https://github.com/ryancinsight/proteus"
+default-theme = "rust"
