@@ -5,7 +5,8 @@ mod law;
 mod response;
 
 pub use error::{
-    CoefficientOrder, InvalidTemperatureCoefficient, TemperatureLawError, TemperatureRole,
+    CoefficientOrder, InvalidTemperatureCoefficient, InvalidTemperatureValidity,
+    TemperatureLawError, TemperatureRole,
 };
-pub use law::{ResponseSet, TemperatureLaw, ThermophysicalResponseSet};
+pub use law::{ResponseSet, TemperatureLaw, TemperatureValidity, ThermophysicalResponseSet};
 pub use response::{ConstantResponse, LinearResponse, QuadraticResponse, TemperatureResponse};

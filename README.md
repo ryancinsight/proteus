@@ -82,7 +82,11 @@ borrow names and runtime materials own names through one API.
 its GAT state. First- and second-order coefficients retain K⁻¹ and K⁻²
 dimensions, respectively. Independent response types monomorphize density,
 heat-capacity, and conductivity behavior without runtime dispatch; invariant
-properties use the zero-sized `ConstantResponse`.
+properties use the zero-sized `ConstantResponse`. `TemperatureLaw::new` uses
+the positive-temperature domain. A calibrated law uses
+`TemperatureValidity::bounded(minimum, maximum)` with
+`TemperatureLaw::with_validity`; both bounds are inclusive and every
+evaluation outside them returns `TemperatureLawError::OutsideValidityDomain`.
 
 ## Mathematical evidence
 

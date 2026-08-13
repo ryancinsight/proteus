@@ -9,7 +9,7 @@ use eunomia::RealField;
 use proteus::{
     CoefficientOrder, ConstantResponse, ConstitutiveLaw, LinearResponse, MassDensity,
     QuadraticResponse, ResponseSet, SpecificHeatCapacity, TemperatureLaw, TemperatureLawError,
-    TemperatureRole, ThermalConductivity, ThermophysicalProperties,
+    TemperatureRole, TemperatureValidity, ThermalConductivity, ThermophysicalProperties,
 };
 
 fn properties<T: RealField>() -> ThermophysicalProperties<T> {
@@ -115,6 +115,70 @@ fn coefficient_and_temperature_boundaries_are_typed() {
             role: TemperatureRole::Reference,
             value: 0.0
         }
+    ));
+}
+
+#[test]
+fn bounded_calibration_domain_rejects_extrapolation() {
+    let validity = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(273.0_f64),
+        ThermodynamicTemperature::from_base(373.0_f64),
+    )
+    .expect("finite positive ordered calibration bounds");
+    let responses = ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse);
+    let law = TemperatureLaw::with_validity(
+        properties(),
+        ThermodynamicTemperature::from_base(300.0),
+        validity,
+        responses,
+    )
+    .expect("reference temperature is calibrated");
+
+    assert_eq!(
+        law.properties(&ThermodynamicTemperature::from_base(350.0))
+            .expect("350 K lies inside the calibration domain"),
+        properties()
+    );
+    assert!(matches!(
+        law.properties(&ThermodynamicTemperature::from_base(1_500.0)),
+        Err(TemperatureLawError::OutsideValidityDomain {
+            role: TemperatureRole::Evaluation,
+            value: 1_500.0,
+            minimum: 273.0,
+            maximum: 373.0,
+        })
+    ));
+}
+
+#[test]
+fn bounded_calibration_domain_rejects_invalid_bounds_and_reference() {
+    let invalid = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(373.0_f64),
+        ThermodynamicTemperature::from_base(273.0_f64),
+    )
+    .expect_err("lower bound must not exceed upper bound");
+    assert_eq!(invalid.minimum().to_bits(), 373.0_f64.to_bits());
+    assert_eq!(invalid.maximum().to_bits(), 273.0_f64.to_bits());
+
+    let validity = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(273.0_f64),
+        ThermodynamicTemperature::from_base(373.0_f64),
+    )
+    .expect("finite positive ordered calibration bounds");
+    let responses = ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse);
+    assert!(matches!(
+        TemperatureLaw::with_validity(
+            properties(),
+            ThermodynamicTemperature::from_base(400.0),
+            validity,
+            responses,
+        ),
+        Err(TemperatureLawError::OutsideValidityDomain {
+            role: TemperatureRole::Reference,
+            value: 400.0,
+            minimum: 273.0,
+            maximum: 373.0,
+        })
     ));
 }
 
