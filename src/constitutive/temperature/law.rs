@@ -5,7 +5,9 @@ use eunomia::{NumericElement, RealField};
 
 use crate::{ConstitutiveLaw, ThermophysicalProperties};
 
-use super::{TemperatureLawError, TemperatureResponse, TemperatureRole};
+use super::{
+    InvalidTemperatureValidity, TemperatureLawError, TemperatureResponse, TemperatureRole,
+};
 
 mod private {
     pub trait Sealed {}
@@ -97,7 +99,59 @@ where
 pub struct TemperatureLaw<T, Responses> {
     reference_properties: ThermophysicalProperties<T>,
     reference_temperature: ThermodynamicTemperature<T>,
+    validity: TemperatureValidity<T>,
     responses: Responses,
+}
+
+/// Inclusive calibration domain for a temperature-dependent constitutive law.
+#[derive(Clone, Copy, Debug, PartialEq)]
+#[non_exhaustive]
+pub enum TemperatureValidity<T> {
+    /// The law accepts every finite, strictly positive thermodynamic temperature.
+    Positive,
+    /// The law accepts temperatures in the inclusive `[minimum, maximum]` range.
+    Bounded {
+        /// Inclusive lower bound in kelvin.
+        minimum: ThermodynamicTemperature<T>,
+        /// Inclusive upper bound in kelvin.
+        maximum: ThermodynamicTemperature<T>,
+    },
+}
+
+impl<T> TemperatureValidity<T> {
+    /// Return the unrestricted positive-temperature domain.
+    #[must_use]
+    pub const fn positive() -> Self {
+        Self::Positive
+    }
+}
+
+impl<T: RealField> TemperatureValidity<T> {
+    /// Construct an inclusive finite positive calibration domain.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`InvalidTemperatureValidity`] when either bound is non-finite,
+    /// non-positive, or the lower bound exceeds the upper bound.
+    pub fn bounded(
+        minimum: ThermodynamicTemperature<T>,
+        maximum: ThermodynamicTemperature<T>,
+    ) -> Result<Self, InvalidTemperatureValidity<T>> {
+        let minimum_value = *minimum.as_base();
+        let maximum_value = *maximum.as_base();
+        if !minimum_value.is_finite()
+            || !maximum_value.is_finite()
+            || minimum_value <= <T as NumericElement>::ZERO
+            || maximum_value <= <T as NumericElement>::ZERO
+            || minimum_value > maximum_value
+        {
+            return Err(InvalidTemperatureValidity::new(
+                minimum_value,
+                maximum_value,
+            ));
+        }
+        Ok(Self::Bounded { minimum, maximum })
+    }
 }
 
 impl<T: RealField, Responses> TemperatureLaw<T, Responses> {
@@ -112,10 +166,37 @@ impl<T: RealField, Responses> TemperatureLaw<T, Responses> {
         reference_temperature: ThermodynamicTemperature<T>,
         responses: Responses,
     ) -> Result<Self, TemperatureLawError<T>> {
-        validate_temperature(TemperatureRole::Reference, reference_temperature)?;
+        Self::with_validity(
+            reference_properties,
+            reference_temperature,
+            TemperatureValidity::positive(),
+            responses,
+        )
+    }
+
+    /// Construct a temperature-dependent law with an explicit calibration domain.
+    ///
+    /// The reference temperature must lie inside `validity`. Every later
+    /// evaluation is checked against the same domain before response factors
+    /// are applied.
+    ///
+    /// # Errors
+    ///
+    /// Returns [`TemperatureLawError::InvalidTemperature`] when the reference
+    /// temperature is non-finite or non-positive, or
+    /// [`TemperatureLawError::OutsideValidityDomain`] when it is outside the
+    /// supplied calibration domain.
+    pub fn with_validity(
+        reference_properties: ThermophysicalProperties<T>,
+        reference_temperature: ThermodynamicTemperature<T>,
+        validity: TemperatureValidity<T>,
+        responses: Responses,
+    ) -> Result<Self, TemperatureLawError<T>> {
+        validate_temperature(TemperatureRole::Reference, reference_temperature, &validity)?;
         Ok(Self {
             reference_properties,
             reference_temperature,
+            validity,
             responses,
         })
     }
@@ -130,6 +211,12 @@ impl<T: RealField, Responses> TemperatureLaw<T, Responses> {
     #[must_use]
     pub const fn reference_temperature(&self) -> &ThermodynamicTemperature<T> {
         &self.reference_temperature
+    }
+
+    /// Borrow the law's inclusive calibration domain.
+    #[must_use]
+    pub const fn validity(&self) -> &TemperatureValidity<T> {
+        &self.validity
     }
 
     /// Borrow the response strategy.
@@ -159,7 +246,7 @@ where
     where
         T: 'a,
     {
-        validate_temperature(TemperatureRole::Evaluation, *temperature)?;
+        validate_temperature(TemperatureRole::Evaluation, *temperature, &self.validity)?;
         let delta = *temperature - self.reference_temperature;
         let density =
             *self.reference_properties.density().quantity() * self.responses.density_factor(delta);
@@ -179,11 +266,23 @@ where
 fn validate_temperature<T: RealField>(
     role: TemperatureRole,
     temperature: ThermodynamicTemperature<T>,
+    validity: &TemperatureValidity<T>,
 ) -> Result<(), TemperatureLawError<T>> {
     let value = *temperature.as_base();
-    if value.is_finite() && value > <T as NumericElement>::ZERO {
-        Ok(())
-    } else {
-        Err(TemperatureLawError::invalid_temperature(role, value))
+    if !value.is_finite() || value <= <T as NumericElement>::ZERO {
+        return Err(TemperatureLawError::invalid_temperature(role, value));
     }
+    if let TemperatureValidity::Bounded { minimum, maximum } = validity {
+        let minimum_value = *minimum.as_base();
+        let maximum_value = *maximum.as_base();
+        if value < minimum_value || value > maximum_value {
+            return Err(TemperatureLawError::OutsideValidityDomain {
+                role,
+                value,
+                minimum: minimum_value,
+                maximum: maximum_value,
+            });
+        }
+    }
+    Ok(())
 }

@@ -34,7 +34,9 @@ dimensions. Proteus owns:
 - `ResponseSet`, which composes independent density, heat-capacity, and
   conductivity strategies; and
 - `TemperatureLaw<T, Responses>`, whose GAT state borrows an Aequitas
-  thermodynamic temperature.
+  thermodynamic temperature. `TemperatureLaw::new` uses the positive-
+  temperature domain; `TemperatureLaw::with_validity` accepts the validated
+  inclusive `TemperatureValidity` range for calibrated laws.
 
 All routing is statically dispatched. An evaluated bundle re-enters the
 existing Proteus property boundary, so a coefficient/temperature combination
@@ -86,6 +88,7 @@ and raw value semantics bit-for-bit.
 - `f32` and `f64` reference-state invariance;
 - exact affine and bounded quadratic value oracles;
 - invalid coefficient, temperature, and derived-property cases;
+- bounded calibration-domain acceptance and typed extrapolation rejection;
 - ZST layout for `ConstantResponse`;
 - generated positive-domain properties;
 - typed/raw linear-response equivalence;

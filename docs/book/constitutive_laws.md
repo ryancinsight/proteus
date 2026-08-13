@@ -30,7 +30,7 @@ fragment:
 
 ```rust,ignore
 use proteus::{ConstantResponse, LinearResponse, QuadraticResponse,
-              ResponseSet, TemperatureLaw};
+              ResponseSet, TemperatureLaw, TemperatureValidity};
 
 let responses = ResponseSet::new(
     ConstantResponse,
@@ -50,6 +50,20 @@ coefficients carry `K⁻¹` and second-order coefficients `K⁻²` dimensions, s
 mis-scaled coefficient cannot type-check. Coefficients must be finite, and the
 reference and evaluation temperatures must be finite and strictly positive;
 violations return the typed `TemperatureLawError<T>`.
+
+Calibration data can narrow the positive-temperature domain:
+
+```rust,ignore
+let validity = TemperatureValidity::bounded(
+    ThermodynamicTemperature::from_base(273.15),
+    ThermodynamicTemperature::from_base(373.15),
+)?;
+let law = TemperatureLaw::with_validity(reference, reference_temperature, validity, responses)?;
+```
+
+The bounds are inclusive. A reference or evaluation temperature outside the
+calibration range returns `TemperatureLawError::OutsideValidityDomain`; the
+law never silently extrapolates a response beyond its declared evidence.
 
 The runnable [temperature-material example](examples/temperature_material.md)
 walks a tissue-style material through this path.

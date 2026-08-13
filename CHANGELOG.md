@@ -4,6 +4,12 @@
 
 ### Changed
 
+- Add explicit `TemperatureValidity` calibration domains to temperature laws.
+  Bounded laws validate the reference and every evaluation temperature and
+  return a typed error instead of silently extrapolating beyond calibration
+  data. The existing `TemperatureLaw::new` positive-temperature contract is
+  preserved.
+
 - Temperature-response laws now consume Aequitas `TemperatureDifference`
   values for evaluated offsets while retaining absolute thermodynamic
   temperatures for reference and evaluation states.

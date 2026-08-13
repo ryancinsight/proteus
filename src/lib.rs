@@ -22,9 +22,9 @@ pub mod thermophysical;
 
 pub use constitutive::{
     CoefficientOrder, ConstantLaw, ConstantResponse, ConstitutiveLaw,
-    InvalidTemperatureCoefficient, LinearResponse, NoState, QuadraticResponse, ResponseSet,
-    TemperatureLaw, TemperatureLawError, TemperatureResponse, TemperatureRole,
-    ThermophysicalResponseSet,
+    InvalidTemperatureCoefficient, InvalidTemperatureValidity, LinearResponse, NoState,
+    QuadraticResponse, ResponseSet, TemperatureLaw, TemperatureLawError, TemperatureResponse,
+    TemperatureRole, TemperatureValidity, ThermophysicalResponseSet,
 };
 pub use material::Material;
 pub use property::{
