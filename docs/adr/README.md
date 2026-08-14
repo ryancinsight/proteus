@@ -6,5 +6,5 @@
 
 | ADR | Title | Status |
 | --- | ----- | ------ |
-| [0001](0001-thermophysical-material-boundary.md) | Own shared thermophysical material law in Proteus | — |
-| [0002](0002-temperature-response-law.md) | Own typed temperature response in Proteus | — |
+| [0001](0001-thermophysical-material-boundary.md) | Own shared thermophysical material law in Proteus | Accepted |
+| [0002](0002-temperature-response-law.md) | Own typed temperature response in Proteus | Accepted |

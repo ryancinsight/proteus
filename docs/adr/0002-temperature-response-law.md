@@ -1,6 +1,6 @@
 # ADR 0002: Own typed temperature response in Proteus
 
-- Status: accepted
+- Status: Accepted
 - Change class: minor, architectural
 - Date: 2026-07-20
 
