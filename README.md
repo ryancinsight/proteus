@@ -108,11 +108,12 @@ alternatives are recorded in
 
 ```text
 cargo fmt --check
-cargo check --no-default-features
-cargo clippy --all-targets --all-features -- -D warnings
-cargo nextest run --all-features
-cargo test --doc --all-features
-cargo doc --no-deps --all-features
+cargo check --locked --no-default-features
+cargo clippy --locked --all-targets --all-features -- -D warnings
+cargo nextest run --locked --all-features
+cargo test --locked --doc --all-features
+cargo doc --locked --no-deps --all-features
+cargo run --locked --example constant_material
 cargo deny check
 ```
 
