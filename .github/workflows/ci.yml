@@ -8,12 +8,17 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: proteus-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CARGO_TERM_COLOR: always
   CARGO_INCREMENTAL: "0"
 
 jobs:
   verify:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
@@ -24,21 +29,22 @@ jobs:
       - name: Format
         run: cargo fmt --all -- --check
       - name: Feature check
-        run: cargo check --no-default-features
+        run: cargo check --locked --no-default-features
       - name: Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --locked --all-targets --all-features -- -D warnings
       - name: Native tests
-        run: cargo nextest run --all-features
+        run: cargo nextest run --locked --all-features
       - name: Documentation tests
-        run: cargo test --doc --all-features
+        run: cargo test --locked --doc --all-features
       - name: Documentation
         env:
           RUSTDOCFLAGS: -D warnings
-        run: cargo doc --no-deps --all-features
+        run: cargo doc --locked --no-deps --all-features
       - name: Example
-        run: cargo run --example constant_material
+        run: cargo run --locked --example constant_material
 
   supply-chain:
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
