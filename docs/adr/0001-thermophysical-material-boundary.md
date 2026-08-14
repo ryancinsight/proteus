@@ -1,6 +1,6 @@
 # ADR 0001: Own shared thermophysical material law in Proteus
 
-- Status: accepted
+- Status: Accepted
 - Change class: minor, architectural
 - Date: 2026-07-20
 
