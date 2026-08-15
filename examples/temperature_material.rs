@@ -1,7 +1,5 @@
 //! Evaluate a material with independent temperature responses.
 
-#![expect(clippy::print_stdout, reason = "example stdout is the deliverable")]
-
 use aequitas::systems::si::quantities::{
     MassDensity as DensityQuantity, ReciprocalTemperature, ReciprocalTemperatureSquared,
     SpecificHeatCapacity as HeatCapacityQuantity, ThermalConductivity as ConductivityQuantity,
