@@ -7,7 +7,7 @@
 - [x] Keep constitutive evaluation generic, GAT-based, and statically
       dispatched; do not add a vtable or a consumer-owned wrapper.
 - [x] Verify the merged default with hosted CI and Pages at
-      `f033a7eb8204b020bbdbfff970f710ef4836fa0e`.
+      `3887eacda7bc2a6f4bd90b04693e7070f05a894d`.
 - [x] Audit `src`, `tests`, and `examples` for placeholder markers and
       re-export shims; the exact fetched default has none.
 
