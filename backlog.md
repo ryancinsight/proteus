@@ -10,8 +10,8 @@ the Atlas board.
 - Boundary: Aequitas owns dimensions and units; Eunomia owns scalar
   representations; consumers retain their domain-specific attenuation,
   perfusion, rheology, and photon-interaction laws.
-- Evidence: provider default `7fb5109aa56195eccd407b83e7b22406ab689d73`;
-  hosted CI and Pages runs `31820651932` and `31820650749` both pass at that
+- Evidence: provider default `f033a7eb8204b020bbdbfff970f710ef4836fa0e`;
+  hosted CI and Pages runs `31860973878` and `31860973039` both pass at that
   exact head.
 
 ## Open

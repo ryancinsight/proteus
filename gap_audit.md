@@ -1,8 +1,8 @@
 # Proteus gap audit
 
-## Clean provider surface — 2026-08-14
+## Clean provider surface — 2026-08-15
 
-The exact fetched default `7fb5109aa56195eccd407b83e7b22406ab689d73` has no
+The exact fetched default `f033a7eb8204b020bbdbfff970f710ef4836fa0e` has no
 `TODO`, `FIXME`, `HACK`, `todo!`, `unimplemented!`, or `panic!` markers in
 `src`, `tests`, or `examples`, and no source re-export shim was found. The
 provider README, ADR index, and domain book describe the same material and
@@ -17,5 +17,5 @@ constitutive-law boundary.
 
 ## Evidence
 
-- Hosted CI: `31820651932`, exact head above, success.
-- Hosted Pages build: `31820650749`, exact head above, success.
+- Hosted CI: `31860973878`, exact head above, success.
+- Hosted Pages build: `31860973039`, exact head above, success.
