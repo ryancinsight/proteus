@@ -4,6 +4,10 @@
 
 ### Changed
 
+- **Book verification:** Hosted CI and the shared Pages build pass for both
+  included material examples at PR #14; the pull-request Pages deployment is
+  correctly skipped.
+
 - **Book verification:** The two included material examples now declare their
   external crates for mdBook and run through the shared Atlas Pages package-
   staging gate with Rust 1.97.0. The three focused API fragments remain
