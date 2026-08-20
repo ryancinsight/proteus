@@ -20,6 +20,10 @@ the Atlas board.
 - **Local evidence target:** format, package build, book build, strict link
   scan, and executable book tests; the shared Windows cache may require the
   hosted Linux job for final mdBook staging evidence.
+- **Published source:** commit `61879d4b4a68e2d201460af0fe6f6a0e7fe9919f`
+  on `ci/proteus-book-test`, PR
+  [#14](https://github.com/ryancinsight/proteus/pull/14); hosted verification
+  is pending at this head.
 
 ## PROTEUS-PHASE-1-001 — Material and constitutive-law provider surface — closed
 
