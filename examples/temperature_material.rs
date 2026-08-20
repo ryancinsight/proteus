@@ -2,6 +2,9 @@
 
 #![expect(clippy::print_stdout, reason = "example stdout is the deliverable")]
 
+extern crate aequitas;
+extern crate proteus;
+
 use aequitas::systems::si::quantities::{
     MassDensity as DensityQuantity, ReciprocalTemperature, ReciprocalTemperatureSquared,
     SpecificHeatCapacity as HeatCapacityQuantity, ThermalConductivity as ConductivityQuantity,

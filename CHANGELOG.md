@@ -4,6 +4,11 @@
 
 ### Changed
 
+- **Book verification:** The two included material examples now declare their
+  external crates for mdBook and run through the shared Atlas Pages package-
+  staging gate with Rust 1.97.0. The three focused API fragments remain
+  intentionally non-standalone.
+
 - Add explicit `TemperatureValidity` calibration domains to temperature laws.
   Bounded laws validate the reference and every evaluation temperature and
   return a typed error instead of silently extrapolating beyond calibration

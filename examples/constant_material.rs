@@ -1,5 +1,8 @@
 //! Construct and evaluate a constant thermophysical material.
 
+extern crate aequitas;
+extern crate proteus;
+
 use aequitas::systems::si::quantities::{
     MassDensity as DensityQuantity, SpecificHeatCapacity as HeatCapacityQuantity,
     ThermalConductivity as ConductivityQuantity,
