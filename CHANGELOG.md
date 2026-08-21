@@ -4,6 +4,11 @@
 
 ### Changed
 
+- **Verification:** CI now runs both shipped examples, checks the declared
+  Rust 1.95 MSRV floor, and compares the public API with the change base using
+  a pinned cargo-semver-checks action. Accepted ADRs now distinguish bitwise
+  value evidence from unperformed release-code-generation evidence.
+
 - **Book verification:** Hosted CI and the shared Pages build pass for both
   included material examples at PR #14; the pull-request Pages deployment is
   correctly skipped.
