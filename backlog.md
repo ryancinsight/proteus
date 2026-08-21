@@ -43,6 +43,19 @@ the Atlas board.
 
 ## Open
 
+### PRO-GATE-004 — Reconcile CI with ADR verification claims [verification] [patch] — in progress
+
+- **Owner:** Codex; branch `fix/proteus-gates-reconcile`.
+- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-thermophysical-material-boundary.md`,
+  and `docs/adr/0002-temperature-response-law.md`.
+- **Non-goals:** shared Pages workflow, provider implementation, and release
+  publication.
+- **Acceptance:** CI runs the SemVer check claimed by ADR 0002, builds at the
+  declared Rust 1.95 MSRV floor, and executes both shipped examples; ADR
+  verification lists remain synchronized with the runnable gates.
+- **Evidence plan:** workflow/config parse, local focused gates, and exact-head
+  hosted CI before completion.
+
 - Add a direct consumer contract test when an Atlas consumer adopts the
   constitutive-law surface. The consumer owns the acceptance oracle; Proteus
   owns the provider implementation.
