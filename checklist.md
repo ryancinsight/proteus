@@ -2,11 +2,11 @@
 
 ## PRO-GATE-004 — Reconcile CI with ADR verification claims
 
-- [ ] Audit the two accepted ADR verification lists against the current
+- [x] Audit the two accepted ADR verification lists against the current
       workflow and example targets.
-- [ ] Add complete, bounded CI jobs for SemVer, Rust 1.95, and both examples;
+- [x] Add complete, bounded CI jobs for SemVer, Rust 1.95, and both examples;
       keep the existing nextest and documentation gates intact.
-- [ ] Validate workflow YAML, manifests, and focused local gates.
+- [x] Validate workflow YAML, manifests, and focused local gates.
 - [ ] Push the branch and record exact-head hosted results before closing.
 
 ## Provider adoption

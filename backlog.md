@@ -53,8 +53,10 @@ the Atlas board.
 - **Acceptance:** CI runs the SemVer check claimed by ADR 0002, builds at the
   declared Rust 1.95 MSRV floor, and executes both shipped examples; ADR
   verification lists remain synchronized with the runnable gates.
-- **Evidence plan:** workflow/config parse, local focused gates, and exact-head
-  hosted CI before completion.
+- **Evidence:** YAML parsing passed; Rust 1.95 all-target check, Rust 1.97
+  format/clippy/Nextest (20/20), doctests (1/1), rustdoc, both examples, and
+  `cargo-semver-checks` against `origin/main` (196 checks, 196 pass) passed
+  locally. Hosted CI remains the delivery check after the branch is pushed.
 
 - Add a direct consumer contract test when an Atlas consumer adopts the
   constitutive-law surface. The consumer owns the acceptance oracle; Proteus
