@@ -1,5 +1,8 @@
 [package]
-name = "proteus"
+# Registry name only. The crates.io name `proteus` belongs to an unrelated
+# third-party crate, so this publishes as `proteus-mat` while the library
+# keeps its `proteus` module path.
+name = "proteus-mat"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.95"
@@ -10,7 +13,12 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 keywords = ["materials", "constitutive-law", "multiphysics", "no-std"]
 categories = ["no-std", "science"]
-publish = false
+publish = true
+
+[lib]
+# Import path stays `proteus` regardless of the registry name above.
+name = "proteus"
+path = "src/lib.rs"
 
 [dependencies]
 aequitas = { version = "0.2.0", git = "https://github.com/ryancinsight/aequitas", default-features = false }
