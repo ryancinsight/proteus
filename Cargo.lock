@@ -189,7 +189,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "proteus"
+name = "proteus-mat"
 version = "0.1.0"
 dependencies = [
  "aequitas",
