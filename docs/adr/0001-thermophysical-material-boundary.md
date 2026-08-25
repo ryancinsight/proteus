@@ -57,12 +57,13 @@ non-negative numerator by a positive denominator yields `alpha >= 0`.
 Property tests exercise this law over bounded finite inputs. The claim excludes
 native scalar overflow, which the property ranges avoid.
 
-### Static-evaluation equivalence
+### Value-semantic equivalence
 
 Transparent wrappers store only the Aequitas scalar and `ConstantLaw` performs
 only a field copy. The diffusivity expression has the same arithmetic order as
-`k/(rho*c_p)`. A release codegen fixture and a bitwise value test compare the
-typed and raw implementations.
+`k/(rho*c_p)`. `tests/codegen_equivalence.rs` compares the typed and raw
+implementations bit-for-bit; this is value evidence, not an assembly or
+release-code-generation proof.
 
 ## Rejected alternatives
 
@@ -96,6 +97,6 @@ typed and raw implementations.
 - pointer identity for borrowed material names;
 - zero-size assertion for `NoState`;
 - transparent property layout and allocation-free borrowed material evaluation;
-- typed-vs-raw value and release-codegen comparison;
+- typed-vs-raw bitwise value comparison;
 - no-default-features, Clippy, nextest, doctests, rustdoc, example, and
-  supply-chain gates.
+  supply-chain, SemVer, MSRV, and both shipped example gates in CI.

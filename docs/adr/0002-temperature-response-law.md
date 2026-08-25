@@ -55,12 +55,13 @@ result preserves the property's dimension.
 At `T = T₀`, `ΔT = 0`; therefore both response families reduce to `f(0) = 1`.
 Every property equals its validated reference value.
 
-### Static-dispatch equivalence
+### Value-semantic equivalence
 
 Response strategy types are generic parameters and carry no vtable. The
 constant strategy is zero-sized. The linear response retains the consumer's
-`mul_add` arithmetic order, and the code-generation fixture compares its typed
-and raw value semantics bit-for-bit.
+`mul_add` arithmetic order, and `tests/codegen_equivalence.rs` compares its
+typed and raw value semantics bit-for-bit. This is value evidence, not an
+assembly or release-code-generation proof.
 
 ## Rejected alternatives
 
@@ -91,6 +92,6 @@ and raw value semantics bit-for-bit.
 - bounded calibration-domain acceptance and typed extrapolation rejection;
 - ZST layout for `ConstantResponse`;
 - generated positive-domain properties;
-- typed/raw linear-response equivalence;
+- typed/raw linear-response bitwise value equivalence;
 - no-default-features, Clippy, Nextest, doctests, rustdoc, examples, dependency
-  policy, and semver checks.
+  policy, SemVer, MSRV, and both shipped example gates in CI.
