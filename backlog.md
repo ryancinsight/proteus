@@ -41,6 +41,130 @@ the Atlas board.
   hosted CI and Pages runs `31865355870` and `31865355539` both pass at that
   exact head.
 
+## Gap-audit 2026-08-20 items
+
+Filed by the Atlas gap audit at `944eed05` from static evidence only; each
+item cites its evidence in `gap_audit.md`. All are unclaimed.
+
+### PRO-PROV-002 — Cite and bound every shipped material value
+
+- **Outcome:** every property value and response coefficient committed outside
+  a pure arithmetic fixture carries a resolvable citation and an explicit
+  `TemperatureValidity::bounded` calibration domain.
+- **Scope:** `examples/temperature_material.rs`, and any future named material.
+  Non-goals: a material catalog (PRO-VOCAB-003), test fixtures whose role is an
+  arithmetic oracle rather than reference data.
+- **Acceptance oracle:** the `"generic tissue"` example is either renamed to a
+  non-physical fixture or re-grounded on a cited source (section/table locator
+  in a source comment) and constructed with `with_validity`; a test asserts
+  that an evaluation outside the cited range returns
+  `TemperatureLawError::OutsideValidityDomain`.
+- **Dependencies:** none.
+- **Risk/change class:** [verification] [patch]; effort M.
+- **Status:** todo.
+
+### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
+
+- **Outcome:** an ADR (0003) records, with a recommended option, whether the
+  provider owns canonical material identity (a validated `MaterialId`-class
+  newtype and, optionally, a cited catalog) or whether identity stays a
+  consumer-supplied string.
+- **Scope:** ADR plus, if Accepted for ownership, the identity newtype in
+  `src/material/`. Non-goals: acoustic/optical/rheology property families,
+  which stay consumer-owned per ADR 0001.
+- **Acceptance oracle:** ADR 0003 exists, is indexed in `docs/adr/README.md`,
+  and states the decision against the current bare `Cow<'name, str>` identity
+  (`src/material/model.rs:10`) and the "material-identity vocabulary" stack
+  role; if ownership is accepted, invalid identifiers are rejected by a typed
+  constructor with a value-semantic test.
+- **Dependencies:** none; informs PRO-PROV-002.
+- **Risk/change class:** [arch] [minor]; effort L.
+- **Status:** todo.
+
+### PRO-GATE-004 — Reconcile CI with the ADR verification claims
+
+- **Outcome:** the gates the ADRs claim either run in CI or the ADR wording is
+  corrected to the gates that exist.
+- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-*.md`,
+  `docs/adr/0002-*.md`. Non-goals: the shared Pages caller.
+- **Acceptance oracle:** `cargo-semver-checks` runs on pull requests (ADR 0002
+  claims it and the workflow has no such step), an MSRV job builds at the
+  declared `rust-version = 1.95` floor, and both examples run; or each removed
+  claim is struck from the ADR with a dated revision note.
+- **Dependencies:** none.
+- **Risk/change class:** [verification] [patch]; effort S.
+- **Status:** todo.
+
+### PRO-CODEGEN-005 — Make the codegen-equivalence evidence real or narrow it
+
+- **Outcome:** the zero-cost claim rests on evidence of its own category.
+- **Scope:** `tests/codegen_equivalence.rs`, CI, and the ADR verification
+  lists. Non-goals: adding a criterion suite.
+- **Acceptance oracle:** either a committed codegen comparison (disassembly or
+  `cargo-llvm-lines`-class artifact for the `#[inline(never)]` typed and raw
+  pairs at release opt-level) with its output recorded, plus a release-profile
+  test pass; or the ADRs are revised to claim bitwise value equivalence only,
+  which is what the file asserts today (`:76-79,90-93`).
+- **Dependencies:** PRO-GATE-004 shares the CI edit.
+- **Risk/change class:** [verification] [patch]; effort M.
+- **Status:** todo.
+
+### PRO-SEMVER-006 — Close the public enums for forward compatibility
+
+- **Outcome:** adding a property family or coefficient order is not a breaking
+  change for consumers.
+- **Scope:** `#[non_exhaustive]` on `PropertyKind`, `PropertyConstraint`
+  (`src/property/error.rs:5,16`), `CoefficientOrder`, and `TemperatureRole`
+  (`src/constitutive/temperature/error.rs:7,16`). Non-goals: the already
+  non-exhaustive `TemperatureLawError` and `TemperatureValidity`.
+- **Acceptance oracle:** all six public enums carry the attribute; in-repo
+  matches compile; the change is classified by `cargo-semver-checks`.
+- **Dependencies:** none.
+- **Risk/change class:** [arch] [major] (adding `#[non_exhaustive]` breaks
+  external exhaustive matches); effort S.
+- **Status:** todo.
+
+### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
+
+- **Outcome:** the validity-boundary and calibration-domain guarantees are
+  verified for each scalar the crate ships, not only `f64`.
+- **Scope:** `tests/properties.rs`, the calibration-domain tests in
+  `tests/temperature_law.rs`, `tests/composition.rs`. Non-goals: the codegen
+  fixture, which is deliberately `f64`-concrete.
+- **Acceptance oracle:** each boundary assertion runs through a generic
+  `fn assert_*<T: RealField>()` instantiated at `f32` and `f64`, matching the
+  existing pattern at `tests/theorems.rs:33-36`.
+- **Dependencies:** none.
+- **Risk/change class:** [verification] [patch]; effort S.
+- **Status:** todo.
+
+### PRO-DOC-008 — Ground the cross-repository ownership claim
+
+- **Outcome:** the book states only what this repository can evidence.
+- **Scope:** `docs/book/stack_position.md:28-31`. Non-goals: editing consumer
+  repositories.
+- **Acceptance oracle:** the assertion that "no duplicate material-property
+  implementation exists in Hyperion, Helios, CFDrs, or Kwavers" is replaced by
+  the boundary statement plus a link to the consumer contract test that
+  evidences it, or is dated and attributed to the Atlas board item that
+  verified it. Must not land while a book CI branch is in flight.
+- **Dependencies:** the open consumer-contract-test item below.
+- **Risk/change class:** [docs] [patch]; effort S.
+- **Status:** todo.
+
+### PRO-SEAL-009 — Record or lift the response-set seal
+
+- **Outcome:** the closure of `ThermophysicalResponseSet` is a recorded
+  decision rather than an undocumented seal.
+- **Scope:** `src/constitutive/temperature/law.rs:12-14,68-71` and ADR 0002.
+- **Acceptance oracle:** ADR 0002 gains a dated revision note stating that the
+  set-level seam is sealed and that consumer variation enters through the
+  unsealed `TemperatureResponse` trait; or the seal is lifted so a correlated
+  or tabulated response set can be supplied downstream.
+- **Dependencies:** none.
+- **Risk/change class:** [arch] [patch]; effort S.
+- **Status:** todo.
+
 ## Open
 
 ### PRO-GATE-004 — Reconcile CI with ADR verification claims [verification] [patch] — in progress
