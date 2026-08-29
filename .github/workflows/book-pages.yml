@@ -46,4 +46,7 @@ jobs:
 
       rust-toolchain: "1.97.0"
 
-      cargo-package: proteus
+      # Package name is `proteus-mat` on the registry; `proteus` belongs to an
+      # unrelated third-party crate, so `cargo package -p proteus` fails with
+      # "package ID specification `proteus` did not match any packages".
+      cargo-package: proteus-mat
