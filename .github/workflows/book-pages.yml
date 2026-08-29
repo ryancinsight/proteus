@@ -50,3 +50,9 @@ jobs:
       # unrelated third-party crate, so `cargo package -p proteus` fails with
       # "package ID specification `proteus` did not match any packages".
       cargo-package: proteus-mat
+      # The [lib] target keeps the `proteus` name (that is the whole point of
+      # the rename), so the shared workflow must stage `libproteus-*.rlib` for
+      # `mdbook test --library-path`; deriving the crate name from the package
+      # would look for `libproteus_mat-*` and stage nothing, leaving every
+      # `extern crate proteus;` book sample failing E0463.
+      cargo-crate: proteus
