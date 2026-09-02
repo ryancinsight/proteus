@@ -74,21 +74,19 @@ jobs:
       - name: Build at declared MSRV
         run: cargo check --locked --all-targets --all-features
 
+  # Public-surface compatibility through the stack's one gate, replacing
+  # the hand-rolled job this repository carried before the shared
+  # workflow existed: a divergent per-repo copy is the duplication
+  # defect ADR 0035 exists to prevent.
+  # Atlas ATLAS-SEMVER-GATE-FLEETWIDE-2026-08-28.
   semver:
-    name: SemVer
-    timeout-minutes: 20
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          fetch-depth: 0
-      - uses: obi1kenobi/cargo-semver-checks-action@6b69fcf40e9b5fb17adeb57e4b6ecd020649a239
-        with:
-          package: proteus-mat
-          manifest-path: Cargo.toml
-          rust-toolchain: 1.97.0
-          baseline-rev: ${{ github.event.pull_request.base.sha || github.event.before }}
-          verbose: true
+    name: SemVer gate
+    uses: ryancinsight/atlas/.github/workflows/semver-gate.yml@466b47a9a604bc9c91d4848f0b6c1df36a2bd5c2
+    with:
+      package: proteus-mat
+      rust-toolchain: 1.97.0
+    permissions:
+      contents: read
 
   supply-chain:
     timeout-minutes: 15
