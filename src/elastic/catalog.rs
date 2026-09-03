@@ -61,8 +61,13 @@ pub enum NamedIsotropicSolid {
     StainlessSteel316L,
     /// Wrought aluminium alloy 6061-T6.
     ///
-    /// `rho = 2700 kg/m^3`, `E = 70 GPa`, `nu = 0.33`,
-    /// `k = 237 W/(m K)`, `c_p = 900 J/(kg K)`, `alpha = 23e-6 /K`.
+    /// `rho = 2700 kg/m^3`, `E = 68.9 GPa`, `nu = 0.33`,
+    /// `k = 167 W/(m K)`, `c_p = 896 J/(kg K)`, `alpha = 23.6e-6 /K`.
+    ///
+    /// The modulus is the published 6061-T6 value, 10 000 ksi. The two
+    /// consumer catalogs this replaces had drifted to `70e9` and `69e9`
+    /// respectively; neither is the grade's value, so consolidation resolves
+    /// the disagreement to the source rather than promoting either side.
     Aluminium6061,
     /// Titanium alloy Ti-6Al-4V (Grade 5).
     ///
@@ -102,11 +107,11 @@ impl NamedIsotropicSolid {
             },
             Self::Aluminium6061 => Constants {
                 density: 2700.0,
-                youngs_modulus: 70e9,
+                youngs_modulus: 68.9e9,
                 poissons_ratio: 0.33,
-                thermal_conductivity: 237.0,
-                specific_heat_capacity: 900.0,
-                thermal_expansion: 23e-6,
+                thermal_conductivity: 167.0,
+                specific_heat_capacity: 896.0,
+                thermal_expansion: 23.6e-6,
             },
             Self::TitaniumGrade5 => Constants {
                 density: 4430.0,

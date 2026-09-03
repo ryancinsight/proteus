@@ -96,7 +96,7 @@ fn assert_engineering_round_trip<T: RealField>(young: f64, poisson: f64) {
 fn engineering_pair_round_trips_for_every_supported_real_scalar() {
     for &(young, poisson) in &[
         (200e9, 0.30),
-        (70e9, 0.33),
+        (68.9e9, 0.33),
         (1e6, 0.0),
         (5e9, -0.25),
         (3e10, 0.49),
@@ -377,7 +377,7 @@ fn catalog_entries_preserve_their_published_constants() {
         .expect("catalog entry is valid");
     assert_close(
         aluminium.moduli().youngs_modulus().into_base(),
-        70e9,
+        68.9e9,
         "6061 E",
     );
     assert_close(
