@@ -3,6 +3,8 @@
 Proteus is the Atlas owner for shared material properties and constitutive-law
 contracts. Phase 1 provides validated isotropic thermophysical properties and
 statically dispatched constant, linear, and quadratic temperature response.
+Phase 2 adds the isotropic linear-elastic conversion contract and the named
+isotropic-solid catalog.
 
 The name refers to Proteus, the shape-changing Greek sea god.
 
@@ -14,12 +16,20 @@ Proteus owns:
 - cohesive material property bundles;
 - named material composition;
 - dimensionally typed temperature-response strategies;
-- statically dispatched constitutive-law evaluation.
+- statically dispatched constitutive-law evaluation;
+- the isotropic-elastic `(E, nu) <-> (lambda, mu) <-> (c_p, c_s)` conversion
+  contract and its positive-definite validity domain;
+- the named isotropic-solid catalog.
 
 Aequitas owns dimensions and units. Eunomia owns scalar representations.
 Kwavers retains acoustic attenuation, optical response, and perfusion; `CFDrs`
 retains fluid rheology and flow closure; Helios retains photon interaction and
 CT calibration. Proteus does not duplicate those domain laws.
+
+Elastic *state* is a material property and lives here; elastic *operators* do
+not. Solid kinematics, stress divergence, balance equations, and contact stay
+with their consumers pending the Ares promotion trigger recorded in the Atlas
+stack map.
 
 ## Example
 
@@ -53,6 +63,10 @@ assert_eq!(evaluated.thermal_diffusivity().into_base(), 1.5e-7);
 
 ```text
 src/
+├── elastic/
+│   ├── moduli.rs         # (E, nu) <-> (lambda, mu) <-> (c_p, c_s) contract
+│   ├── catalog.rs        # named isotropic solids + cohesive solid bundle
+│   └── error.rs          # typed elastic validity failure
 ├── constitutive/
 │   ├── contract.rs       # GAT-based static constitutive seam
 │   ├── constant.rs       # constant law and zero-sized state

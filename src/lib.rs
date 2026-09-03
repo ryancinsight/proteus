@@ -13,6 +13,8 @@ extern crate alloc;
 
 /// Constitutive-law contracts and static implementations.
 pub mod constitutive;
+/// Isotropic linear-elastic moduli and the named-solid catalog.
+pub mod elastic;
 /// Material identity and law composition.
 pub mod material;
 /// Validated physical material properties.
@@ -25,6 +27,10 @@ pub use constitutive::{
     InvalidTemperatureCoefficient, InvalidTemperatureValidity, LinearResponse, NoState,
     QuadraticResponse, ResponseSet, TemperatureLaw, TemperatureLawError, TemperatureResponse,
     TemperatureRole, TemperatureValidity, ThermophysicalResponseSet,
+};
+pub use elastic::{
+    ElasticConstraint, ElasticQuantity, InvalidElasticModuli, IsotropicModuli, IsotropicSolid,
+    NamedIsotropicSolid,
 };
 pub use material::Material;
 pub use property::{

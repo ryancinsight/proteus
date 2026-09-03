@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Added
+
+- **Isotropic-elastic conversion contract.** `IsotropicModuli` owns the
+  `(E, nu) <-> (lambda, mu) <-> (c_p, c_s)` conversion set over `T: RealField`,
+  carrying the Lame pair as its single canonical state. Its validity domain is
+  the positive-definite one, `mu > 0` and `K = lambda + 2mu/3 > 0`, which admits
+  auxetic solids (`nu < 0`, `lambda < 0`) that a non-negative-`lambda` check
+  would wrongly reject. Round trips, the `mu = E / (2(1 + nu))` and
+  `K = E / (3(1 - 2nu))` closed forms, open-interval boundaries, non-finite
+  input, and generic `f32`/`f64` instantiation carry executable evidence;
+  round-trip tolerances are scaled by the derived cancellation condition number
+  rather than a flat epsilon.
+
+- **Named isotropic-solid catalog.** `NamedIsotropicSolid` publishes carbon
+  steel, stainless steel 316L, aluminium 6061-T6, and Ti-6Al-4V with their
+  elastic, thermophysical, and thermal-expansion constants. Each variant names
+  one specific grade: the consumer catalogs this replaces both said "steel"
+  while meaning different alloys, so entries stay grade-specific to keep that
+  substitution unrepresentable.
+
 ### Changed
 
 - **Verification:** CI now runs both shipped examples, checks the declared
