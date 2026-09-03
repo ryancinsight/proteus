@@ -46,6 +46,26 @@ impl<T> IsotropicSolid<T> {
 /// entry would silently substitute their constants. Consumers that need a
 /// grade absent here construct [`IsotropicModuli`] directly rather than
 /// approximating with a neighbouring entry.
+///
+/// # Inclusion criterion
+///
+/// An entry belongs here when its constants are **grade-defined, published,
+/// and isotropic**: the grade designation fixes the values, a citable source
+/// gives them, and an isotropic description is not an approximation.
+/// Engineering alloys qualify.
+///
+/// Domain-specific materials do not, and stay with their domain owner while
+/// still consuming this module's conversion contract. Biological tissue is the
+/// clearest case: cortical bone is anisotropic, so a single Young's modulus is
+/// a direction-dependent approximation rather than a property of the material;
+/// its values vary by site, age, and species rather than by grade; and a tissue
+/// model needs acoustic, optical, thermal, and strength properties alongside
+/// the elastic ones, so lifting only the elastic constants into a general
+/// engineering catalog would fragment one material's data across repositories.
+///
+/// Such a consumer builds [`IsotropicModuli`] from its own cited constants.
+/// The conversion algebra still has one owner, which is what this module is
+/// for; only the material data stays where its domain expertise lives.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum NamedIsotropicSolid {
