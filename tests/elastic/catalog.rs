@@ -29,7 +29,7 @@ fn catalog_entries_preserve_their_published_constants() {
         .expect("catalog entry is valid");
     assert_close(
         aluminium.moduli().youngs_modulus().into_base(),
-        70e9,
+        68.9e9,
         "6061 E",
     );
     assert_close(
