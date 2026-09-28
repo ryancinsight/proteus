@@ -106,6 +106,14 @@ struct Constants {
     thermal_expansion: f64,
 }
 
+impl Constants {
+    /// The entry's mass density as a dimensional quantity at the target scalar.
+    #[must_use]
+    fn density_quantity<T: RealField>(&self) -> DensityQuantity<T> {
+        DensityQuantity::from_base(T::from_f64(self.density))
+    }
+}
+
 impl NamedIsotropicSolid {
     const fn constants(self) -> Constants {
         match self {
@@ -157,14 +165,13 @@ impl NamedIsotropicSolid {
             Pressure::from_base(T::from_f64(constants.youngs_modulus)),
             Dimensionless::from_base(T::from_f64(constants.poissons_ratio)),
         )?;
-        let density = MassDensity::new(DensityQuantity::from_base(T::from_f64(constants.density)))
-            .map_err(|invalid| {
-                InvalidElasticModuli::new(
-                    super::ElasticQuantity::MassDensity,
-                    *invalid.value(),
-                    super::ElasticConstraint::FinitePositive,
-                )
-            })?;
+        let density = MassDensity::new(constants.density_quantity::<T>()).map_err(|invalid| {
+            InvalidElasticModuli::new(
+                super::ElasticQuantity::MassDensity,
+                *invalid.value(),
+                super::ElasticConstraint::FinitePositive,
+            )
+        })?;
         Ok(IsotropicSolid::new(moduli, density))
     }
 
@@ -179,7 +186,7 @@ impl NamedIsotropicSolid {
     ) -> Result<ThermophysicalProperties<T>, crate::property::InvalidProperty<T>> {
         let constants = self.constants();
         ThermophysicalProperties::try_from_quantities(
-            DensityQuantity::from_base(T::from_f64(constants.density)),
+            constants.density_quantity::<T>(),
             HeatCapacityQuantity::from_base(T::from_f64(constants.specific_heat_capacity)),
             ConductivityQuantity::from_base(T::from_f64(constants.thermal_conductivity)),
         )

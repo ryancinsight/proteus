@@ -1,28 +1,15 @@
 //! Executable laws for temperature-dependent thermophysical response.
 
 use aequitas::systems::si::quantities::{
-    MassDensity as DensityQuantity, ReciprocalTemperature, ReciprocalTemperatureSquared,
-    SpecificHeatCapacity as HeatCapacityQuantity, ThermalConductivity as ConductivityQuantity,
-    ThermodynamicTemperature,
+    ReciprocalTemperature, ReciprocalTemperatureSquared, ThermodynamicTemperature,
 };
 use eunomia::RealField;
 use proteus::{
-    CoefficientOrder, ConstantResponse, ConstitutiveLaw, LinearResponse, MassDensity,
-    QuadraticResponse, ResponseSet, SpecificHeatCapacity, TemperatureLaw, TemperatureLawError,
-    TemperatureRole, TemperatureValidity, ThermalConductivity, ThermophysicalProperties,
+    CoefficientOrder, ConstantResponse, ConstitutiveLaw, LinearResponse, QuadraticResponse,
+    ResponseSet, TemperatureLaw, TemperatureLawError, TemperatureRole, TemperatureValidity,
 };
 
-fn properties<T: RealField>() -> ThermophysicalProperties<T> {
-    ThermophysicalProperties::new(
-        MassDensity::new(DensityQuantity::from_base(T::from_f64(1_000.0)))
-            .expect("positive density"),
-        SpecificHeatCapacity::new(HeatCapacityQuantity::from_base(T::from_f64(4_000.0)))
-            .expect("positive heat capacity"),
-        ThermalConductivity::new(ConductivityQuantity::from_base(T::from_f64(0.6)))
-            .expect("positive conductivity"),
-    )
-    .expect("positive continuum density")
-}
+mod common;
 
 fn assert_reference_invariance<T: RealField>() {
     let reference_temperature = ThermodynamicTemperature::from_base(T::from_f64(310.15));
@@ -36,13 +23,13 @@ fn assert_reference_invariance<T: RealField>() {
         )
         .expect("finite coefficients"),
     );
-    let law = TemperatureLaw::new(properties(), reference_temperature, responses)
+    let law = TemperatureLaw::new(common::reference(), reference_temperature, responses)
         .expect("positive reference temperature");
     let evaluated = law
         .properties(&reference_temperature)
         .expect("reference state is admissible");
 
-    assert_eq!(evaluated, properties());
+    assert_eq!(evaluated, common::reference());
 }
 
 #[test]
@@ -63,7 +50,7 @@ fn independent_response_orders_match_their_polynomials() {
         )
         .expect("finite coefficients"),
     );
-    let law = TemperatureLaw::new(properties(), reference_temperature, responses)
+    let law = TemperatureLaw::new(common::reference(), reference_temperature, responses)
         .expect("positive reference temperature");
     let temperature = ThermodynamicTemperature::from_base(310.0);
     let evaluated = law
@@ -104,7 +91,7 @@ fn coefficient_and_temperature_boundaries_are_typed() {
 
     let responses = ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse);
     let invalid_reference = TemperatureLaw::new(
-        properties(),
+        common::reference(),
         ThermodynamicTemperature::from_base(0.0),
         responses,
     )
@@ -127,7 +114,7 @@ fn bounded_calibration_domain_rejects_extrapolation() {
     .expect("finite positive ordered calibration bounds");
     let responses = ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse);
     let law = TemperatureLaw::with_validity(
-        properties(),
+        common::reference(),
         ThermodynamicTemperature::from_base(300.0),
         validity,
         responses,
@@ -137,7 +124,7 @@ fn bounded_calibration_domain_rejects_extrapolation() {
     assert_eq!(
         law.properties(&ThermodynamicTemperature::from_base(350.0))
             .expect("350 K lies inside the calibration domain"),
-        properties()
+        common::reference()
     );
     assert!(matches!(
         law.properties(&ThermodynamicTemperature::from_base(1_500.0)),
@@ -168,7 +155,7 @@ fn bounded_calibration_domain_rejects_invalid_bounds_and_reference() {
     let responses = ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse);
     assert!(matches!(
         TemperatureLaw::with_validity(
-            properties(),
+            common::reference(),
             ThermodynamicTemperature::from_base(400.0),
             validity,
             responses,
@@ -191,7 +178,7 @@ fn evaluation_revalidates_every_derived_property() {
         ConstantResponse,
     );
     let law = TemperatureLaw::new(
-        properties(),
+        common::reference(),
         ThermodynamicTemperature::from_base(300.0),
         responses,
     )
@@ -231,7 +218,7 @@ proptest::proptest! {
             ConstantResponse,
         );
         let reference = ThermodynamicTemperature::from_base(300.0);
-        let law = TemperatureLaw::new(properties(), reference, responses)
+        let law = TemperatureLaw::new(common::reference(), reference, responses)
             .expect("positive reference temperature");
         let temperature = ThermodynamicTemperature::from_base(300.0 + delta);
         let evaluated = law.properties(&temperature)
