@@ -8,9 +8,10 @@ use aequitas::systems::si::quantities::{
 };
 use proteus::{
     ConstantLaw, MassDensity, Material, NoState, SpecificHeatCapacity, ThermalConductivity,
-    ThermophysicalProperties,
 };
 use stats_alloc::{INSTRUMENTED_SYSTEM, Region, StatsAlloc};
+
+mod common;
 
 #[global_allocator]
 static ALLOCATOR: &StatsAlloc<std::alloc::System> = &INSTRUMENTED_SYSTEM;
@@ -37,12 +38,7 @@ fn property_newtypes_are_transparent_over_their_quantities() {
 
 #[test]
 fn borrowed_material_construction_and_evaluation_allocate_nothing() {
-    let properties = ThermophysicalProperties::try_from_quantities(
-        DensityQuantity::from_base(1_000.0_f64),
-        HeatCapacityQuantity::from_base(4_000.0_f64),
-        ConductivityQuantity::from_base(0.6_f64),
-    )
-    .expect("valid fixture");
+    let properties = common::reference::<f64>();
 
     let region = Region::new(ALLOCATOR);
     let material = Material::borrowed("reference", ConstantLaw::new(properties));
