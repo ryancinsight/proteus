@@ -1,4 +1,10 @@
 //! Representation and allocation invariants.
+//!
+//! Allocation windows count allocations made by the calling thread only. A
+//! process-wide counter is invalid here: libtest runs the test body on a
+//! spawned thread while its main thread keeps inserting the running test into
+//! its bookkeeping collections, so a process-wide window occasionally absorbs
+//! those allocations and fails for reasons unrelated to the code under test.
 
 use core::mem::{align_of, size_of};
 
@@ -6,15 +12,16 @@ use aequitas::systems::si::quantities::{
     MassDensity as DensityQuantity, SpecificHeatCapacity as HeatCapacityQuantity,
     ThermalConductivity as ConductivityQuantity,
 };
+use mnemosyne::counting::{AllocationDelta, CountingAllocator};
 use proteus::{
     ConstantLaw, MassDensity, Material, NoState, SpecificHeatCapacity, ThermalConductivity,
 };
-use stats_alloc::{INSTRUMENTED_SYSTEM, Region, StatsAlloc};
 
 mod common;
 
 #[global_allocator]
-static ALLOCATOR: &StatsAlloc<std::alloc::System> = &INSTRUMENTED_SYSTEM;
+static ALLOCATOR: CountingAllocator<std::alloc::System> =
+    CountingAllocator::new(std::alloc::System);
 
 #[test]
 fn property_newtypes_are_transparent_over_their_quantities() {
@@ -40,13 +47,11 @@ fn property_newtypes_are_transparent_over_their_quantities() {
 fn borrowed_material_construction_and_evaluation_allocate_nothing() {
     let properties = common::reference::<f64>();
 
-    let region = Region::new(ALLOCATOR);
-    let material = Material::borrowed("reference", ConstantLaw::new(properties));
-    let evaluated = material.properties(NoState).expect("infallible");
-    let change = region.change();
+    let (evaluated, change) = mnemosyne::counting::measure(|| {
+        let material = Material::borrowed("reference", ConstantLaw::new(properties));
+        material.properties(NoState).expect("infallible")
+    });
 
     assert_eq!(evaluated, properties);
-    assert_eq!(change.allocations, 0);
-    assert_eq!(change.reallocations, 0);
-    assert_eq!(change.deallocations, 0);
+    assert_eq!(change, AllocationDelta::default());
 }
