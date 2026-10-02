@@ -19,8 +19,8 @@ checksum = "320119579fcad9c21884f5c4861d16174d0e06250625266f50fe6898340abefa"
 
 [[package]]
 name = "aequitas"
-version = "0.2.0"
-source = "git+https://github.com/ryancinsight/aequitas#dc4bdefbbd679a732017886657bef2d54af9d9bb"
+version = "0.2.1"
+source = "git+https://github.com/ryancinsight/aequitas#e433dbd4c9f7c750d533eb747e5be3ee72d7279e"
 dependencies = [
  "eunomia",
  "typenum",
@@ -125,11 +125,22 @@ dependencies = [
 
 [[package]]
 name = "eunomia"
-version = "0.8.0"
-source = "git+https://github.com/ryancinsight/eunomia#35158d17d20160214519811b19167ce385215f3e"
+version = "0.8.1"
+source = "git+https://github.com/ryancinsight/eunomia#9931fc1f18279a205802127ba86b1b3775df1e38"
 dependencies = [
  "bytemuck",
+ "eunomia-derive",
  "libm",
+]
+
+[[package]]
+name = "eunomia-derive"
+version = "0.8.1"
+source = "git+https://github.com/ryancinsight/eunomia#9931fc1f18279a205802127ba86b1b3775df1e38"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.119",
 ]
 
 [[package]]
@@ -617,7 +628,7 @@ dependencies = [
 [[package]]
 name = "themis-topology"
 version = "0.11.1"
-source = "git+https://github.com/ryancinsight/themis#d89d3aa6b730705e103c3e461a09b221e9700d83"
+source = "git+https://github.com/ryancinsight/themis#b7b937c37d009ac766e9613a81a48f6b94bb5430"
 dependencies = [
  "libc",
  "melinoe",
