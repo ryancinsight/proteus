@@ -19,6 +19,8 @@ use proteus::{
 
 mod common;
 
+mod common;
+
 #[global_allocator]
 static ALLOCATOR: CountingAllocator<std::alloc::System> =
     CountingAllocator::new(std::alloc::System);
