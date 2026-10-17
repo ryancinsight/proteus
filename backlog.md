@@ -4,7 +4,8 @@
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
-- Implementation complete; independent review and acceptance remain pending.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
 - Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
   (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
   `2mu` overflowed. The frozen original eight failures/five controls remain.
@@ -22,7 +23,8 @@
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
-- Implementation complete; independent review and acceptance remain pending.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
 - Baseline: accepted states returned infinite E/K/M or zero nu even when the
   correct output fits the native scalar. Small products also lost finite E.
 - Repair: bounded ratios and native FMA avoid quadratic products and premature

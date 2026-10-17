@@ -10,7 +10,9 @@
       at O2/O3 with default/no-default parity, without test or policy waivers.
 - [x] Measure ordinary direct/indirect/stream workflows, sampled allocations
       and unchanged object sizes; retain before/after outlining evidence.
-- [ ] Record final exact-head source/package/hosted gates and draft PR.
+- [x] Record source/package/hosted gates and open draft
+      [#87](https://github.com/ryancinsight/proteus/pull/87); exact-head evidence
+      is retained with the review packet.
 - [ ] Independent exact-head review and performance/resource acceptance.
 - [ ] First-publication identity/authentication and dependency/lifecycle checks;
       keep merge/publication held and preserve all existing protected holds.
