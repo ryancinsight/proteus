@@ -1,5 +1,31 @@
 # Proteus checklist
 
+## Elastic range repair — target 0.1.1 [patch]
+
+- [x] PRO-ELASTIC-VALIDITY-RANGE: preserve original 8-red/5-control evidence;
+      verify finite invalid bulk states and exact/adjacent native boundaries.
+- [x] PRO-ELASTIC-DERIVED-RANGE: recover representable E/nu/K/M, tiny products,
+      cancellation, true overflow and the typed wave-speed consumer.
+- [x] Verify the shared native FMA/scaling argument and the 20,148-pair oracle
+      at O2/O3 with default/no-default parity, without test or policy waivers.
+- [x] Measure ordinary direct/indirect/stream workflows, sampled allocations
+      and unchanged object sizes; retain before/after outlining evidence.
+- [x] Record source/package/hosted gates and open draft
+      [#87](https://github.com/ryancinsight/proteus/pull/87); exact-head evidence
+      is retained with the review packet.
+- [x] Reproduce the [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) Young/bulk midpoint findings; add all four failures
+      and 336 rational boundary cases, including exact overflow ties.
+- [x] Retain native residuals and quotient corrections; replay all 27,594
+      independent inputs in the expanded 78,163-pair/profile corpus without
+      changing domain decisions, eight-ULP limits or finite classification policy.
+- [x] Run renewed strict source gates: 73 tests per debug/release/no-default
+      mode, docs/examples, Clippy and declared Rust 1.95 floor.
+- [ ] Independent repaired-head review and performance/resource acceptance;
+      historical [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) acceptance/publication evidence is superseded.
+- [ ] First-publication identity/authentication and dependency/lifecycle checks;
+      keep merge/publication held and preserve all existing protected holds.
+
+
 ## PRO-GATE-004 — Reconcile CI with ADR verification claims
 
 - [x] Audit the two accepted ADR verification lists against the current
