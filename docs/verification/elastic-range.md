@@ -168,3 +168,15 @@ index returns 404 for `proteus-mat`: first-publication identity, authentication,
 registry dependency graph and publication scope require lifecycle verification.
 No merge, tag, publish, authentication/settings change or service deployment is
 part of this draft. Iris #80's denied-read hold and all protected holds remain.
+
+## Guarded residual integration
+
+The prior reviewed implementation's large-value cost motivates the guarded
+recovery in docs/verification/elastic-guard.md. Its full-domain proof checks
+the locked scalar cohort, normal intermediate bounds including cancellation,
+exact threshold representability, finite/infinite classification and the
+existing eight-ULP value contract. Ordinary entry arithmetic and the exact
+boundary recovery remain unchanged. The integration adds 305 guard-neighbor
+cases and transparent-wrapper coverage; fresh source/package/API/conformance/
+CI and cost evidence belong to the new head. Prior-head correctness review
+and measurements do not constitute acceptance of the changed head.

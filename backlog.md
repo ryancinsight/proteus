@@ -51,6 +51,14 @@
   to +0.600 ns/call. Large sampled repaired workflows reach 133.985 ns/call.
   All 8,064 continuation regions allocate zero heap bytes/calls; object sizes
   remain unchanged. Peak total stack/RSS and performance acceptance stay open.
+- Guard integration: full-domain native error bounds select exact residual
+  recovery near the overflow midpoint and a bounded evaluation elsewhere;
+  ordinary entry arithmetic and the repaired exact comparisons stay unchanged.
+  Co-located proof: docs/verification/elastic-guard.md. Add 305 native guard
+  neighbors and transparent-wrapper equivalence; renew exact-head source,
+  package/API/conformance/CI and representative mixed/stack evidence. Prior
+  review does not approve this integration; performance/resource acceptance
+  and lifecycle holds remain open.
 - Lifecycle: `proteus-mat` is absent from the checked sparse index (HTTP 404).
   First-publication identity/authentication/dependency scope remains a separate
   hold. Preserve Iris #80's denied-read lifecycle hold and all protected holds.

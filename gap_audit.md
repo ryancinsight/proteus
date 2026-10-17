@@ -26,6 +26,17 @@ the sparse index has no `proteus-mat` entry. See the two backlog rows and
 preserved; this work does not claim or close them.
 
 
+## Guarded recovery continuation [patch]
+
+The accepted prior correctness implementation pays residual costs for every
+large input. The guarded integration retains the exact comparison inside a
+mathematically derived band and uses a bounded native evaluation outside it.
+The proof covers the locked f32/f64/F32/F64 domain and cancellation; it is not
+inferred solely from the finite oracle. Ordinary outputs and existing repaired
+boundaries retain their policies. New transition/wrapper tests and renewed
+source/package/gates/cost evidence accompany the changed head. Independent
+review, resource acceptance and first-publication identity remain separate holds.
+
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
 Static audit at `944eed056c1be7bf4b5fd332aa8037c5e6950d7a` on branch

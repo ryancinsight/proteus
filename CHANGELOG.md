@@ -16,6 +16,10 @@
   bulk values just above MAX can still round to finite MAX. Add the four
   independent failures, 336 exact-rational boundary fixtures and midpoint ties.
 
+- Avoid residual-expansion work for large moduli whose bounded native
+  approximation is proven away from the overflow midpoint. Keep exact recovery
+  at the boundary, ordinary entry arithmetic and the existing value/error policy.
+
 ### Verification
 
 - Native f32/f64 range and boundary regressions, typed wave-speed consumer,

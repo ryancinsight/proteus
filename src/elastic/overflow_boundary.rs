@@ -133,7 +133,7 @@ pub(super) fn young<T: RealField>(lambda: T, mu: T) -> T {
     let l = lambda / s;
     let m = mu / s;
     let two_mu = two::<T>() * mu;
-    // When |l| < eps/16, |E/S - 2m| < eps/15. Here m > 1/2,
+    // When |l| < eps/16, |E/S - 2m| < eps/15. Here m >= 1/2,
     // so the error is below 1/4 ulp. The native grid for 2m stays at
     // least eps/2 from the overflow midpoint. Thus even normalization
     // underflow cannot change finite/infinite classification.
@@ -141,8 +141,22 @@ pub(super) fn young<T: RealField>(lambda: T, mu: T) -> T {
     if l.abs() < T::EPSILON / sixteen {
         return two_mu;
     }
-    // Outside the tiny-term case, all products and residuals are normal
-    // for binary32/binary64. Admissibility gives l+m > m/3 > 1/6.
+    // N is one fused linear combination, D one positive sum. Their
+    // ratio and product have relative error <= gamma4; E/S < 6. For p >= 24,
+    // 6gamma4 < 25u. The exact 16eps = 32u margin also covers the
+    // midpoint offset u. See docs/verification/elastic-guard.md for the
+    // normal-intermediate and value-accuracy proof over the locked scalars.
+    let numerator = l.scalar_fmadd(three::<T>(), two::<T>() * m);
+    let approximation = m * (numerator / (l + m));
+    if let Some(value) = away_from_boundary(approximation, s) {
+        return value;
+    }
+    young_boundary(l, m, s)
+}
+
+#[cold]
+#[inline(never)]
+fn young_boundary<T: RealField>(l: T, m: T, s: T) -> T {
     if young_midpoint(l, m, T::ONE) != Ordering::Less {
         return T::INFINITY;
     }
@@ -186,6 +200,16 @@ pub(super) fn bulk<T: RealField>(lambda: T, mu: T) -> T {
     if l < T::EPSILON / sixteen || m < T::EPSILON / sixteen {
         return lambda + (mu / three::<T>()) * two::<T>();
     }
+    let approximation = l + (m / three::<T>()) * two::<T>();
+    if let Some(value) = away_from_boundary(approximation, s) {
+        return value;
+    }
+    bulk_boundary(l, m, s)
+}
+
+#[cold]
+#[inline(never)]
+fn bulk_boundary<T: RealField>(l: T, m: T, s: T) -> T {
     if bulk_midpoint(l, m, T::ONE) != Ordering::Less {
         return T::INFINITY;
     }
@@ -196,4 +220,20 @@ pub(super) fn bulk<T: RealField>(lambda: T, mu: T) -> T {
     let quotient = numerator.estimate() / three::<T>();
     numerator.product(-quotient, three::<T>());
     (quotient + numerator.estimate() / three::<T>()) * s
+}
+
+/// Outside this analytically bounded interval the approximate result cannot
+/// cross the overflow midpoint. Its native forward error remains below the
+/// existing eight-ULP contract. Inside, retain the exact residual comparison.
+#[inline]
+fn away_from_boundary<T: RealField>(approximation: T, scale: T) -> Option<T> {
+    let four = two::<T>() + two::<T>();
+    let margin = (four * four) * T::EPSILON;
+    if approximation < two::<T>() - margin {
+        Some(approximation * scale)
+    } else if approximation > two::<T>() + margin {
+        Some(T::INFINITY)
+    } else {
+        None
+    }
 }

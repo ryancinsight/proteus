@@ -20,6 +20,11 @@
       changing domain decisions, eight-ULP limits or finite classification policy.
 - [x] Run renewed strict source gates: 73 tests per debug/release/no-default
       mode, docs/examples, Clippy and declared Rust 1.95 floor.
+- [x] Establish the full-domain residual guard proof for every locked real
+      scalar, preserving ordinary entry arithmetic and exact boundary recovery.
+- [x] Add 305 rational guard-neighbor inputs and transparent-wrapper tests.
+- [x] Renew source/model/API checks and prepare the integrated exact-head
+      package/conformance/CI and mixed-workflow/native-frame review packet.
 - [ ] Independent repaired-head review and performance/resource acceptance;
       historical [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) acceptance/publication evidence is superseded.
 - [ ] First-publication identity/authentication and dependency/lifecycle checks;
