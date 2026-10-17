@@ -1,4 +1,7 @@
 """Check the guard proof constants and public transition fixture with rationals."""
+import sys
+sys.dont_write_bytecode = True
+
 from fractions import Fraction as F
 from pathlib import Path
 from elastic_range_reference import exact, nearest, format_spec
