@@ -1,5 +1,21 @@
 # Proteus checklist
 
+## Elastic range repair — target 0.1.1 [patch]
+
+- [x] PRO-ELASTIC-VALIDITY-RANGE: preserve original 8-red/5-control evidence;
+      verify finite invalid bulk states and exact/adjacent native boundaries.
+- [x] PRO-ELASTIC-DERIVED-RANGE: recover representable E/nu/K/M, tiny products,
+      cancellation, true overflow and the typed wave-speed consumer.
+- [x] Verify the shared native FMA/scaling argument and the 20,148-pair oracle
+      at O2/O3 with default/no-default parity, without test or policy waivers.
+- [x] Measure ordinary direct/indirect/stream workflows, sampled allocations
+      and unchanged object sizes; retain before/after outlining evidence.
+- [ ] Record final exact-head source/package/hosted gates and draft PR.
+- [ ] Independent exact-head review and performance/resource acceptance.
+- [ ] First-publication identity/authentication and dependency/lifecycle checks;
+      keep merge/publication held and preserve all existing protected holds.
+
+
 ## PRO-GATE-004 — Reconcile CI with ADR verification claims
 
 - [x] Audit the two accepted ADR verification lists against the current

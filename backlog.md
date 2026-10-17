@@ -1,5 +1,43 @@
 # Proteus backlog
 
+## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
+
+- Owner: Codex; target: 0.1.1; status: implemented, independent review pending.
+- Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
+  (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
+  `2mu` overflowed. The frozen original eight failures/five controls remain.
+- Repair: positive lambda is admissible with finite positive mu; negative
+  lambda uses the sign of `3lambda+2mu`, evaluated by native FMA. When doubling
+  mu overflows, the equivalent half-scaled FMA preserves the sign. No rounded
+  `2/3` threshold, widened arithmetic, saturation or tolerance in validation.
+- Evidence: exact and adjacent zero-bulk boundaries, rounded-two-thirds and
+  subnormal cases, both native scalar input guards; exact-rational domain oracle.
+- Acceptance: final source/package/CI gates, independent exact-head correctness
+  review, and explicit performance/resource and lifecycle acceptance remain
+  required. No merge or publication is part of this draft.
+
+## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
+
+- Owner: Codex; target: 0.1.1; status: implemented, independent review pending.
+- Baseline: accepted states returned infinite E/K/M or zero nu even when the
+  correct output fits the native scalar. Small products also lost finite E.
+- Repair: bounded ratios and native FMA avoid quadratic products and premature
+  doubling; bulk cancellation uses the same fused numerator as validation.
+  Exceptional overflow paths are outlined; the canonical Lame pair and public
+  API stay unchanged. True derived overflow retains IEEE infinity.
+- Evidence: 23 new regression/control tests, typed wave-speed consumer, 20,148
+  exact-rational input pairs per optimization level, default/no-default parity;
+  observed maximum one ULP for E/nu/K and exact-rounding P-wave modulus.
+- Resources/performance: one ARM64/Rust 1.97 O2/O3 matrix, 2,016 samples/profile,
+  ordinary direct/indirect/stream callers and recovered cases. All sampled heap
+  requests are zero; state/Result sizes unchanged. Ordinary deltas span
+  -0.359 to +1.390 ns/call, including construct-and-derive. No universal bound.
+- Lifecycle: `proteus-mat` is absent from the checked sparse index (HTTP 404).
+  First-publication identity/authentication/dependency scope remains a separate
+  hold. Preserve Iris #80's denied-read lifecycle hold and all protected holds.
+- Detail and limits: `docs/verification/elastic-range.md`.
+
+
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
 

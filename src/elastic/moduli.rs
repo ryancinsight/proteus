@@ -3,7 +3,7 @@ use aequitas::systems::si::quantities::{
 };
 use eunomia::{NumericElement, RealField};
 
-use super::{ElasticConstraint, ElasticQuantity, InvalidElasticModuli};
+use super::{ElasticConstraint, ElasticQuantity, InvalidElasticModuli, range};
 
 /// Validated isotropic linear-elastic moduli.
 ///
@@ -57,11 +57,6 @@ impl<T: RealField> IsotropicModuli<T> {
         <T as NumericElement>::ONE + <T as NumericElement>::ONE
     }
 
-    #[inline]
-    fn three() -> T {
-        Self::two() + <T as NumericElement>::ONE
-    }
-
     /// Construct from the Lame parameters `(lambda, mu)`.
     ///
     /// # Errors
@@ -92,8 +87,9 @@ impl<T: RealField> IsotropicModuli<T> {
             ));
         }
 
-        let bulk = lambda + Self::two() * mu / Self::three();
-        if bulk <= zero {
+        // For negative lambda, test the exact-sign linear combination rather
+        // than a rounded quotient or an overflowing intermediate 2mu.
+        if lambda < zero && range::bulk_numerator(lambda, mu).0 <= zero {
             return Err(InvalidElasticModuli::new(
                 ElasticQuantity::LameLambda,
                 lambda,
@@ -207,7 +203,7 @@ impl<T: RealField> IsotropicModuli<T> {
     pub fn youngs_modulus(&self) -> Pressure<T> {
         let lambda = *self.lame_lambda.as_base();
         let mu = *self.shear_modulus.as_base();
-        Pressure::from_base(mu * (Self::three() * lambda + Self::two() * mu) / (lambda + mu))
+        Pressure::from_base(range::young(lambda, mu))
     }
 
     /// Derive Poisson's ratio `nu = lambda / (2 (lambda + mu))`.
@@ -215,7 +211,7 @@ impl<T: RealField> IsotropicModuli<T> {
     pub fn poissons_ratio(&self) -> Dimensionless<T> {
         let lambda = *self.lame_lambda.as_base();
         let mu = *self.shear_modulus.as_base();
-        Dimensionless::from_base(lambda / (Self::two() * (lambda + mu)))
+        Dimensionless::from_base(range::poisson(lambda, mu))
     }
 
     /// Derive the bulk modulus `K = lambda + 2 mu / 3`.
@@ -223,7 +219,7 @@ impl<T: RealField> IsotropicModuli<T> {
     pub fn bulk_modulus(&self) -> Pressure<T> {
         let lambda = *self.lame_lambda.as_base();
         let mu = *self.shear_modulus.as_base();
-        Pressure::from_base(lambda + Self::two() * mu / Self::three())
+        Pressure::from_base(range::bulk(lambda, mu))
     }
 
     /// Derive the P-wave (longitudinal) modulus `M = lambda + 2 mu`.
@@ -231,7 +227,7 @@ impl<T: RealField> IsotropicModuli<T> {
     pub fn p_wave_modulus(&self) -> Pressure<T> {
         let lambda = *self.lame_lambda.as_base();
         let mu = *self.shear_modulus.as_base();
-        Pressure::from_base(lambda + Self::two() * mu)
+        Pressure::from_base(mu.scalar_fmadd(Self::two(), lambda))
     }
 
     /// Derive the compressional wave speed `c_p = sqrt((lambda + 2 mu) / rho)`.

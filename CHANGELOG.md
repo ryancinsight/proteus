@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.1.1 — Unreleased
+
+### Fixed
+
+- Reject finite Lame pairs with nonpositive exact bulk even when an intermediate
+  doubles beyond range. Native fused validation retains auxetic states and the
+  open positive-definite boundary, including subnormal and adjacent cases.
+- Recover representable Young's/bulk/P-wave moduli and Poisson ratios after
+  intermediate overflow, underflow or cancellation. Keep native scalar
+  arithmetic, typed nonfinite input errors and the canonical Lame pair.
+
+### Verification
+
+- Native f32/f64 range and boundary regressions, typed wave-speed consumer,
+  exact-rational oracle, ordinary caller timings and sampled allocations are
+  documented in `docs/verification/elastic-range.md`. Independent review and
+  lifecycle acceptance remain required before merge/publication.
+
+
 ## Unreleased
 
 ### Added

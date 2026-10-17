@@ -8,6 +8,7 @@
 mod catalog;
 mod error;
 mod moduli;
+mod range;
 
 pub use catalog::{IsotropicSolid, NamedIsotropicSolid};
 pub use error::{ElasticConstraint, ElasticQuantity, InvalidElasticModuli};

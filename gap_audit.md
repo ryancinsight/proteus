@@ -1,5 +1,25 @@
 # Proteus gap audit
 
+## Native isotropic-elastic range audit (2026-10-17) [patch]
+
+Two correctness findings at `1681e9a` are implemented for draft review:
+`PRO-ELASTIC-VALIDITY-RANGE` (overflow admitted negative exact bulk) and
+`PRO-ELASTIC-DERIVED-RANGE` (representable E/nu/K/M lost to intermediate range).
+Native fused linear combinations preserve the domain sign, including adjacent
+and subnormal boundaries; bounded ratios and exact power-of-two scaling keep
+intermediates in range. The canonical representation, nonfinite input errors,
+provider cohort, hooks and verification limits remain unchanged.
+
+The original eight failures/five controls and expanded baseline red replay are
+preserved outside the member. The final source has 23 new tests and a bounded
+20,148-pair exact-rational oracle at O2/O3/default/no-default. No change to the
+wave-speed multiplication/division kernels, constitutive laws or other member
+is claimed. Review and performance/resource/lifecycle acceptance remain open;
+the sparse index has no `proteus-mat` entry. See the two backlog rows and
+`docs/verification/elastic-range.md`. Older planning/rescue entries below are
+preserved; this work does not claim or close them.
+
+
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
 Static audit at `944eed056c1be7bf4b5fd332aa8037c5e6950d7a` on branch
