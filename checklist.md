@@ -13,7 +13,15 @@
 - [x] Record source/package/hosted gates and open draft
       [#87](https://github.com/ryancinsight/proteus/pull/87); exact-head evidence
       is retained with the review packet.
-- [ ] Independent exact-head review and performance/resource acceptance.
+- [x] Reproduce the d7ed3f8 Young/bulk midpoint findings; add all four failures
+      and 336 rational boundary cases, including exact overflow ties.
+- [x] Retain native residuals and quotient corrections; replay all 27,594
+      independent inputs in the expanded 78,163-pair/profile corpus without
+      changing domain decisions, eight-ULP limits or finite classification policy.
+- [x] Run renewed strict source gates: 73 tests per debug/release/no-default
+      mode, docs/examples, Clippy and declared Rust 1.95 floor.
+- [ ] Independent repaired-head review and performance/resource acceptance;
+      historical d7ed3f8 acceptance/publication evidence is superseded.
 - [ ] First-publication identity/authentication and dependency/lifecycle checks;
       keep merge/publication held and preserve all existing protected holds.
 

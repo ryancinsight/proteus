@@ -11,6 +11,11 @@
   intermediate overflow, underflow or cancellation. Keep native scalar
   arithmetic, typed nonfinite input errors and the canonical Lame pair.
 
+- Preserve IEEE finite/infinite classification at Young and bulk overflow
+  midpoints using native residual expansions and quotient correction. Exact
+  bulk values just above MAX can still round to finite MAX. Add the four
+  independent failures, 336 exact-rational boundary fixtures and midpoint ties.
+
 ### Verification
 
 - Native f32/f64 range and boundary regressions, typed wave-speed consumer,

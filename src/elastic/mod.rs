@@ -8,6 +8,7 @@
 mod catalog;
 mod error;
 mod moduli;
+mod overflow_boundary;
 mod range;
 
 pub use catalog::{IsotropicSolid, NamedIsotropicSolid};

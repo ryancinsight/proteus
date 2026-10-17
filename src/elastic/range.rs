@@ -2,6 +2,8 @@
 
 use eunomia::{NumericElement, RealField};
 
+use super::overflow_boundary;
+
 #[inline]
 fn two<T: RealField>() -> T {
     <T as NumericElement>::ONE + <T as NumericElement>::ONE
@@ -37,18 +39,21 @@ pub(super) fn bulk<T: RealField>(lambda: T, mu: T) -> T {
     if lambda < <T as NumericElement>::ZERO {
         let (numerator, scale) = bulk_numerator(lambda, mu);
         (numerator / three::<T>()) * scale
+    } else if !(lambda * (two::<T>() + two::<T>())).is_finite()
+        || !(mu * (two::<T>() + two::<T>())).is_finite()
+    {
+        overflow_boundary::bulk(lambda, mu)
     } else {
-        let twice_mu = two::<T>() * mu;
-        if twice_mu.is_finite() {
-            lambda + twice_mu / three::<T>()
-        } else {
-            large_positive_bulk(lambda, mu)
-        }
+        lambda + (two::<T>() * mu) / three::<T>()
     }
 }
 
 #[inline]
 pub(super) fn young<T: RealField>(lambda: T, mu: T) -> T {
+    // E < 3mu: only this upper range can approach IEEE overflow.
+    if !(mu * (two::<T>() + two::<T>())).is_finite() {
+        return overflow_boundary::young(lambda, mu);
+    }
     let sum = lambda + mu;
     if lambda < <T as NumericElement>::ZERO {
         let (numerator, scale) = bulk_numerator(lambda, mu);
@@ -84,12 +89,6 @@ pub(super) fn poisson<T: RealField>(lambda: T, mu: T) -> T {
 #[inline(never)]
 fn large_bulk_numerator<T: RealField>(lambda: T, mu: T) -> T {
     lambda.scalar_fmadd(three::<T>() / two::<T>(), mu)
-}
-
-#[cold]
-#[inline(never)]
-fn large_positive_bulk<T: RealField>(lambda: T, mu: T) -> T {
-    lambda + (mu / three::<T>()) * two::<T>()
 }
 
 #[cold]

@@ -36,15 +36,61 @@ to retain small terms at the true overflow edge. A positive overflowing sum is
 halved to compute the bounded ratio. Nu similarly halves its numerator before
 division when its doubled denominator overflows, retaining subnormal outputs.
 M uses one native FMA `2mu+lambda`, so cancellation can recover a finite result
-even when doubling alone would overflow. Truly unrepresentable results retain
-native IEEE overflow/underflow; no new Result error, clamp or sentinel is added.
+even when doubling alone would overflow. Results past the IEEE rounding range retain
+native overflow/underflow; no new Result error, clamp or sentinel is added.
 
 Only exceptional overflow branches are outlined. Auxetic material is a normal
 case and is not marked cold. There is no per-precision algorithm fork.
 
+### Overflow midpoint continuation
+
+Independent review of `d7ed3f8` demonstrates two remaining P2 failures: a
+rounded Young factor crosses the final multiplication's overflow threshold,
+and rounding mu/3 before adding bulk crosses the IEEE overflow midpoint.
+The latter exact K is MAX + ulp(MAX)/6: it exceeds MAX as a real number but
+correctly rounds to finite MAX, below MAX + ulp(MAX)/2. The former also has
+positive-lambda cases that return finite E when exact rounding is infinity.
+The historical 20,148-case oracle misses these boundaries.
+
+The repair routes only large derived-value evaluations to a private native-T
+residual kernel. E < 3mu, and nonnegative bulk with both inputs <= MAX/4 is
+at most 5MAX/12. Thus an overflowing 4*mu (or, for bulk, 4*lambda) selects a
+superset of all possible overflow cases. Negative-lambda bulk and the exact
+constructor predicate retain their validated implementation.
+
+Use provider-native binary exponent/scaling to obtain S=2^emax, with at most
+two binade advances from the large input. Provider MAX_VALUE is infinity,
+a reduction identity; it is not used as a finite bound. Put l=lambda/S and
+m=mu/S. Young's normalized numerator and denominator are
+N=3lm+2m^2 and D=l+m>m/3>1/6; bulk uses N=3l+2m and D=3.
+All products are bounded. FMA TwoProduct residuals and grow-expansion TwoSum
+preserve these polynomials as at most twelve native terms in sixteen stack
+slots. The last nonzero expansion term determines the exact sign.
+
+For upper overflow boundary b=2-eps/2, compare exact N-bD with zero; equality
+rounds to infinity because the next binade has the even significand. The lower
+MAX rounding boundary is 2-3eps/2; strict inequality selects the interior MAX
+rounding interval. Returning MAX inside that interval is IEEE rounding, not
+saturation. Below it, compute q=RN(estimate(N)/RN(D)) and retain the exact
+residual N-qD; one quotient correction supplies the finite value before
+restoring S. Summing a nonoverlapping expansion has a relative gamma_n bound;
+with n<=12, the first quotient error is below 16u and the corrected error is
+bounded by u+512u^2, where u=eps/2. This is below the existing eight-ULP limit
+for binary32/64. Classification is decided by the exact sign, not this bound.
+
+If a normalized contributing term has magnitude below eps/16, its Young
+correction is below eps/15 (m>1/2), or its bulk correction is below eps/24.
+The native grid near 2 remains at least eps/2 from overflow's midpoint. Such
+a term cannot change classification and changes the result by at most one
+ULP. This analytically bounded path also excludes normalization underflow
+from the exact expansion. Otherwise all nonzero relevant products/residuals stay
+normal for the provider's binary32/64 RealField implementations. There is no
+widened scalar, heap allocation, numeric tolerance in domain/classification,
+or change to typed state or input errors.
+
 ## Verification and scope
 
-The 23 added tests preserve the original bodies and add exact/adjacent bulk
+The original 23 added tests preserve the original bodies and add exact/adjacent bulk
 boundaries, rounded-two-thirds distinctions, subnormal and small-product cases,
 ordinary identities, typed input guards, genuine overflow and an actual typed
 compressional/shear-speed consumer of the recovered moduli. A source-baseline
@@ -57,7 +103,25 @@ Python Fraction and rounds reference results with integer nearest-even rules.
 O2/O3 default and no-default API outputs agree. All constructor decisions match;
 E/nu/K differ by at most one ULP in this corpus and M matches exact rounding.
 The predeclared bound was eight ULP with no finite/nonfinite mismatch allowed.
-This is bounded evidence, not exhaustive correct-rounding or platform coverage.
+This is historical bounded evidence, not exhaustive correct-rounding or
+platform coverage; it does not establish overflow midpoint correctness.
+
+The continuation adds the four independent regressions and two generic
+fixture runners (73 total tests, 29 elastic-range tests). The 336 committed
+boundary cases include each reviewed input's neighbors, both lambda signs,
+true overflow, tiny-term/path-activation neighbors, and exact bulk overflow
+ties in both formats. Run `python3 scripts/elastic_range_reference.py` to
+check every E/K reference with integer/Fraction nearest-even rounding.
+All six added tests fail against d7ed3f8 at O2/O3 with both feature modes.
+
+An expanded external oracle runs 78,163 deduplicated input pairs, retaining
+all 27,594 independent-review inputs. It adds neighborhoods of the exact
+lower/upper overflow midpoints and MAX for 1,024 seeded mu samples per format,
+as well as scaling-underflow and activation edges. All four O2/O3 and
+default/no-default combinations match the domain and finite classification;
+E/nu/K stay within one ULP, M matches exact rounding. The original acceptance
+bound remains eight ULP with zero finite/nonfinite mismatches. This remains
+bounded binary32/64 evidence; renewed exact-head review is required.
 
 ## Ordinary cost and resources
 
@@ -71,14 +135,29 @@ excluded; complete Results/typed outputs are blackboxed. Each profile has
 
 The single outlining hypothesis retains its source, binaries, assembly and raw
 before/after CSV. Before outlining, ordinary deltas span -0.263 to +3.166 ns.
-The final ordinary matrix spans -0.359 to +1.390 ns/call across APIs/workflows.
+The historical d7ed3f8 ordinary matrix spans -0.359 to +1.390 ns/call across APIs/workflows.
 Not every context improves. Recovered construct-and-derive cases cost
 1.788-4.374 ns in the sampled contexts; the baseline's wrong output is not a
 throughput target. No optimality or universal timing claim is made.
 
-Every sampled region requests zero heap allocation calls/bytes. State sizes
+Every historical sampled region requests zero heap allocation calls/bytes. State sizes
 stay 8/16 bytes and Result sizes 12/24 bytes for f32/f64. These object/request
 measurements are not peak-stack, RSS/cache, no_std-performance or solver bounds.
+
+The repaired-head matrix repeats all 2,016 samples/profile against both the
+original 1681e9a baseline and reviewed d7ed3f8, with identical context counts,
+input streams, validation, flags and alternating order. Ordinary deltas versus
+the original baseline span -0.140 to +1.410 ns/call; versus d7ed3f8 they span
+-0.253 to +0.600 ns/call. The largest median for sampled large-value repaired
+workflows is 133.985 ns/call. The exact residual work adds cost in those paths;
+it is required to repair the prior boundary misclassification. These samples
+do not establish a universal cost bound or acceptance.
+
+All 8,064 continuation timing regions request zero heap allocations/bytes.
+State and Result sizes remain 8/16 and 12/24 bytes respectively. The private
+sixteen-T expansion has bounded stack storage; peak total stack, RSS and
+solver-level effects are not measured. No build/test process overlaps timing.
+Independent performance/resource acceptance remains open.
 
 ## Review and release holds
 

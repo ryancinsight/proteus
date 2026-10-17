@@ -11,8 +11,14 @@ intermediates in range. The canonical representation, nonfinite input errors,
 provider cohort, hooks and verification limits remain unchanged.
 
 The original eight failures/five controls and expanded baseline red replay are
-preserved outside the member. The final source has 23 new tests and a bounded
-20,148-pair exact-rational oracle at O2/O3/default/no-default. No change to the
+preserved outside the member. Independent review of d7ed3f8 adds two P2 findings at Young and bulk overflow
+midpoints, despite the historical 20,148-pair oracle. The continuation adds
+native residual polynomial comparisons and quotient correction, preserves the
+constructor predicate, and retains the four new failures plus 336 rational
+fixture cases. All six new tests fail on d7ed3f8 in all feature/profile modes.
+The repaired source passes 73 tests per mode and 78,163 exact-rational pairs
+per O2/O3/default/no-default combination, including all independent inputs;
+zero domain/classification mismatches, E/nu/K <=1 ULP, M exact rounding. No change to the
 wave-speed multiplication/division kernels, constitutive laws or other member
 is claimed. Review and performance/resource/lifecycle acceptance remain open;
 the sparse index has no `proteus-mat` entry. See the two backlog rows and

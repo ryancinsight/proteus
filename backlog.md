@@ -31,13 +31,26 @@
   doubling; bulk cancellation uses the same fused numerator as validation.
   Exceptional overflow paths are outlined; the canonical Lame pair and public
   API stay unchanged. True derived overflow retains IEEE infinity.
-- Evidence: 23 new regression/control tests, typed wave-speed consumer, 20,148
-  exact-rational input pairs per optimization level, default/no-default parity;
-  observed maximum one ULP for E/nu/K and exact-rounding P-wave modulus.
+- Independent review at d7ed3f8 reopens two P2 overflow boundaries: rounded
+  Young factors can cross the final multiplication threshold in either
+  direction; rounded mu/3 can make finite-rounded bulk become infinity.
+- Repair continuation: exact native residual polynomial/midpoint comparisons
+  and quotient correction in large-value branches; constructor domain unchanged.
+- Evidence: original 23 plus 6 new regression/control tests, typed wave-speed
+  consumer, 336 committed rational E/K fixtures with exact midpoint ties; all
+  six new tests fail at d7ed3f8 in all four feature/profile combinations.
+  Expanded oracle: 78,163 pairs including all 27,594 independent review inputs;
+  no domain/classification mismatches, E/nu/K within one ULP, exact M rounding.
+  Original eight-ULP/zero-classification-mismatch limits remain intact.
 - Resources/performance: one ARM64/Rust 1.97 O2/O3 matrix, 2,016 samples/profile,
-  ordinary direct/indirect/stream callers and recovered cases. All sampled heap
+  historical d7ed3f8 ordinary direct/indirect/stream callers and recovered cases. All sampled heap
   requests are zero; state/Result sizes unchanged. Ordinary deltas span
-  -0.359 to +1.390 ns/call, including construct-and-derive. No universal bound.
+  -0.359 to +1.390 ns/call, including construct-and-derive. Continuation timings
+  and renewed exact-head review accompany the external packet. Repaired ordinary
+  deltas versus baseline span -0.140 to +1.410 ns/call; versus d7ed3f8, -0.253
+  to +0.600 ns/call. Large sampled repaired workflows reach 133.985 ns/call.
+  All 8,064 continuation regions allocate zero heap bytes/calls; object sizes
+  remain unchanged. Peak total stack/RSS and performance acceptance stay open.
 - Lifecycle: `proteus-mat` is absent from the checked sparse index (HTTP 404).
   First-publication identity/authentication/dependency scope remains a separate
   hold. Preserve Iris #80's denied-read lifecycle hold and all protected holds.
