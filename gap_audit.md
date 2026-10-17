@@ -1,5 +1,42 @@
 # Proteus gap audit
 
+## Native isotropic-elastic range audit (2026-10-17) [patch]
+
+Two correctness findings at `1681e9a` are implemented for draft review:
+`PRO-ELASTIC-VALIDITY-RANGE` (overflow admitted negative exact bulk) and
+`PRO-ELASTIC-DERIVED-RANGE` (representable E/nu/K/M lost to intermediate range).
+Native fused linear combinations preserve the domain sign, including adjacent
+and subnormal boundaries; bounded ratios and exact power-of-two scaling keep
+intermediates in range. The canonical representation, nonfinite input errors,
+provider cohort, hooks and verification limits remain unchanged.
+
+The original eight failures/five controls and expanded baseline red replay are
+preserved outside the member. Independent review of [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) adds two P2 findings at Young and bulk overflow
+midpoints, despite the historical 20,148-pair oracle. The continuation adds
+native residual polynomial comparisons and quotient correction, preserves the
+constructor predicate, and retains the four new failures plus 336 rational
+fixture cases. All six new tests fail on [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) in all feature/profile modes.
+The repaired source passes 73 tests per mode and 78,163 exact-rational pairs
+per O2/O3/default/no-default combination, including all independent inputs;
+zero domain/classification mismatches, E/nu/K <=1 ULP, M exact rounding. No change to the
+wave-speed multiplication/division kernels, constitutive laws or other member
+is claimed. Review and performance/resource/lifecycle acceptance remain open;
+the sparse index has no `proteus-mat` entry. See the two backlog rows and
+`docs/verification/elastic-range.md`. Older planning/rescue entries below are
+preserved; this work does not claim or close them.
+
+
+## Guarded recovery continuation [patch]
+
+The accepted prior correctness implementation pays residual costs for every
+large input. The guarded integration retains the exact comparison inside a
+mathematically derived band and uses a bounded native evaluation outside it.
+The proof covers the locked f32/f64/F32/F64 domain and cancellation; it is not
+inferred solely from the finite oracle. Ordinary outputs and existing repaired
+boundaries retain their policies. New transition/wrapper tests and renewed
+source/package/gates/cost evidence accompany the changed head. Independent
+review, resource acceptance and first-publication identity remain separate holds.
+
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
 Static audit at `944eed056c1be7bf4b5fd332aa8037c5e6950d7a` on branch

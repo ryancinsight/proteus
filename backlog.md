@@ -1,5 +1,70 @@
 # Proteus backlog
 
+<a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
+## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
+
+- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
+- Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
+  (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
+  `2mu` overflowed. The frozen original eight failures/five controls remain.
+- Repair: positive lambda is admissible with finite positive mu; negative
+  lambda uses the sign of `3lambda+2mu`, evaluated by native FMA. When doubling
+  mu overflows, the equivalent half-scaled FMA preserves the sign. No rounded
+  `2/3` threshold, widened arithmetic, saturation or tolerance in validation.
+- Evidence: exact and adjacent zero-bulk boundaries, rounded-two-thirds and
+  subnormal cases, both native scalar input guards; exact-rational domain oracle.
+- Acceptance: final source/package/CI gates, independent exact-head correctness
+  review, and explicit performance/resource and lifecycle acceptance remain
+  required. No merge or publication is part of this draft.
+
+<a id="PRO-ELASTIC-DERIVED-RANGE"></a>
+## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
+
+- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
+- Baseline: accepted states returned infinite E/K/M or zero nu even when the
+  correct output fits the native scalar. Small products also lost finite E.
+- Repair: bounded ratios and native FMA avoid quadratic products and premature
+  doubling; bulk cancellation uses the same fused numerator as validation.
+  Exceptional overflow paths are outlined; the canonical Lame pair and public
+  API stay unchanged. True derived overflow retains IEEE infinity.
+- Independent review at [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) reopens two P2 overflow boundaries: rounded
+  Young factors can cross the final multiplication threshold in either
+  direction; rounded mu/3 can make finite-rounded bulk become infinity.
+- Repair continuation: exact native residual polynomial/midpoint comparisons
+  and quotient correction in large-value branches; constructor domain unchanged.
+- Evidence: original 23 plus 6 new regression/control tests, typed wave-speed
+  consumer, 336 committed rational E/K fixtures with exact midpoint ties; all
+  six new tests fail at [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) in all four feature/profile combinations.
+  Expanded oracle: 78,163 pairs including all 27,594 independent review inputs;
+  no domain/classification mismatches, E/nu/K within one ULP, exact M rounding.
+  Original eight-ULP/zero-classification-mismatch limits remain intact.
+- Resources/performance: one ARM64/Rust 1.97 O2/O3 matrix, 2,016 samples/profile,
+  historical [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) ordinary direct/indirect/stream callers and recovered cases. All sampled heap
+  requests are zero; state/Result sizes unchanged. Ordinary deltas span
+  -0.359 to +1.390 ns/call, including construct-and-derive. Continuation timings
+  and renewed exact-head review accompany the external packet. Repaired ordinary
+  deltas versus baseline span -0.140 to +1.410 ns/call; versus [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265), -0.253
+  to +0.600 ns/call. Large sampled repaired workflows reach 133.985 ns/call.
+  All 8,064 continuation regions allocate zero heap bytes/calls; object sizes
+  remain unchanged. Peak total stack/RSS and performance acceptance stay open.
+- Guard integration: full-domain native error bounds select exact residual
+  recovery near the overflow midpoint and a bounded evaluation elsewhere;
+  ordinary entry arithmetic and the repaired exact comparisons stay unchanged.
+  Co-located proof: docs/verification/elastic-guard.md. Add 305 native guard
+  neighbors and transparent-wrapper equivalence; renew exact-head source,
+  package/API/conformance/CI and representative mixed/stack evidence. Prior
+  review does not approve this integration; performance/resource acceptance
+  and lifecycle holds remain open.
+- Lifecycle: `proteus-mat` is absent from the checked sparse index (HTTP 404).
+  First-publication identity/authentication/dependency scope remains a separate
+  hold. Preserve Iris #80's denied-read lifecycle hold and all protected holds.
+- Detail and limits: `docs/verification/elastic-range.md`.
+
+
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
 

@@ -3,7 +3,7 @@
 # third-party crate, so this publishes as `proteus-mat` while the library
 # keeps its `proteus` module path.
 name = "proteus-mat"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.95"
 authors = ["Ryan Clanton <ryanclanton@outlook.com>"]
