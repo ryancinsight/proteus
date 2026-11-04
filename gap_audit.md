@@ -1,5 +1,20 @@
 # Proteus gap audit
 
+## Thermal-diffusivity range audit (2026-11-04) [patch]
+
+At `bf850b12e857f8d423117b322adfa73ec3e5c865`, eight public-law tests fail:
+the capacity product can underflow to zero or overflow, causing NaN for zero
+conductivity or destroying a representable diffusivity. Subnormal capacity
+rounding also loses significant digits. A later exact-rational campaign
+reproduces false zero/overflow classifications even for normal capacities.
+
+The repair preserves ordinary interior arithmetic and uses native binary
+scaling plus FMA residual classification at the exceptional boundaries. The
+744-case corpus, four real representations, signed-zero and allocation
+contracts accompany the whole-domain argument in
+`docs/verification/thermal-diffusivity-range.md`. Final exact-revision and
+release gates remain required; no historical elastic or owner hold is closed.
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented for draft review:

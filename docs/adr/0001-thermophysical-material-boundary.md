@@ -54,14 +54,19 @@ expression to any other quantity type fails compilation.
 
 If `rho > 0`, `c_p > 0`, and `k >= 0`, then `rho c_p > 0`; division of a
 non-negative numerator by a positive denominator yields `alpha >= 0`.
-Property tests exercise this law over bounded finite inputs. The claim excludes
-native scalar overflow, which the property ranges avoid.
+The constructor admits the full finite component range; it does not prevent
+intermediate product overflow or underflow. The 2026-11-04 range repair uses
+native scaling and final boundary comparisons to preserve this law, with
+legitimate final overflow represented by infinity. The proof and numerical
+error contract are in [the range note](../verification/thermal-diffusivity-range.md).
 
 ### Value-semantic equivalence
 
 Transparent wrappers store only the Aequitas scalar and `ConstantLaw` performs
-only a field copy. The diffusivity expression has the same arithmetic order as
-`k/(rho*c_p)`. `tests/codegen_equivalence.rs` compares the typed and raw
+only a field copy. The diffusivity expression preserves the arithmetic order of
+`k/(rho*c_p)` in the ordinary interior. The 2026-11-04 range paths change the
+operation order where the original expression loses range or misclassifies a
+final rounding boundary. `tests/codegen_equivalence.rs` compares the typed and raw
 implementations bit-for-bit; this is value evidence, not an assembly or
 release-code-generation proof.
 

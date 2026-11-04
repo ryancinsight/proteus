@@ -68,14 +68,34 @@ impl<T: RealField> ThermophysicalProperties<T> {
     ///
     /// # Theorem
     ///
-    /// For `rho > 0`, `c_p > 0`, and `k >= 0`, `alpha` is finite and
-    /// non-negative whenever the native scalar operations do not overflow.
-    /// Positivity follows because the denominator is positive and the numerator
-    /// is non-negative. Aequitas proves the result dimension is `L^2 / T`.
+    /// For finite `rho > 0`, `c_p > 0`, and `k >= 0`, the result is
+    /// non-negative and never NaN. Binary scaling prevents a prematurely
+    /// rounded capacity product from destroying a representable quotient.
+    /// Native residual comparisons preserve final zero/overflow classification;
+    /// finite values have a four-ULP error bound, rather than a universal
+    /// correct-rounding guarantee. Zero conductivity retains its sign.
+    /// Aequitas proves the result dimension is `L^2 / T`.
     #[must_use]
     pub fn thermal_diffusivity(&self) -> ThermalDiffusivity<T> {
-        self.thermal_conductivity.into_quantity()
-            / (self.density.into_quantity() * self.specific_heat_capacity.into_quantity())
+        let density = self.density.into_quantity();
+        let heat_capacity = self.specific_heat_capacity.into_quantity();
+        let conductivity = self.thermal_conductivity.into_quantity();
+        let capacity = density * heat_capacity;
+        let scalar = *capacity.as_base();
+        let minimum = super::range::minimum_normal::<T>();
+        if scalar.is_finite() && scalar >= minimum {
+            let result = conductivity / capacity;
+            let value = *result.as_base();
+            // Preserve the original operation order in the interior. Even a
+            // normal capacity can round across a final zero/overflow midpoint,
+            // so those extremes require the original-input comparison too.
+            if (value > minimum * T::EPSILON && value < T::INFINITY.bitxor(minimum))
+                || *conductivity.as_base() == T::ZERO
+            {
+                return result;
+            }
+        }
+        super::range::diffusivity(density, heat_capacity, conductivity)
     }
 }
 

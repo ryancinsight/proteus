@@ -1,5 +1,21 @@
 # Proteus backlog
 
+<a id="pro-thermal-diffusivity-range-20261104"></a>
+## PRO-THERMAL-DIFFUSIVITY-RANGE-20261104 — Native diffusivity range [patch] — todo
+
+- Priority: correctness; target: 0.1.2; owner: codex:01a17995-4c0b-701d-8625-8650165230c2.
+- [x] Reproduce NaN, false infinity/zero and lost digits through the public law
+  at `bf850b12e857f8d423117b322adfa73ec3e5c865`, independently in f32/f64.
+- [x] Normalize exceptional capacity products and certify final boundary
+  classifications, including normal-product cases; preserve native precision,
+  dimensions, signed zero and ordinary interior results.
+- [ ] Complete final full/native/release/minimal/API/package/performance and
+  unchanged normal-hook gates, independent exact-source review and hosted CI.
+- [ ] Verify conditional release prerequisites and documentation deployment.
+- Source scope is thermophysical evaluation and its tests/docs. Elastic work,
+  hook PR #92 and rescue PRs #84/#85 remain preserved; no provider requirement
+  or external lock record changes. Proof: `docs/verification/thermal-diffusivity-range.md`.
+
 <a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 

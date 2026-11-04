@@ -1,5 +1,12 @@
 # Proteus checklist
 
+## Thermal diffusivity — target 0.1.2 [patch]
+
+- [x] Reproduce the public-law range failures before production changes.
+- [x] Preserve dimensions and native arithmetic with exact final classification.
+- [ ] Complete exact-revision tests, cost checks, independent review and gates.
+- [ ] Verify source/release receipts and permitted documentation delivery.
+
 ## Elastic range repair — target 0.1.1 [patch]
 
 - [x] PRO-ELASTIC-VALIDITY-RANGE: preserve original 8-red/5-control evidence;

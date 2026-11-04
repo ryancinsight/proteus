@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.2 — Unreleased
+
+### Fixed
+
+- Preserve thermal diffusivity when the density/heat-capacity product loses
+  range. Zero conductivity retains signed zero; native scaling and residual
+  comparisons preserve representable results and final zero/overflow
+  classification. Ordinary interior results keep their existing bits.
+- Add native and transparent-scalar regressions, 744 exact-rational fixtures,
+  allocation checks and the proof in `docs/verification/thermal-diffusivity-range.md`.
+
 ## 0.1.1 — Unreleased
 
 ### Fixed
