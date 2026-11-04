@@ -113,3 +113,27 @@ remains unchanged. Final native, no-default, release, documentation, API,
 package, performance, normal-hook and independent-review receipts accompany
 delivery; the fixture corpus alone is not a whole-domain proof or release
 acceptance.
+
+## Measured cost
+
+One ARM64 Mac/Rust 1.97 release build compared the original public law at
+`bf850b12` with the repaired law at `099d3faa`, using the same locked graph,
+overflow checks, typed callers and returned-value validation. Each case uses
+nine samples of 100,000 calls, with construction outside the measured region.
+These are local pipelined throughput observations, not application latency.
+
+| Public call | Original median ns/call | Repaired median ns/call |
+| --- | ---: | ---: |
+| Ordinary binary32 | 0.555 | 0.915 |
+| Ordinary binary64 | 0.597 | 0.902 |
+| Small/large capacity, binary32 | 0.555 | 7.589 / 7.599 |
+| Small/large capacity, binary64 | 0.598 / 0.597 | 7.539 / 7.538 |
+| Zero conductivity, tiny capacity, binary32 | 0.576 | 5.307 |
+| Zero conductivity, tiny capacity, binary64 | 0.597 | 5.070 |
+
+The original exceptional outputs are incorrect, including NaN for the last
+two cases. The ordinary guard adds about 0.30–0.36 ns/call in this experiment;
+the recovery path pays for native scaling and exact boundary classification.
+Separate value-semantic allocation tests measure zero requests during public
+evaluation for both native precisions and transparent wrappers. This does not
+measure total application stack/RSS or establish a universal cost bound.

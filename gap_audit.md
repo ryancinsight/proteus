@@ -15,6 +15,22 @@ contracts accompany the whole-domain argument in
 `docs/verification/thermal-diffusivity-range.md`. Final exact-revision and
 release gates remain required; no historical elastic or owner hold is closed.
 
+## Published scalar-provider boundary (2026-11-04) [major]
+
+Published 0.1.1 (source `0d9931c5`) uses Eunomia 0.10; current default
+`bf850b12` uses 0.12 without a corresponding package boundary. A real generic
+client passes against the published package, fails with E0599 against both
+normalized main and the repair under the old bound, and passes after migrating
+to Eunomia 0.12. The 223 passing API checks do not detect this trait-identity
+break. It is inherited from main, separate from the numerical correction.
+
+ADR 0004 proposes delivery as 0.2.0 with unchanged latest provider dependencies.
+The independently reviewed numerical repair and release decision support draft
+qualification; they do not clear consumer or publication holds. Four verified
+current consumer manifests reject 0.2, and the full adoption set must be
+reconciled by existing integration owners. The old dated first-publication
+statements below remain historical evidence, not current registry status.
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented for draft review:

@@ -1,6 +1,24 @@
 # Changelog
 
-## 0.1.2 — Unreleased
+## 0.2.0 — Unreleased
+
+### Breaking
+
+- The current Eunomia 0.12 provider changes the public scalar-trait identity
+  relative to published Proteus 0.1.1, which used Eunomia 0.10. This transition
+  already exists on main; the diffusivity repair does not introduce it.
+  Generic clients must update their Eunomia requirement to 0.12 and their
+  Proteus requirement to 0.2. Git consumers must share the same provider source
+  identity; normalized packages use registry dependencies.
+- An unchanged generic `T: eunomia::RealField` client compiles with published
+  0.1.1/Eunomia 0.10, fails against normalized main and the repair with the old
+  bound, and compiles after migrating the bound provider to 0.12. Automated
+  API checks pass but miss this dependency-trait break. See
+  [ADR 0004](docs/adr/0004-public-scalar-provider-transition.md).
+- Merge and automatic publication remain held pending existing-owner consumer
+  migration. Current CFDrs, Helios, Kwavers and Hyperion defaults still require
+  Proteus 0.1; provider-only tests do not qualify their adoption.
+
 
 ### Fixed
 

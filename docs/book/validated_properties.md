@@ -34,10 +34,19 @@ let properties = ThermophysicalProperties::new(
 
 `try_from_quantities` performs the same composition directly from Aequitas
 quantities. From the bundle, `thermal_diffusivity` derives
-`alpha = k / (rho c_p)`. Because density and heat capacity are positive and
-conductivity is non-negative, the result is finite and non-negative whenever
-native scalar arithmetic does not overflow; Aequitas proves the result
-dimension is `L²/T`.
+`alpha = k / (rho c_p)`; Aequitas proves the result dimension is `L²/T`.
+Evaluation retains representable diffusivity even when the intermediate
+capacity product overflows or underflows. Zero conductivity preserves its
+sign and never becomes NaN. Native binary scaling and residual comparisons
+preserve the exact quotient's final zero/nonzero and finite/infinite
+classification. Legitimate final overflow remains infinity.
+
+For the supported binary32/binary64 real scalars and their transparent
+wrappers, finite values are within four representable steps of the exact
+quotient rounded to the native format. This contract assumes nearest-even
+rounding and gradual underflow; it does not promise correctly rounded values
+for every input. Ordinary interior results retain the original operation
+order and bits. Evaluation does not allocate or widen the scalar precision.
 
 The runnable [constant-material example](examples/constant_material.md) is the
 compiled end-to-end demonstration of construction and evaluation.

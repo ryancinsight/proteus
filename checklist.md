@@ -1,6 +1,14 @@
 # Proteus checklist
 
-## Thermal diffusivity — target 0.1.2 [patch]
+## Active release — target 0.2.0 [major]
+
+- [x] Reproduce the inherited published-to-main scalar-provider incompatibility.
+- [x] Review the proposed ADR and preserve current dependencies/external locks.
+- [ ] Qualify the final provider revision and deliver a reviewed draft.
+- [ ] Existing owners qualify consumer adoption before merge/publication.
+- [ ] Verify published source and fresh consumers after permitted release.
+
+## Thermal diffusivity — target 0.2.0 [patch]
 
 - [x] Reproduce the public-law range failures before production changes.
 - [x] Preserve dimensions and native arithmetic with exact final classification.

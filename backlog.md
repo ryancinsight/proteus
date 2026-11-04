@@ -3,7 +3,7 @@
 <a id="pro-thermal-diffusivity-range-20261104"></a>
 ## PRO-THERMAL-DIFFUSIVITY-RANGE-20261104 — Native diffusivity range [patch] — todo
 
-- Priority: correctness; target: 0.1.2; owner: codex:01a17995-4c0b-701d-8625-8650165230c2.
+- Priority: correctness; target: 0.2.0; owner: codex:01a17995-4c0b-701d-8625-8650165230c2.
 - [x] Reproduce NaN, false infinity/zero and lost digits through the public law
   at `bf850b12e857f8d423117b322adfa73ec3e5c865`, independently in f32/f64.
 - [x] Normalize exceptional capacity products and certify final boundary
@@ -15,6 +15,23 @@
 - Source scope is thermophysical evaluation and its tests/docs. Elastic work,
   hook PR #92 and rescue PRs #84/#85 remain preserved; no provider requirement
   or external lock record changes. Proof: `docs/verification/thermal-diffusivity-range.md`.
+
+<a id="pro-scalar-provider-boundary-20261104"></a>
+## PRO-SCALAR-PROVIDER-BOUNDARY-20261104 — Public dependency identity [major] — todo
+
+- Priority: release correctness; target: 0.2.0; owner: codex:01a17995-4c0b-701d-8625-8650165230c2.
+- [x] Verify published 0.1.1 source/archive and reproduce the inherited main
+  Eunomia 0.10-to-0.12 generic-client break against normalized packages.
+- [x] Obtain independent design review; record proposed ADR 0004 and migration
+  instructions without changing provider requirements or external lock records.
+- [ ] Complete exact-head provider qualification and reviewed draft delivery.
+- [ ] Existing integration owners qualify the full consumer set, including
+  compatible requirements/locks, generic calls and normalized package closure.
+- [ ] Accept the coordinated transition before merge/automatic publication;
+  verify fresh registry/source/consumer receipts after permitted publication.
+- Verified minimum consumer set: CFDrs, Helios, Kwavers and Hyperion still
+  require 0.1. Helios #183 and the held Hyperion #90 retain their owners.
+  This branch does not claim cohort closure or alter consumer work.
 
 <a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
