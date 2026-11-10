@@ -4,6 +4,7 @@
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
+- milestone: M-elastic-contracts.
 - Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
   independent review and acceptance remain pending.
 - Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
@@ -23,6 +24,7 @@
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
+- milestone: M-elastic-contracts.
 - Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
   independent review and acceptance remain pending.
 - Baseline: accepted states returned infinite E/K/M or zero nu even when the
@@ -235,6 +237,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 ### PRO-GATE-004 — Reconcile CI with ADR verification claims [verification] [patch] — in progress
 
 - **Owner:** Codex; branch `fix/proteus-gates-reconcile`.
+- **milestone:** M-1.0.
 - **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-thermophysical-material-boundary.md`,
   and `docs/adr/0002-temperature-response-law.md`.
 - **Non-goals:** shared Pages workflow, provider implementation, and release

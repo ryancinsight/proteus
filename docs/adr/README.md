@@ -11,3 +11,4 @@
 | --- | ----- | ------ |
 | [0001](0001-thermophysical-material-boundary.md) | Own shared thermophysical material law in Proteus | Accepted |
 | [0002](0002-temperature-response-law.md) | Own typed temperature response in Proteus | Accepted |
+| [0003](0003-release-scope-1-0.md) | Proteus release scope for 1.0 | Accepted |
