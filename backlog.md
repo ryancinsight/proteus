@@ -5,9 +5,8 @@
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
 - milestone: M-elastic-contracts.
-- Implementation complete and merged in [#87](https://github.com/ryancinsight/proteus/pull/87)
-  on 2026-10-17. The review and acceptance holds below are not recorded as
-  discharged in the tree and stay open until re-verified.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
 - Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
   (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
   `2mu` overflowed. The frozen original eight failures/five controls remain.
@@ -19,16 +18,15 @@
   subnormal cases, both native scalar input guards; exact-rational domain oracle.
 - Acceptance: final source/package/CI gates, independent exact-head correctness
   review, and explicit performance/resource and lifecycle acceptance remain
-  required. Publication is not part of this item.
+  required. No merge or publication is part of this draft.
 
 <a id="PRO-ELASTIC-DERIVED-RANGE"></a>
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
 - milestone: M-elastic-contracts.
-- Implementation complete and merged in [#87](https://github.com/ryancinsight/proteus/pull/87)
-  on 2026-10-17. The review, performance/resource and lifecycle holds below
-  are not recorded as discharged in the tree and stay open until re-verified.
+- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
+  independent review and acceptance remain pending.
 - Baseline: accepted states returned infinite E/K/M or zero nu even when the
   correct output fits the native scalar. Small products also lost finite E.
 - Repair: bounded ratios and native FMA avoid quadratic products and premature
@@ -115,27 +113,37 @@ the Atlas board.
 Filed by the Atlas gap audit at `944eed05` from static evidence only; each
 item cites its evidence in `gap_audit.md`. All are unclaimed.
 
-### PRO-PROV-002 — Cite and bound every shipped material value
+<a id="PRO-PROV-002"></a>
+### PRO-PROV-002 — Cite and bound every named isotropic solid
 
 - **Outcome:** each `NamedIsotropicSolid` entry carries a resolvable citation
-  with a table locator and an encoded temperature validity domain; the
-  `"reference liquid"` example (a `ConstantLaw` over `NoState`, so it has no
-  temperature state to bound) is cited the same way or renamed to a
-  non-physical fixture.
-- **Scope:** `src/elastic/catalog.rs`, `tests/elastic/catalog.rs`,
-  `examples/constant_material.rs`, `README.md:52`, book pages naming it, any
-  future named material. Non-goals: PRO-VOCAB-003; arithmetic-oracle fixtures.
+  with a table locator and an encoded temperature validity domain.
+- **Scope:** `src/elastic/catalog.rs`, `tests/elastic/catalog.rs`, any future
+  named material. Non-goals: PRO-VOCAB-003; arithmetic-oracle fixtures.
 - **Acceptance oracle:** Rustdoc beside each catalog constant names source and
   table locator; a value test per entry asserts the cited value and an
   out-of-domain request returns a typed error; carbon steel names its source
   grade or is removed; the domain encoding is recorded in a design note first.
-  Example: a source comment cites source and table locator for 1000 / 4000 /
-  0.6, or `git grep -n -i -E 'reference liquid|water' -- examples/constant_material.rs
-  README.md docs/book/examples/constant_material.md` is empty.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch], [minor] if the domain is a
-  public accessor; effort L.
-- **Status:** todo.
+- **Status:** todo; **priority:** verification; **milestone:** M-elastic-contracts; **needs:** none;
+  **basis:** `d23144bb`.
+- **Risk/change class:** [verification] [patch], [minor] if the domain is a public accessor; effort L.
+- **Next step:** design note for the domain encoding.
+
+<a id="PRO-PROV-010"></a>
+### PRO-PROV-010 — Cite or rename the "reference liquid" example
+
+- **Outcome:** the `"reference liquid"` example (a `ConstantLaw` over `NoState`, so no temperature
+  state to bound) is cited or renamed to a non-physical fixture; split from PRO-PROV-002.
+- **Scope:** `examples/constant_material.rs`, `README.md:52`,
+  `docs/book/examples/constant_material.md`. Non-goals: PRO-PROV-002; arithmetic-oracle fixtures.
+- **Acceptance oracle:** a source comment cites source and table locator for
+  1000 / 4000 / 0.6, or `git grep -n -i -E 'reference liquid|water' --
+  examples/constant_material.rs README.md docs/book/examples/constant_material.md`
+  is empty (it is not at `d23144bb`).
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none;
+  **basis:** `d23144bb`.
+- **Risk/change class:** [verification] [patch]; effort S.
+- **Next step:** cite or rename, then run the oracle grep.
 
 ### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
 
@@ -198,6 +206,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   external exhaustive matches); effort S.
 - **Status:** todo.
 
+<a id="PRO-GENERIC-007"></a>
 ### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
 
 - **Outcome:** the validity-boundary and calibration-domain guarantees are
