@@ -88,19 +88,29 @@ evidence.
 
 ### Data provenance (primary gap)
 
-The repository commits **no source-cited material property value**. Every
-numeric value in the tree is a fixture or demonstration constant with no
-citation and no encoded validity range:
+The repository commits **no source-cited material property value**. No
+shipped numeric value carries a citation or a physical validity range; the
+one bounded domain is a labelled arithmetic fixture:
 
-- `examples/temperature_material.rs:20-31` ships a material named
-  `"generic tissue"` (`:37`) with ρ = 1050, c_p = 3600, k = 0.5, β₁ = 2.0e-4
-  K⁻¹ and 1.0e-3 K⁻¹, β₂ = 0.0 — no reference, and it uses
-  `TemperatureLaw::new` (`:32`), i.e. the unbounded positive-temperature
-  domain, not `with_validity`.
-- That directly weakens the book claim that "the law never silently
-  extrapolates a response beyond its declared evidence"
-  (`docs/book/constitutive_laws.md:64-66`): the only shipped physically-named
-  material declares no evidence domain at all.
+- `src/elastic/catalog.rs` ships the public `NamedIsotropicSolid` catalog:
+  carbon steel, 316L, 6061-T6 and Ti-6Al-4V with six constants each (density,
+  Young's modulus, Poisson's ratio, conductivity, specific heat, expansion),
+  exposed through `solid`, `thermophysical` and `thermal_expansion`. The
+  Rustdoc calls them "published" but names no source or table locator (316L
+  cites ASTM F138/F139 as the grade, not as the origin of its values), the
+  carbon-steel entry names no grade, and no entry encodes a validity range.
+  PRO-PROV-002 tracks it.
+- `examples/constant_material.rs:24` ships `"reference liquid"` with
+  1000 / 4000 / 0.6, uncited and unbounded; `README.md:52` binds it to the
+  name `water` and `docs/book/examples/constant_material.md:5` calls it
+  "water-like". PRO-PROV-002 tracks it.
+- `examples/temperature_material.rs` is a labelled `"arithmetic fixture"`
+  whose values are documented as non-physical. It is built with
+  `TemperatureLaw::with_validity` over an inclusive 280 K to 340 K fixture
+  domain and returns an error unless a 400 K evaluation yields
+  `TemperatureLawError::OutsideValidityDomain`, so the book claim at
+  `docs/book/constitutive_laws.md:64-66` holds for the shipped example. The
+  domain is a fixture choice, not calibration evidence.
 - `tests/*.rs` fixtures (1000 / 4000 / 0.6, 310.15 K) are water-like round
   numbers used as arithmetic oracles, not reference data — legitimate as
   fixtures, but they mean the "source-traceable reference value" evidence
@@ -109,13 +119,17 @@ citation and no encoded validity range:
 ### Material identity and consumer vocabulary
 
 `Material` identity is a bare `Cow<'name, str>` (`src/material/model.rs:10`)
-with no validation, normalization, or canonical identifier type, and no named
-material catalog exists anywhere in `src/`. A consumer therefore receives
+with no validation, normalization, or canonical identifier type, and
+`Material` is not linked to a catalog: the only named-material data in `src/`
+is the elastic `NamedIsotropicSolid` enum (`src/elastic/catalog.rs`), which
+`Material` identity does not reference. A consumer therefore receives
 validated *property types* but not a shared *material vocabulary*: two
 consumers spelling the same tissue differently do not unify, and each still
-owns its own table. ADR 0001 records the catalog omission as a deliberate
-Phase-1 boundary ("not a speculative catalog of every material"), so this is a
-scope decision to revisit against the stack role, not an undisclosed gap.
+owns its own table. ADR 0001 limits Phase 1 to "not a speculative catalog of
+every material", and ADR 0003 places "catalog-backed material contracts" in
+the 0.3.0 milestone; canonical identity and an optional cited catalog remain
+the PRO-VOCAB-003 decision, so this is a scope decision to revisit against the
+stack role, not an undisclosed gap.
 
 ### Claim-vs-code cross-checks
 

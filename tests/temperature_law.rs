@@ -137,6 +137,65 @@ fn bounded_calibration_domain_rejects_extrapolation() {
     ));
 }
 
+fn assert_calibration_bounds_are_inclusive<T: RealField>() {
+    let minimum = T::from_f64(273.0);
+    let maximum = T::from_f64(373.0);
+    let validity = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(minimum),
+        ThermodynamicTemperature::from_base(maximum),
+    )
+    .expect("finite positive ordered calibration bounds");
+    // beta = 2^-10 with offsets of -27 K and +73 K from the 300 K reference
+    // gives the heat-capacity factors 997/1024 and 1097/1024, and their
+    // products with c_p = 4000 are 3894.53125 and 4285.15625. Every operand
+    // and result is a dyadic rational that `f32` and `f64` both hold exactly,
+    // so the assertions are equalities rather than tolerances.
+    let coefficient = ReciprocalTemperature::from_base(T::from_f64(0.000_976_562_5));
+    let responses = ResponseSet::new(
+        ConstantResponse,
+        LinearResponse::new(coefficient).expect("finite coefficient"),
+        ConstantResponse,
+    );
+    let law = TemperatureLaw::with_validity(
+        common::reference(),
+        ThermodynamicTemperature::from_base(T::from_f64(300.0)),
+        validity,
+        responses,
+    )
+    .expect("reference temperature is calibrated");
+
+    for (bound, heat_capacity) in [(minimum, 3_894.531_25), (maximum, 4_285.156_25)] {
+        assert_eq!(
+            law.properties(&ThermodynamicTemperature::from_base(bound)),
+            Ok(common::properties(
+                T::from_f64(1_000.0),
+                T::from_f64(heat_capacity),
+                T::from_f64(0.6),
+            )),
+            "the inclusive bound itself is calibrated and evaluates the response"
+        );
+    }
+    // One kelvin beyond each bound: the smallest whole-kelvin probe that is
+    // exactly representable at both scalars and strictly outside the domain.
+    for value in [T::from_f64(272.0), T::from_f64(374.0)] {
+        assert_eq!(
+            law.properties(&ThermodynamicTemperature::from_base(value)),
+            Err(TemperatureLawError::OutsideValidityDomain {
+                role: TemperatureRole::Evaluation,
+                value,
+                minimum,
+                maximum,
+            })
+        );
+    }
+}
+
+#[test]
+fn calibration_bounds_are_inclusive() {
+    assert_calibration_bounds_are_inclusive::<f32>();
+    assert_calibration_bounds_are_inclusive::<f64>();
+}
+
 #[test]
 fn bounded_calibration_domain_rejects_invalid_bounds_and_reference() {
     let invalid = TemperatureValidity::bounded(

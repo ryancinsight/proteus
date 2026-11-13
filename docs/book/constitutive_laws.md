@@ -66,4 +66,4 @@ calibration range returns `TemperatureLawError::OutsideValidityDomain`; the
 law never silently extrapolates a response beyond its declared evidence.
 
 The runnable [temperature-material example](examples/temperature_material.md)
-walks a tissue-style material through this path.
+walks a bounded arithmetic-fixture material through this path.
