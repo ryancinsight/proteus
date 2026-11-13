@@ -5,8 +5,9 @@
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
 - milestone: M-elastic-contracts.
-- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
-  independent review and acceptance remain pending.
+- Implementation complete and merged in [#87](https://github.com/ryancinsight/proteus/pull/87)
+  on 2026-10-17. The review and acceptance holds below are not recorded as
+  discharged in the tree and stay open until re-verified.
 - Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
   (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
   `2mu` overflowed. The frozen original eight failures/five controls remain.
@@ -18,15 +19,16 @@
   subnormal cases, both native scalar input guards; exact-rational domain oracle.
 - Acceptance: final source/package/CI gates, independent exact-head correctness
   review, and explicit performance/resource and lifecycle acceptance remain
-  required. No merge or publication is part of this draft.
+  required. Publication is not part of this item.
 
 <a id="PRO-ELASTIC-DERIVED-RANGE"></a>
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
 - Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
 - milestone: M-elastic-contracts.
-- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
-  independent review and acceptance remain pending.
+- Implementation complete and merged in [#87](https://github.com/ryancinsight/proteus/pull/87)
+  on 2026-10-17. The review, performance/resource and lifecycle holds below
+  are not recorded as discharged in the tree and stay open until re-verified.
 - Baseline: accepted states returned infinite E/K/M or zero nu even when the
   correct output fits the native scalar. Small products also lost finite E.
 - Repair: bounded ratios and native FMA avoid quadratic products and premature
@@ -115,16 +117,21 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 
 ### PRO-PROV-002 — Cite and bound every shipped material value
 
-- **Outcome:** each `NamedIsotropicSolid` entry and the `"reference liquid"`
-  example carry a resolvable citation with a table locator and an encoded
-  temperature validity domain.
+- **Outcome:** each `NamedIsotropicSolid` entry carries a resolvable citation
+  with a table locator and an encoded temperature validity domain; the
+  `"reference liquid"` example (a `ConstantLaw` over `NoState`, so it has no
+  temperature state to bound) is cited the same way or renamed to a
+  non-physical fixture.
 - **Scope:** `src/elastic/catalog.rs`, `tests/elastic/catalog.rs`,
-  `examples/constant_material.rs`, `README.md:52`, book pages naming it.
-  Non-goals: PRO-VOCAB-003; fixtures that serve as arithmetic oracles.
-- **Acceptance oracle:** Rustdoc beside each constant names source and table
-  locator; a value test per entry asserts the cited value, and an
+  `examples/constant_material.rs`, `README.md:52`, book pages naming it, any
+  future named material. Non-goals: PRO-VOCAB-003; arithmetic-oracle fixtures.
+- **Acceptance oracle:** Rustdoc beside each catalog constant names source and
+  table locator; a value test per entry asserts the cited value and an
   out-of-domain request returns a typed error; carbon steel names its source
   grade or is removed; the domain encoding is recorded in a design note first.
+  Example: a source comment cites source and table locator for 1000 / 4000 /
+  0.6, or `git grep -n -i -E 'reference liquid|water' -- examples/constant_material.rs
+  README.md docs/book/examples/constant_material.md` is empty.
 - **Dependencies:** none.
 - **Risk/change class:** [verification] [patch], [minor] if the domain is a
   public accessor; effort L.
@@ -195,12 +202,12 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 
 - **Outcome:** the validity-boundary and calibration-domain guarantees are
   verified for each scalar the crate ships, not only `f64`.
-- **Scope:** `tests/properties.rs`, the calibration-domain tests in
+- **Scope:** `tests/properties.rs`, the `f64`-only calibration-domain tests in
   `tests/temperature_law.rs`, `tests/composition.rs`. Non-goals: the codegen
   fixture, which is deliberately `f64`-concrete.
 - **Acceptance oracle:** each boundary assertion runs through a generic
   `fn assert_*<T: RealField>()` instantiated at `f32` and `f64`, matching the
-  existing pattern at `tests/theorems.rs:33-36`.
+  existing pattern at `tests/theorems.rs:7-18`.
 - **Dependencies:** none.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Status:** todo.
@@ -253,5 +260,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - Add a direct consumer contract test when an Atlas consumer adopts the
   constitutive-law surface. The consumer owns the acceptance oracle; Proteus
   owns the provider implementation.
-- Release publication remains external authority because `Cargo.toml` sets
-  `publish = false`; no registry state is inferred from local package checks.
+- Re-open trigger: the `publish` policy in `Cargo.toml` (`publish = true` at
+  this revision) changes under release authority. No registry state is
+  inferred from local package checks.

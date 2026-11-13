@@ -58,7 +58,7 @@ evidence.
   `HACK`/`panic!(`; 0 production `unwrap()`; 0 `dyn `; 0 `pub use ... as `
   shims; 0 files over 500 lines; `#![deny(missing_docs)]` at
   `src/lib.rs:10`; the single suppression is
-  `examples/temperature_material.rs:3` (`#![expect(clippy::print_stdout,
+  `examples/temperature_material.rs:6` (`#![expect(clippy::print_stdout,
   reason = ...)]`).
 
 ### Property and law coverage
@@ -84,7 +84,7 @@ evidence.
   (`src/constitutive/temperature/law.rs:136-154,266-288`), and every derived
   property re-enters the property boundary
   (`src/constitutive/temperature/law.rs:261`). Rejection is covered by
-  `tests/temperature_law.rs:122-183,186-214`.
+  `tests/temperature_law.rs:78-313`.
 
 ### Data provenance (primary gap)
 
@@ -111,6 +111,10 @@ one bounded domain is a labelled arithmetic fixture:
   `TemperatureLawError::OutsideValidityDomain`, so the book claim at
   `docs/book/constitutive_laws.md:64-66` holds for the shipped example. The
   domain is a fixture choice, not calibration evidence.
+- `src/elastic/moduli.rs:38-41` binds a doctest value named `steel` (200 GPa,
+  nu = 0.3) with no citation. The doctest checks the identity
+  mu = E / (2 (1 + nu)), so it is an arithmetic oracle, not reference data,
+  and sits outside PRO-PROV-002 as that item's non-goal states.
 - `tests/*.rs` fixtures (1000 / 4000 / 0.6, 310.15 K) are water-like round
   numbers used as arithmetic oracles, not reference data — legitimate as
   fixtures, but they mean the "source-traceable reference value" evidence
@@ -134,27 +138,31 @@ stack role, not an undisclosed gap.
 ### Claim-vs-code cross-checks
 
 - ADR 0002 Verification lists "semver checks"; `.github/workflows/ci.yml` runs
-  fmt, `check --no-default-features`, clippy, nextest, doctests, rustdoc, one
-  example, and `cargo-deny` — there is no `cargo-semver-checks` step.
+  fmt, `check --no-default-features`, clippy, nextest, doctests, rustdoc, both
+  examples (`:54-57`), a SemVer gate through the shared workflow (`:82-84`),
+  and `cargo-deny` (`:91-97`).
 - ADR 0001 Verification lists a "release codegen fixture" and ADR 0002 a
   "code-generation fixture". `tests/codegen_equivalence.rs` asserts only
   bitwise *value* equality (`:76-79,90-93`); no codegen or assembly comparison
   exists in the tree or in CI, and nextest runs the default (debug) profile,
   so the "release" qualifier is unverified.
-- `Cargo.toml:5` declares `rust-version = "1.95"` while
-  `rust-toolchain.toml:3` pins 1.97.0 and CI installs no second toolchain — the
-  MSRV floor is an untested claim.
-- `.github/workflows/ci.yml` runs only `--example constant_material`;
-  `temperature_material` is compiled by `clippy --all-targets` and executed
-  only through the book job's `mdbook-test`.
+- `Cargo.toml:8` declares `rust-version = "1.95"` while
+  `rust-toolchain.toml:3` pins 1.97.0; the `msrv` job (`ci.yml:59-75`) runs
+  `cargo check --locked --all-targets --all-features` under
+  `RUSTUP_TOOLCHAIN: 1.95.0`, so the floor is exercised.
+- `.github/workflows/ci.yml:54-57` runs both shipped examples,
+  `constant_material` and `temperature_material`; the book workflow sets
+  `mdbook-test: true` (`.github/workflows/book-pages.yml:47`).
 - `docs/book/stack_position.md:28-31` asserts that "no duplicate
   material-property implementation exists in Hyperion, Helios, CFDrs, or
   Kwavers". That is a cross-repository claim with no in-repo evidence, and
   `backlog.md` Open simultaneously records that no consumer contract test
   exists. The two statements cannot both be current.
-- Generic instantiation is partial: `tests/theorems.rs:33-36` and
-  `tests/temperature_law.rs:49-52` instantiate `f32` and `f64`; the validity
-  boundary suite (`tests/properties.rs`), the calibration-domain suite, the
+- Generic instantiation is partial: `tests/theorems.rs:14-18`,
+  `tests/temperature_law.rs:35-39` and the calibration-bound tests at
+  `tests/temperature_law.rs:196-200,246-250` instantiate `f32` and `f64`; the
+  validity boundary suite (`tests/properties.rs`), the remaining
+  calibration-domain tests (`tests/temperature_law.rs:108-138,252-282`), the
   codegen fixture, and `tests/composition.rs` are `f64`-only.
 - Public enums `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,
   16`), `CoefficientOrder`, and `TemperatureRole`
@@ -188,8 +196,8 @@ constitutive-law boundary.
 
 - Atlas-level consumer adoption still needs a direct contract test at the
   consuming repository; provider presence is not integration proof.
-- Registry publication is intentionally disabled in `Cargo.toml`. Package or
-  documentation checks do not prove release readiness while that policy holds.
+- `Cargo.toml` sets `publish = true`. Package or documentation checks do not
+  prove release readiness.
 - Local verification is limited by preserved peer work in `Cargo.lock`,
   `Cargo.toml`, and `examples/temperature_material.rs`. `cargo fmt --all --
   --check` passes, but `cargo check --locked --no-default-features` stops
