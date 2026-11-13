@@ -148,8 +148,11 @@ fn assert_calibration_bounds_are_inclusive<T: RealField>() {
     // beta = 2^-10 with offsets of -27 K and +73 K from the 300 K reference
     // gives the heat-capacity factors 997/1024 and 1097/1024, and their
     // products with c_p = 4000 are 3894.53125 and 4285.15625. Every operand
-    // and result is a dyadic rational that `f32` and `f64` both hold exactly,
-    // so the assertions are equalities rather than tolerances.
+    // and result of that heat-capacity chain is a dyadic rational that `f32`
+    // and `f64` both hold exactly. Density and conductivity pass through
+    // `ConstantResponse` unchanged, so their expected values are the same
+    // rounded literals the reference carries. The assertions are therefore
+    // equalities rather than tolerances.
     let coefficient = ReciprocalTemperature::from_base(T::from_f64(0.000_976_562_5));
     let responses = ResponseSet::new(
         ConstantResponse,
@@ -194,6 +197,56 @@ fn assert_calibration_bounds_are_inclusive<T: RealField>() {
 fn calibration_bounds_are_inclusive() {
     assert_calibration_bounds_are_inclusive::<f32>();
     assert_calibration_bounds_are_inclusive::<f64>();
+}
+
+fn assert_adjacent_values_decide_calibration_bounds<T: RealField>() {
+    let minimum = T::from_f64(273.0);
+    let maximum = T::from_f64(373.0);
+    // Both bounds lie in [256, 512), where adjacent representable values are
+    // 2^8 * EPSILON apart: a power of two, so the sums below are exact.
+    let spacing = T::EPSILON * T::from_f64(256.0);
+    assert!(minimum - spacing < minimum && minimum < minimum + spacing);
+    assert!(maximum - spacing < maximum && maximum < maximum + spacing);
+    let validity = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(minimum),
+        ThermodynamicTemperature::from_base(maximum),
+    )
+    .expect("finite positive ordered calibration bounds");
+    // Constant responses make every admitted evaluation equal the reference
+    // exactly, so only the domain decision varies between the probes.
+    let law = TemperatureLaw::with_validity(
+        common::reference(),
+        ThermodynamicTemperature::from_base(T::from_f64(300.0)),
+        validity,
+        ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse),
+    )
+    .expect("reference temperature is calibrated");
+
+    for value in [minimum + spacing, maximum - spacing] {
+        assert_eq!(
+            law.properties(&ThermodynamicTemperature::from_base(value)),
+            Ok(common::reference()),
+            "the representable value just inside a bound is calibrated"
+        );
+    }
+    for value in [minimum - spacing, maximum + spacing] {
+        assert_eq!(
+            law.properties(&ThermodynamicTemperature::from_base(value)),
+            Err(TemperatureLawError::OutsideValidityDomain {
+                role: TemperatureRole::Evaluation,
+                value,
+                minimum,
+                maximum,
+            }),
+            "the representable value just outside a bound is rejected"
+        );
+    }
+}
+
+#[test]
+fn adjacent_representable_values_decide_calibration_bounds() {
+    assert_adjacent_values_decide_calibration_bounds::<f32>();
+    assert_adjacent_values_decide_calibration_bounds::<f64>();
 }
 
 #[test]
