@@ -197,7 +197,8 @@ constitutive-law boundary.
 ## Residuals
 
 - Atlas-level consumer adoption still needs a direct contract test at the
-  consuming repository; provider presence is not integration proof.
+  consuming repository (PRO-CONSUMER-011); provider presence is not
+  integration proof.
 - `Cargo.toml` sets `publish = true`. Package or documentation checks do not
   prove release readiness.
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are

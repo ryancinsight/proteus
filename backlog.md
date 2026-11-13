@@ -127,20 +127,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [arch] [minor]; effort L.
 - **Status:** todo.
 
-### PRO-GATE-004 — Reconcile CI with the ADR verification claims
-
-- **Outcome:** the gates the ADRs claim either run in CI or the ADR wording is
-  corrected to the gates that exist.
-- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-*.md`,
-  `docs/adr/0002-*.md`. Non-goals: the shared Pages caller.
-- **Acceptance oracle:** `cargo-semver-checks` runs on pull requests (ADR 0002
-  claims it and the workflow has no such step), an MSRV job builds at the
-  declared `rust-version = 1.95` floor, and both examples run; or each removed
-  claim is struck from the ADR with a dated revision note.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch]; effort S.
-- **Status:** todo.
-
+<a id="PRO-CODEGEN-005"></a>
 ### PRO-CODEGEN-005 — Make the codegen-equivalence evidence real or narrow it
 
 - **Outcome:** the zero-cost claim rests on evidence of its own category.
@@ -151,7 +138,8 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   pairs at release opt-level) with its output recorded, plus a release-profile
   test pass; or the ADRs are revised to claim bitwise value equivalence only,
   which is what the file asserts today (`:76-79,90-93`).
-- **Dependencies:** PRO-GATE-004 shares the CI edit.
+- **Dependencies:** none; the CI edit it shared with PRO-GATE-004 landed in
+  [#17](https://github.com/ryancinsight/proteus/pull/17).
 - **Risk/change class:** [verification] [patch]; effort M.
 - **Status:** todo.
 
@@ -185,6 +173,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Status:** todo.
 
+<a id="PRO-DOC-008"></a>
 ### PRO-DOC-008 — Ground the cross-repository ownership claim
 
 - **Outcome:** the book states only what this repository can evidence.
@@ -195,7 +184,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   the boundary statement plus a link to the consumer contract test that
   evidences it, or is dated and attributed to the Atlas board item that
   verified it. Must not land while a book CI branch is in flight.
-- **Dependencies:** the open consumer-contract-test item below.
+- **Dependencies:** PRO-CONSUMER-011.
 - **Risk/change class:** [docs] [patch]; effort S.
 - **Status:** todo.
 
@@ -214,25 +203,16 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 
 ## Open
 
-### PRO-GATE-004 — Reconcile CI with ADR verification claims [verification] [patch] — in progress
+<a id="PRO-CONSUMER-011"></a>
+### PRO-CONSUMER-011 — Add a consumer contract test for the constitutive-law surface
 
-- **Owner:** Codex; branch `fix/proteus-gates-reconcile`.
-- **milestone:** M-1.0.
-- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-thermophysical-material-boundary.md`,
-  and `docs/adr/0002-temperature-response-law.md`.
-- **Non-goals:** shared Pages workflow, provider implementation, and release
-  publication.
-- **Acceptance:** CI runs the SemVer check claimed by ADR 0002, builds at the
-  declared Rust 1.95 MSRV floor, and executes both shipped examples; ADR
-  verification lists remain synchronized with the runnable gates.
-- **Evidence:** YAML parsing passed; Rust 1.95 all-target check, Rust 1.97
-  format/clippy/Nextest (20/20), doctests (1/1), rustdoc, both examples, and
-  `cargo-semver-checks` against `origin/main` (196 checks, 196 pass) passed
-  locally. Hosted CI remains the delivery check after the branch is pushed.
-
-- Add a direct consumer contract test when an Atlas consumer adopts the
-  constitutive-law surface. The consumer owns the acceptance oracle; Proteus
-  owns the provider implementation.
-- Re-open trigger: the `publish` policy in `Cargo.toml` (`publish = true` at
-  this revision) changes under release authority. No registry state is
-  inferred from local package checks.
+- **Outcome:** an Atlas consumer tests the Proteus constitutive-law surface
+  directly; provider presence is not integration proof.
+- **Scope:** the adopting consumer's tests; the consumer owns the acceptance
+  oracle and Proteus owns the provider implementation. Non-goals: editing
+  consumer repositories from here.
+- **Acceptance oracle:** the consumer's contract test merges and PRO-DOC-008
+  cites it.
+- **priority:** verification; **milestone:** M-1.0; **needs:** none.
+- **Status:** blocked. Blocker: no Atlas consumer has adopted the
+  constitutive-law surface. Re-open trigger: a consumer adopts it.
