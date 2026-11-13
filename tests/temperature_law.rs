@@ -205,6 +205,10 @@ fn assert_adjacent_values_decide_calibration_bounds<T: RealField>() {
     // Both bounds lie in [256, 512), where adjacent representable values are
     // 2^8 * EPSILON apart: a power of two, so the sums below are exact.
     let spacing = T::EPSILON * T::from_f64(256.0);
+    assert!(
+        T::from_f64(256.0) <= minimum && maximum < T::from_f64(512.0),
+        "the spacing derivation holds only for bounds inside [256, 512)"
+    );
     assert!(minimum - spacing < minimum && minimum < minimum + spacing);
     assert!(maximum - spacing < maximum && maximum < maximum + spacing);
     let validity = TemperatureValidity::bounded(
