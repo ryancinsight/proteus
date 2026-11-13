@@ -2,7 +2,8 @@
 
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
-Two correctness findings at `1681e9a` are implemented for draft review:
+Two correctness findings at `1681e9a` are implemented and merged in
+[#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17:
 `PRO-ELASTIC-VALIDITY-RANGE` (overflow admitted negative exact bulk) and
 `PRO-ELASTIC-DERIVED-RANGE` (representable E/nu/K/M lost to intermediate range).
 Native fused linear combinations preserve the domain sign, including adjacent
