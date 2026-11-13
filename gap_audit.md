@@ -84,7 +84,7 @@ evidence.
   (`src/constitutive/temperature/law.rs:136-154,266-288`), and every derived
   property re-enters the property boundary
   (`src/constitutive/temperature/law.rs:261`). Rejection is covered by
-  `tests/temperature_law.rs:78-313`.
+  `tests/temperature_law.rs:78-317`.
 
 ### Data provenance (primary gap)
 
@@ -103,7 +103,7 @@ one bounded domain is a labelled arithmetic fixture:
 - `examples/constant_material.rs:24` ships `"reference liquid"` with
   1000 / 4000 / 0.6, uncited and unbounded; `README.md:52` binds it to the
   name `water` and `docs/book/examples/constant_material.md:5` calls it
-  "water-like". PRO-PROV-002 tracks it.
+  "water-like". PRO-PROV-010 tracks it.
 - `examples/temperature_material.rs` is a labelled `"arithmetic fixture"`
   whose values are documented as non-physical. It is built with
   `TemperatureLaw::with_validity` over an inclusive 280 K to 340 K fixture
@@ -160,9 +160,9 @@ stack role, not an undisclosed gap.
   exists. The two statements cannot both be current.
 - Generic instantiation is partial: `tests/theorems.rs:14-18`,
   `tests/temperature_law.rs:35-39` and the calibration-bound tests at
-  `tests/temperature_law.rs:196-200,246-250` instantiate `f32` and `f64`; the
+  `tests/temperature_law.rs:196-200,250-254` instantiate `f32` and `f64`; the
   validity boundary suite (`tests/properties.rs`), the remaining
-  calibration-domain tests (`tests/temperature_law.rs:108-138,252-282`), the
+  calibration-domain tests (`tests/temperature_law.rs:108-138,256-286`), the
   codegen fixture, and `tests/composition.rs` are `f64`-only.
 - Public enums `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,
   16`), `CoefficientOrder`, and `TemperatureRole`
@@ -181,8 +181,9 @@ stack role, not an undisclosed gap.
   `3887eacd...`; HEAD has advanced by five commits, so that verdict has
   decayed. The marker and shim scans in this finding re-establish it at
   `944eed05`; the hosted-run evidence is not re-verified here.
-- Local build verification remains blocked by the shared target lock and the
-  Atlas patch overlay; this audit is deliberately static-only.
+- The audit at `944eed05` was static-only. Later changes (PR #104) are gated
+  locally on a `git archive` export of the revision with `--manifest-path`,
+  `--locked` and the shared target, outside the Atlas patch overlay.
 
 ## Clean provider surface — 2026-08-15
 
@@ -198,12 +199,9 @@ constitutive-law boundary.
   consuming repository; provider presence is not integration proof.
 - `Cargo.toml` sets `publish = true`. Package or documentation checks do not
   prove release readiness.
-- Local verification is limited by preserved peer work in `Cargo.lock`,
-  `Cargo.toml`, and `examples/temperature_material.rs`. `cargo fmt --all --
-  --check` passes, but `cargo check --locked --no-default-features` stops
-  before compilation because the active `D:\atlas\.cargo\config.toml` patch
-  overlay requires a lockfile update that `--locked` refuses. This does not
-  weaken the hosted exact-head evidence below.
+- `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
+  committed at this revision; no preserved peer work limits local
+  verification, which runs on an export outside the patch overlay.
 
 ## Evidence
 
