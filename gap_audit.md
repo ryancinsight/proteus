@@ -92,15 +92,13 @@ The repository commits **no source-cited material property value**. Every
 numeric value in the tree is a fixture or demonstration constant with no
 citation and no encoded validity range:
 
-- `examples/temperature_material.rs:20-31` ships a material named
-  `"generic tissue"` (`:37`) with ρ = 1050, c_p = 3600, k = 0.5, β₁ = 2.0e-4
-  K⁻¹ and 1.0e-3 K⁻¹, β₂ = 0.0 — no reference, and it uses
-  `TemperatureLaw::new` (`:32`), i.e. the unbounded positive-temperature
-  domain, not `with_validity`.
-- That directly weakens the book claim that "the law never silently
-  extrapolates a response beyond its declared evidence"
-  (`docs/book/constitutive_laws.md:64-66`): the only shipped physically-named
-  material declares no evidence domain at all.
+- `examples/temperature_material.rs` shipped a material named `"generic tissue"`
+  with unsourced values on the unbounded positive-temperature domain.
+  PRO-PROV-002 renamed it `"arithmetic fixture"`, documented the values as
+  non-physical, constructed it with `TemperatureLaw::with_validity` over an
+  inclusive 280 K to 340 K domain, and made the example assert that 400 K
+  returns `TemperatureLawError::OutsideValidityDomain`. The book claim at
+  `docs/book/constitutive_laws.md:64-66` holds for the shipped example.
 - `tests/*.rs` fixtures (1000 / 4000 / 0.6, 310.15 K) are water-like round
   numbers used as arithmetic oracles, not reference data — legitimate as
   fixtures, but they mean the "source-traceable reference value" evidence

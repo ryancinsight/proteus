@@ -72,7 +72,7 @@ dependency-first:
        the bitwise value equivalence the fixture actually asserts.
 5. [ ] PRO-GENERIC-007 — instantiate the boundary suites at `f32` as well as
        `f64`.
-6. [ ] PRO-PROV-002 — cite and bound the shipped `"generic tissue"` values, or
+6. [x] PRO-PROV-002 — cite and bound the shipped `"generic tissue"` values, or
        rename them to a non-physical fixture.
 7. [ ] PRO-SEMVER-006 — add `#[non_exhaustive]` to the four open public enums
        under a `[major]` classification.

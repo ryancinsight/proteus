@@ -113,23 +113,6 @@ the Atlas board.
 Filed by the Atlas gap audit at `944eed05` from static evidence only; each
 item cites its evidence in `gap_audit.md`. All are unclaimed.
 
-### PRO-PROV-002 — Cite and bound every shipped material value
-
-- **Outcome:** every property value and response coefficient committed outside
-  a pure arithmetic fixture carries a resolvable citation and an explicit
-  `TemperatureValidity::bounded` calibration domain.
-- **Scope:** `examples/temperature_material.rs`, and any future named material.
-  Non-goals: a material catalog (PRO-VOCAB-003), test fixtures whose role is an
-  arithmetic oracle rather than reference data.
-- **Acceptance oracle:** the `"generic tissue"` example is either renamed to a
-  non-physical fixture or re-grounded on a cited source (section/table locator
-  in a source comment) and constructed with `with_validity`; a test asserts
-  that an evaluation outside the cited range returns
-  `TemperatureLawError::OutsideValidityDomain`.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch]; effort M.
-- **Status:** todo.
-
 ### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
 
 - **Outcome:** an ADR (0003) records, with a recommended option, whether the
@@ -144,7 +127,7 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   (`src/material/model.rs:10`) and the "material-identity vocabulary" stack
   role; if ownership is accepted, invalid identifiers are rejected by a typed
   constructor with a value-semantic test.
-- **Dependencies:** none; informs PRO-PROV-002.
+- **Dependencies:** none.
 - **Risk/change class:** [arch] [minor]; effort L.
 - **Status:** todo.
 

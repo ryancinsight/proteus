@@ -137,6 +137,57 @@ fn bounded_calibration_domain_rejects_extrapolation() {
     ));
 }
 
+fn assert_calibration_bounds_are_inclusive<T: RealField>() {
+    let minimum = T::from_f64(273.0);
+    let maximum = T::from_f64(373.0);
+    let validity = TemperatureValidity::bounded(
+        ThermodynamicTemperature::from_base(minimum),
+        ThermodynamicTemperature::from_base(maximum),
+    )
+    .expect("finite positive ordered calibration bounds");
+    let responses = ResponseSet::new(
+        ConstantResponse,
+        LinearResponse::new(ReciprocalTemperature::from_base(T::from_f64(0.001)))
+            .expect("finite coefficient"),
+        ConstantResponse,
+    );
+    let law = TemperatureLaw::with_validity(
+        common::reference(),
+        ThermodynamicTemperature::from_base(T::from_f64(300.0)),
+        validity,
+        responses,
+    )
+    .expect("reference temperature is calibrated");
+
+    for bound in [minimum, maximum] {
+        assert!(
+            law.properties(&ThermodynamicTemperature::from_base(bound))
+                .is_ok_and(|evaluated| evaluated.density() == common::reference().density()),
+            "the inclusive bound itself is calibrated"
+        );
+    }
+    for (value, role) in [
+        (T::from_f64(272.0), TemperatureRole::Evaluation),
+        (T::from_f64(374.0), TemperatureRole::Evaluation),
+    ] {
+        assert_eq!(
+            law.properties(&ThermodynamicTemperature::from_base(value)),
+            Err(TemperatureLawError::OutsideValidityDomain {
+                role,
+                value,
+                minimum,
+                maximum,
+            })
+        );
+    }
+}
+
+#[test]
+fn calibration_bounds_are_inclusive_for_every_supported_real_scalar() {
+    assert_calibration_bounds_are_inclusive::<f32>();
+    assert_calibration_bounds_are_inclusive::<f64>();
+}
+
 #[test]
 fn bounded_calibration_domain_rejects_invalid_bounds_and_reference() {
     let invalid = TemperatureValidity::bounded(
