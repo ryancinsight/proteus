@@ -2,7 +2,8 @@
 
 **Source**: examples/temperature_material.rs
 
-Construct a temperature-dependent material and evaluate at multiple temperatures.
+Construct a bounded temperature-dependent arithmetic fixture, evaluate it inside its
+calibration domain, and confirm that an evaluation outside it is rejected.
 
 ## Source
 

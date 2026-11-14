@@ -58,7 +58,7 @@ evidence.
   `HACK`/`panic!(`; 0 production `unwrap()`; 0 `dyn `; 0 `pub use ... as `
   shims; 0 files over 500 lines; `#![deny(missing_docs)]` at
   `src/lib.rs:10`; the single suppression is
-  `examples/temperature_material.rs:3` (`#![expect(clippy::print_stdout,
+  `examples/temperature_material.rs:6` (`#![expect(clippy::print_stdout,
   reason = ...)]`).
 
 ### Property and law coverage
@@ -84,23 +84,37 @@ evidence.
   (`src/constitutive/temperature/law.rs:136-154,266-288`), and every derived
   property re-enters the property boundary
   (`src/constitutive/temperature/law.rs:261`). Rejection is covered by
-  `tests/temperature_law.rs:122-183,186-214`.
+  `tests/temperature_law.rs:78-317`.
 
 ### Data provenance (primary gap)
 
-The repository commits **no source-cited material property value**. Every
-numeric value in the tree is a fixture or demonstration constant with no
-citation and no encoded validity range:
+The repository commits **no source-cited material property value**. No
+shipped numeric value carries a citation or a physical validity range; the
+one bounded domain is a labelled arithmetic fixture:
 
-- `examples/temperature_material.rs:20-31` ships a material named
-  `"generic tissue"` (`:37`) with ρ = 1050, c_p = 3600, k = 0.5, β₁ = 2.0e-4
-  K⁻¹ and 1.0e-3 K⁻¹, β₂ = 0.0 — no reference, and it uses
-  `TemperatureLaw::new` (`:32`), i.e. the unbounded positive-temperature
-  domain, not `with_validity`.
-- That directly weakens the book claim that "the law never silently
-  extrapolates a response beyond its declared evidence"
-  (`docs/book/constitutive_laws.md:64-66`): the only shipped physically-named
-  material declares no evidence domain at all.
+- `src/elastic/catalog.rs` ships the public `NamedIsotropicSolid` catalog:
+  carbon steel, 316L, 6061-T6 and Ti-6Al-4V with six constants each (density,
+  Young's modulus, Poisson's ratio, conductivity, specific heat, expansion),
+  exposed through `solid`, `thermophysical` and `thermal_expansion`. The
+  Rustdoc calls them "published" but names no source or table locator (316L
+  cites ASTM F138/F139 as the grade, not as the origin of its values), the
+  carbon-steel entry names no grade, and no entry encodes a validity range.
+  PRO-PROV-002 tracks it.
+- `examples/constant_material.rs:24` ships `"reference liquid"` with
+  1000 / 4000 / 0.6, uncited and unbounded; `README.md:52` binds it to the
+  name `water` and `docs/book/examples/constant_material.md:5` calls it
+  "water-like". PRO-PROV-010 tracks it.
+- `examples/temperature_material.rs` is a labelled `"arithmetic fixture"`
+  whose values are documented as non-physical. It is built with
+  `TemperatureLaw::with_validity` over an inclusive 280 K to 340 K fixture
+  domain and returns an error unless a 400 K evaluation yields
+  `TemperatureLawError::OutsideValidityDomain`, so the book claim at
+  `docs/book/constitutive_laws.md:64-66` holds for the shipped example. The
+  domain is a fixture choice, not calibration evidence.
+- `src/elastic/moduli.rs:38-41` binds a doctest value named `steel` (200 GPa,
+  nu = 0.3) with no citation. The doctest checks the identity
+  mu = E / (2 (1 + nu)), so it is an arithmetic oracle, not reference data,
+  and sits outside PRO-PROV-002 as that item's non-goal states.
 - `tests/*.rs` fixtures (1000 / 4000 / 0.6, 310.15 K) are water-like round
   numbers used as arithmetic oracles, not reference data — legitimate as
   fixtures, but they mean the "source-traceable reference value" evidence
@@ -109,38 +123,46 @@ citation and no encoded validity range:
 ### Material identity and consumer vocabulary
 
 `Material` identity is a bare `Cow<'name, str>` (`src/material/model.rs:10`)
-with no validation, normalization, or canonical identifier type, and no named
-material catalog exists anywhere in `src/`. A consumer therefore receives
+with no validation, normalization, or canonical identifier type, and
+`Material` is not linked to a catalog: the only named-material data in `src/`
+is the elastic `NamedIsotropicSolid` enum (`src/elastic/catalog.rs`), which
+`Material` identity does not reference. A consumer therefore receives
 validated *property types* but not a shared *material vocabulary*: two
 consumers spelling the same tissue differently do not unify, and each still
-owns its own table. ADR 0001 records the catalog omission as a deliberate
-Phase-1 boundary ("not a speculative catalog of every material"), so this is a
-scope decision to revisit against the stack role, not an undisclosed gap.
+owns its own table. ADR 0001 limits Phase 1 to "not a speculative catalog of
+every material", and ADR 0003 places "catalog-backed material contracts" in
+the 0.3.0 milestone; canonical identity and an optional cited catalog remain
+the PRO-VOCAB-003 decision, so this is a scope decision to revisit against the
+stack role, not an undisclosed gap.
 
 ### Claim-vs-code cross-checks
 
 - ADR 0002 Verification lists "semver checks"; `.github/workflows/ci.yml` runs
-  fmt, `check --no-default-features`, clippy, nextest, doctests, rustdoc, one
-  example, and `cargo-deny` — there is no `cargo-semver-checks` step.
+  fmt, `check --no-default-features`, clippy, nextest, doctests, rustdoc, both
+  examples (`:54-57`), a SemVer gate through the shared workflow (`:82-84`),
+  and `cargo-deny` (`:91-97`).
 - ADR 0001 Verification lists a "release codegen fixture" and ADR 0002 a
   "code-generation fixture". `tests/codegen_equivalence.rs` asserts only
   bitwise *value* equality (`:76-79,90-93`); no codegen or assembly comparison
   exists in the tree or in CI, and nextest runs the default (debug) profile,
   so the "release" qualifier is unverified.
-- `Cargo.toml:5` declares `rust-version = "1.95"` while
-  `rust-toolchain.toml:3` pins 1.97.0 and CI installs no second toolchain — the
-  MSRV floor is an untested claim.
-- `.github/workflows/ci.yml` runs only `--example constant_material`;
-  `temperature_material` is compiled by `clippy --all-targets` and executed
-  only through the book job's `mdbook-test`.
+- `Cargo.toml:8` declares `rust-version = "1.95"` while
+  `rust-toolchain.toml:3` pins 1.97.0; the `msrv` job (`ci.yml:59-75`) runs
+  `cargo check --locked --all-targets --all-features` under
+  `RUSTUP_TOOLCHAIN: 1.95.0`, so the floor is exercised.
+- `.github/workflows/ci.yml:54-57` runs both shipped examples,
+  `constant_material` and `temperature_material`; the book workflow sets
+  `mdbook-test: true` (`.github/workflows/book-pages.yml:47`).
 - `docs/book/stack_position.md:28-31` asserts that "no duplicate
   material-property implementation exists in Hyperion, Helios, CFDrs, or
   Kwavers". That is a cross-repository claim with no in-repo evidence, and
   `backlog.md` Open simultaneously records that no consumer contract test
   exists. The two statements cannot both be current.
-- Generic instantiation is partial: `tests/theorems.rs:33-36` and
-  `tests/temperature_law.rs:49-52` instantiate `f32` and `f64`; the validity
-  boundary suite (`tests/properties.rs`), the calibration-domain suite, the
+- Generic instantiation is partial: `tests/theorems.rs:14-18`,
+  `tests/temperature_law.rs:35-39` and the calibration-bound tests at
+  `tests/temperature_law.rs:196-200,250-254` instantiate `f32` and `f64`; the
+  validity boundary suite (`tests/properties.rs`), the remaining
+  calibration-domain tests (`tests/temperature_law.rs:108-138,256-286`), the
   codegen fixture, and `tests/composition.rs` are `f64`-only.
 - Public enums `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,
   16`), `CoefficientOrder`, and `TemperatureRole`
@@ -159,8 +181,9 @@ scope decision to revisit against the stack role, not an undisclosed gap.
   `3887eacd...`; HEAD has advanced by five commits, so that verdict has
   decayed. The marker and shim scans in this finding re-establish it at
   `944eed05`; the hosted-run evidence is not re-verified here.
-- Local build verification remains blocked by the shared target lock and the
-  Atlas patch overlay; this audit is deliberately static-only.
+- The audit at `944eed05` was static-only. Later changes (PR #104) are gated
+  locally on a `git archive` export of the revision with `--manifest-path`,
+  `--locked` and the shared target, outside the Atlas patch overlay.
 
 ## Clean provider surface — 2026-08-15
 
@@ -174,14 +197,11 @@ constitutive-law boundary.
 
 - Atlas-level consumer adoption still needs a direct contract test at the
   consuming repository; provider presence is not integration proof.
-- Registry publication is intentionally disabled in `Cargo.toml`. Package or
-  documentation checks do not prove release readiness while that policy holds.
-- Local verification is limited by preserved peer work in `Cargo.lock`,
-  `Cargo.toml`, and `examples/temperature_material.rs`. `cargo fmt --all --
-  --check` passes, but `cargo check --locked --no-default-features` stops
-  before compilation because the active `D:\atlas\.cargo\config.toml` patch
-  overlay requires a lockfile update that `--locked` refuses. This does not
-  weaken the hosted exact-head evidence below.
+- `Cargo.toml` sets `publish = true`. Package or documentation checks do not
+  prove release readiness.
+- `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
+  committed at this revision; no preserved peer work limits local
+  verification, which runs on an export outside the patch overlay.
 
 ## Evidence
 

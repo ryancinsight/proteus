@@ -113,22 +113,37 @@ the Atlas board.
 Filed by the Atlas gap audit at `944eed05` from static evidence only; each
 item cites its evidence in `gap_audit.md`. All are unclaimed.
 
-### PRO-PROV-002 — Cite and bound every shipped material value
+<a id="PRO-PROV-002"></a>
+### PRO-PROV-002 — Cite and bound every named isotropic solid
 
-- **Outcome:** every property value and response coefficient committed outside
-  a pure arithmetic fixture carries a resolvable citation and an explicit
-  `TemperatureValidity::bounded` calibration domain.
-- **Scope:** `examples/temperature_material.rs`, and any future named material.
-  Non-goals: a material catalog (PRO-VOCAB-003), test fixtures whose role is an
-  arithmetic oracle rather than reference data.
-- **Acceptance oracle:** the `"generic tissue"` example is either renamed to a
-  non-physical fixture or re-grounded on a cited source (section/table locator
-  in a source comment) and constructed with `with_validity`; a test asserts
-  that an evaluation outside the cited range returns
-  `TemperatureLawError::OutsideValidityDomain`.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch]; effort M.
-- **Status:** todo.
+- **Outcome:** each `NamedIsotropicSolid` entry carries a resolvable citation
+  with a table locator and an encoded temperature validity domain.
+- **Scope:** `src/elastic/catalog.rs`, `tests/elastic/catalog.rs`, any future
+  named material. Non-goals: PRO-VOCAB-003; arithmetic-oracle fixtures.
+- **Acceptance oracle:** Rustdoc beside each catalog constant names source and
+  table locator; a value test per entry asserts the cited value and an
+  out-of-domain request returns a typed error; carbon steel names its source
+  grade or is removed; the domain encoding is recorded in a design note first.
+- **Status:** todo; **priority:** verification; **milestone:** M-elastic-contracts; **needs:** none;
+  **basis:** `d23144bb`.
+- **Risk/change class:** [verification] [patch], [minor] if the domain is a public accessor; effort L.
+- **Next step:** design note for the domain encoding.
+
+<a id="PRO-PROV-010"></a>
+### PRO-PROV-010 — Cite or rename the "reference liquid" example
+
+- **Outcome:** the `"reference liquid"` example (a `ConstantLaw` over `NoState`, so no temperature
+  state to bound) is cited or renamed to a non-physical fixture; split from PRO-PROV-002.
+- **Scope:** `examples/constant_material.rs`, `README.md:52`,
+  `docs/book/examples/constant_material.md`. Non-goals: PRO-PROV-002; arithmetic-oracle fixtures.
+- **Acceptance oracle:** a source comment cites source and table locator for
+  1000 / 4000 / 0.6, or `git grep -n -i -E 'reference liquid|water' --
+  examples/constant_material.rs README.md docs/book/examples/constant_material.md`
+  is empty (it is not at `d23144bb`).
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none;
+  **basis:** `d23144bb`.
+- **Risk/change class:** [verification] [patch]; effort S.
+- **Next step:** cite or rename, then run the oracle grep.
 
 ### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
 
@@ -191,16 +206,17 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   external exhaustive matches); effort S.
 - **Status:** todo.
 
+<a id="PRO-GENERIC-007"></a>
 ### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
 
 - **Outcome:** the validity-boundary and calibration-domain guarantees are
   verified for each scalar the crate ships, not only `f64`.
-- **Scope:** `tests/properties.rs`, the calibration-domain tests in
+- **Scope:** `tests/properties.rs`, the `f64`-only calibration-domain tests in
   `tests/temperature_law.rs`, `tests/composition.rs`. Non-goals: the codegen
   fixture, which is deliberately `f64`-concrete.
 - **Acceptance oracle:** each boundary assertion runs through a generic
   `fn assert_*<T: RealField>()` instantiated at `f32` and `f64`, matching the
-  existing pattern at `tests/theorems.rs:33-36`.
+  existing pattern at `tests/theorems.rs:7-18`.
 - **Dependencies:** none.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Status:** todo.
@@ -253,5 +269,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - Add a direct consumer contract test when an Atlas consumer adopts the
   constitutive-law surface. The consumer owns the acceptance oracle; Proteus
   owns the provider implementation.
-- Release publication remains external authority because `Cargo.toml` sets
-  `publish = false`; no registry state is inferred from local package checks.
+- Re-open trigger: the `publish` policy in `Cargo.toml` (`publish = true` at
+  this revision) changes under release authority. No registry state is
+  inferred from local package checks.
