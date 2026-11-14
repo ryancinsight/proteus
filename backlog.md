@@ -1,112 +1,39 @@
 # Proteus backlog
 
+This board records provider-owned work. Cross-repository adoption remains in
+the Atlas board.
+
 <a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 
-- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
-- milestone: M-elastic-contracts.
-- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
-  independent review and acceptance remain pending.
-- Baseline: `1681e9a`; finite `lambda=-3s, mu=3s`, with `s=2^126`
-  (`f32`) or `2^1022` (`f64`), has exact `K=-s<0` but was accepted after
-  `2mu` overflowed. The frozen original eight failures/five controls remain.
-- Repair: positive lambda is admissible with finite positive mu; negative
-  lambda uses the sign of `3lambda+2mu`, evaluated by native FMA. When doubling
-  mu overflows, the equivalent half-scaled FMA preserves the sign. No rounded
-  `2/3` threshold, widened arithmetic, saturation or tolerance in validation.
-- Evidence: exact and adjacent zero-bulk boundaries, rounded-two-thirds and
-  subnormal cases, both native scalar input guards; exact-rational domain oracle.
-- Acceptance: final source/package/CI gates, independent exact-head correctness
-  review, and explicit performance/resource and lifecycle acceptance remain
-  required. No merge or publication is part of this draft.
+- Status: blocked; priority: correctness; milestone: M-elastic-contracts; needs: none.
+- basis: `d23144bb`. Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
+- Outcome: bulk validity uses the exact sign of `3lambda+2mu` by native FMA, with no widened
+  arithmetic, saturation or tolerance (baseline `1681e9a` accepted exact `K<0` after `2mu`
+  overflowed). Detail: `docs/verification/elastic-range.md`.
+- Scope: `src/elastic/`, `tests/elastic/`.
+- Acceptance oracle: exact-rational domain oracle at the zero-bulk boundary and its neighbours,
+  rounded-two-thirds and subnormal cases, both scalar guards.
+- Next step, post-publication acceptance of 0.1.1 (packaged from `0d9931c5`, the #87 merge; none
+  recorded as discharged in the tree): source/package/CI gates, independent exact-head review,
+  performance/resource and lifecycle acceptance. Re-open trigger: that packet is recorded at the
+  exact head. A failure is remedied by a yank plus a forward version.
 
 <a id="PRO-ELASTIC-DERIVED-RANGE"></a>
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
-- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
-- milestone: M-elastic-contracts.
-- Implementation complete in draft [#87](https://github.com/ryancinsight/proteus/pull/87);
-  independent review and acceptance remain pending.
-- Baseline: accepted states returned infinite E/K/M or zero nu even when the
-  correct output fits the native scalar. Small products also lost finite E.
-- Repair: bounded ratios and native FMA avoid quadratic products and premature
-  doubling; bulk cancellation uses the same fused numerator as validation.
-  Exceptional overflow paths are outlined; the canonical Lame pair and public
-  API stay unchanged. True derived overflow retains IEEE infinity.
-- Independent review at [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) reopens two P2 overflow boundaries: rounded
-  Young factors can cross the final multiplication threshold in either
-  direction; rounded mu/3 can make finite-rounded bulk become infinity.
-- Repair continuation: exact native residual polynomial/midpoint comparisons
-  and quotient correction in large-value branches; constructor domain unchanged.
-- Evidence: original 23 plus 6 new regression/control tests, typed wave-speed
-  consumer, 336 committed rational E/K fixtures with exact midpoint ties; all
-  six new tests fail at [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) in all four feature/profile combinations.
-  Expanded oracle: 78,163 pairs including all 27,594 independent review inputs;
-  no domain/classification mismatches, E/nu/K within one ULP, exact M rounding.
-  Original eight-ULP/zero-classification-mismatch limits remain intact.
-- Resources/performance: one ARM64/Rust 1.97 O2/O3 matrix, 2,016 samples/profile,
-  historical [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265) ordinary direct/indirect/stream callers and recovered cases. All sampled heap
-  requests are zero; state/Result sizes unchanged. Ordinary deltas span
-  -0.359 to +1.390 ns/call, including construct-and-derive. Continuation timings
-  and renewed exact-head review accompany the external packet. Repaired ordinary
-  deltas versus baseline span -0.140 to +1.410 ns/call; versus [#87 prior reviewed head](https://github.com/ryancinsight/proteus/pull/87/commits/d7ed3f83503372532b688e45a545e5f3b65b0265), -0.253
-  to +0.600 ns/call. Large sampled repaired workflows reach 133.985 ns/call.
-  All 8,064 continuation regions allocate zero heap bytes/calls; object sizes
-  remain unchanged. Peak total stack/RSS and performance acceptance stay open.
-- Guard integration: full-domain native error bounds select exact residual
-  recovery near the overflow midpoint and a bounded evaluation elsewhere;
-  ordinary entry arithmetic and the repaired exact comparisons stay unchanged.
-  Co-located proof: docs/verification/elastic-guard.md. Add 305 native guard
-  neighbors and transparent-wrapper equivalence; renew exact-head source,
-  package/API/conformance/CI and representative mixed/stack evidence. Prior
-  review does not approve this integration; performance/resource acceptance
-  and lifecycle holds remain open.
-- Lifecycle: `proteus-mat` is absent from the checked sparse index (HTTP 404).
-  First-publication identity/authentication/dependency scope remains a separate
-  hold. Preserve Iris #80's denied-read lifecycle hold and all protected holds.
-- Detail and limits: `docs/verification/elastic-range.md`.
-
-
-This board records provider-owned work. Cross-repository adoption remains in
-the Atlas board.
-
-## PRO-DOC-BOOK-001 — Execute included book examples [patch] — closed 2026-08-20
-
-- **Owner:** Atlas coordinator; Proteus source scope only. The peer-staged
-  `Cargo.lock` remains outside this increment.
-- **Scope:** shared Pages caller and the two included example sources;
-  `constitutive_laws.md` and `validated_properties.md` retain their focused,
-  non-standalone `rust,ignore` API fragments.
-- **Acceptance:** the caller enables the shared `mdbook-test` job with Rust
-  1.97.0 and package `proteus`; both included examples compile against staged
-  `proteus` and `aequitas` crates and the hosted Pages build passes.
-- **Baseline:** local `mdbook test docs/book` reached both examples and failed
-  with unresolved `proteus`/`aequitas` crates because the caller did not stage
-  a package. The failure was a real integration gap, not an existence-only
-  assertion.
-- **Local evidence target:** format, package build, book build, strict link
-  scan, and executable book tests; the shared Windows cache may require the
-  hosted Linux job for final mdBook staging evidence.
-- **Published source:** commit `61879d4b4a68e2d201460af0fe6f6a0e7fe9919f`
-  on `ci/proteus-book-test`, PR
-  [#14](https://github.com/ryancinsight/proteus/pull/14); hosted verification
-  passes at exact head `4d482709927aa464f9116b36dc016d516b01b8be` in CI and
-  Pages runs `32338237653` and `32338238163`. PR #14 merged at default
-  `1c73fdd17e45cb7d1feb63fcbea774c6bbb5a146`.
-- **Definition of done:** met. The hosted Pages book build executes the
-  package-staged examples; its deployment job is correctly skipped for the
-  pull-request event.
-
-## PROTEUS-PHASE-1-001 — Material and constitutive-law provider surface — closed
-
-- Outcome: Proteus owns validated thermophysical properties, typed temperature
-  response laws, constitutive evaluation, and borrowed-or-owned material names.
-- Boundary: Aequitas owns dimensions and units; Eunomia owns scalar
-  representations; consumers retain their domain-specific attenuation,
-  perfusion, rheology, and photon-interaction laws.
-- Evidence: provider default `3887eacda7bc2a6f4bd90b04693e7070f05a894d`;
-  hosted CI and Pages runs `31865355870` and `31865355539` both pass at that
-  exact head.
+- Status: blocked; priority: correctness; milestone: M-elastic-contracts; needs: none.
+- basis: `d23144bb`. Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
+- Outcome: derived E/nu/K/M are finite whenever the exact result fits the native scalar; true
+  overflow keeps IEEE infinity; the Lame pair and public API are unchanged.
+- Scope: `src/elastic/`, `tests/elastic/`; `docs/verification/elastic-range.md`, `elastic-guard.md`.
+- Acceptance oracle: exact-rational oracle (78,163 pairs incl. 27,594 review inputs; 336 + 305
+  fixtures): no domain/classification mismatch, E/nu/K within one ULP, exact M rounding.
+- Next step, post-publication acceptance of 0.1.1 (packaged from `0d9931c5`, the #87 merge, guard
+  integration included; looked up 2026-11-14T01:13Z). Re-open trigger: (1) and (2) recorded at the
+  exact head. (1) Renewed review of the guard integration (prior review does not approve it);
+  (2) performance/resource acceptance incl. peak stack/RSS; (3) lifecycle: Iris #80's denied-read
+  hold and all protected holds stay. A failure is remedied by a yank plus a forward version.
 
 ## Gap-audit 2026-08-20 items
 
@@ -145,130 +72,75 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Next step:** cite or rename, then run the oracle grep.
 
-### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
-
-- **Outcome:** an ADR (0003) records, with a recommended option, whether the
-  provider owns canonical material identity (a validated `MaterialId`-class
-  newtype and, optionally, a cited catalog) or whether identity stays a
-  consumer-supplied string.
-- **Scope:** ADR plus, if Accepted for ownership, the identity newtype in
-  `src/material/`. Non-goals: acoustic/optical/rheology property families,
-  which stay consumer-owned per ADR 0001.
-- **Acceptance oracle:** ADR 0003 exists, is indexed in `docs/adr/README.md`,
-  and states the decision against the current bare `Cow<'name, str>` identity
-  (`src/material/model.rs:10`) and the "material-identity vocabulary" stack
-  role; if ownership is accepted, invalid identifiers are rejected by a typed
-  constructor with a value-semantic test.
-- **Dependencies:** none; informs PRO-PROV-002.
-- **Risk/change class:** [arch] [minor]; effort L.
-- **Status:** todo.
-
-### PRO-GATE-004 — Reconcile CI with the ADR verification claims
-
-- **Outcome:** the gates the ADRs claim either run in CI or the ADR wording is
-  corrected to the gates that exist.
-- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-*.md`,
-  `docs/adr/0002-*.md`. Non-goals: the shared Pages caller.
-- **Acceptance oracle:** `cargo-semver-checks` runs on pull requests (ADR 0002
-  claims it and the workflow has no such step), an MSRV job builds at the
-  declared `rust-version = 1.95` floor, and both examples run; or each removed
-  claim is struck from the ADR with a dated revision note.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch]; effort S.
-- **Status:** todo.
-
-### PRO-CODEGEN-005 — Make the codegen-equivalence evidence real or narrow it
-
-- **Outcome:** the zero-cost claim rests on evidence of its own category.
-- **Scope:** `tests/codegen_equivalence.rs`, CI, and the ADR verification
-  lists. Non-goals: adding a criterion suite.
-- **Acceptance oracle:** either a committed codegen comparison (disassembly or
-  `cargo-llvm-lines`-class artifact for the `#[inline(never)]` typed and raw
-  pairs at release opt-level) with its output recorded, plus a release-profile
-  test pass; or the ADRs are revised to claim bitwise value equivalence only,
-  which is what the file asserts today (`:76-79,90-93`).
-- **Dependencies:** PRO-GATE-004 shares the CI edit.
-- **Risk/change class:** [verification] [patch]; effort M.
-- **Status:** todo.
-
-### PRO-SEMVER-006 — Close the public enums for forward compatibility
-
-- **Outcome:** adding a property family or coefficient order is not a breaking
-  change for consumers.
-- **Scope:** `#[non_exhaustive]` on `PropertyKind`, `PropertyConstraint`
-  (`src/property/error.rs:5,16`), `CoefficientOrder`, and `TemperatureRole`
-  (`src/constitutive/temperature/error.rs:7,16`). Non-goals: the already
-  non-exhaustive `TemperatureLawError` and `TemperatureValidity`.
-- **Acceptance oracle:** all six public enums carry the attribute; in-repo
-  matches compile; the change is classified by `cargo-semver-checks`.
-- **Dependencies:** none.
-- **Risk/change class:** [arch] [major] (adding `#[non_exhaustive]` breaks
-  external exhaustive matches); effort S.
-- **Status:** todo.
-
 <a id="PRO-GENERIC-007"></a>
 ### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
 
-- **Outcome:** the validity-boundary and calibration-domain guarantees are
-  verified for each scalar the crate ships, not only `f64`.
-- **Scope:** `tests/properties.rs`, the `f64`-only calibration-domain tests in
-  `tests/temperature_law.rs`, `tests/composition.rs`. Non-goals: the codegen
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [verification] [patch]; effort S.
+- **Outcome:** the validity-boundary and calibration-domain guarantees are verified for each
+  scalar the crate ships, not only `f64`.
+- **Scope:** `tests/properties.rs`, `tests/composition.rs`, and in `tests/temperature_law.rs` the
+  `f64`-only `bounded_calibration_domain_rejects_extrapolation` and
+  `bounded_calibration_domain_rejects_invalid_bounds_and_reference`. Non-goals: the codegen
   fixture, which is deliberately `f64`-concrete.
-- **Acceptance oracle:** each boundary assertion runs through a generic
-  `fn assert_*<T: RealField>()` instantiated at `f32` and `f64`, matching the
-  existing pattern at `tests/theorems.rs:7-18`.
-- **Dependencies:** none.
-- **Risk/change class:** [verification] [patch]; effort S.
-- **Status:** todo.
+- **Acceptance oracle:** each boundary assertion runs through a generic `fn assert_*<T: RealField>()`
+  instantiated at `f32` and `f64`, matching `tests/theorems.rs:7-18`.
+- **Next step:** make the `tests/properties.rs` boundary assertions generic first.
 
+<a id="PRO-DOC-008"></a>
 ### PRO-DOC-008 — Ground the cross-repository ownership claim
 
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [docs] [patch]; effort S. No book CI branch is open at the basis.
 - **Outcome:** the book states only what this repository can evidence.
-- **Scope:** `docs/book/stack_position.md:28-31`. Non-goals: editing consumer
-  repositories.
-- **Acceptance oracle:** the assertion that "no duplicate material-property
-  implementation exists in Hyperion, Helios, CFDrs, or Kwavers" is replaced by
-  the boundary statement plus a link to the consumer contract test that
-  evidences it, or is dated and attributed to the Atlas board item that
-  verified it. Must not land while a book CI branch is in flight.
-- **Dependencies:** the open consumer-contract-test item below.
-- **Risk/change class:** [docs] [patch]; effort S.
-- **Status:** todo.
+- **Scope:** `docs/book/stack_position.md:28-31` and `:37-41` (the `publish = false` rationale
+  contradicts `Cargo.toml` and the registry). Non-goals: editing consumer repositories.
+- **Acceptance oracle:** the "no duplicate material-property implementation exists in Hyperion,
+  Helios, CFDrs, or Kwavers" assertion becomes the boundary statement plus links pinned to commits
+  of the adopters' tests: Hyperion `tests/contracts/transport_theorems.rs`, CFDrs `cfd-core`
+  `thermophysical.rs` (closed-form test), Kwavers `kwavers-physics` `thermal/properties.rs`; the
+  `publish` sentence states the registry fact. Must not land while a book CI branch is in flight.
+- **Next step:** read each adopter test at its pinned commit, then edit the two passages.
 
+<a id="PRO-SEMVER-006"></a>
+### PRO-SEMVER-006 — Close the public enums for forward compatibility
+
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [arch] [major]; effort S. The planned 0.2.0 admits the break
+  (0.1.x to 0.2.0 is incompatible under Cargo's leftmost-nonzero rule).
+- **Outcome:** adding a property family or coefficient order is not a breaking change for consumers.
+- **Scope:** `#[non_exhaustive]` on `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,16`),
+  `CoefficientOrder` and `TemperatureRole` (`src/constitutive/temperature/error.rs:7,16`).
+  Non-goals: the already non-exhaustive `TemperatureLawError` and `TemperatureValidity`.
+- **Acceptance oracle:** all six public enums carry the attribute; in-repo matches compile;
+  `cargo-semver-checks` classifies the change as major.
+- **Next step:** add the attribute to the four enums, fix in-repo matches, run the SemVer gate.
+
+<a id="PRO-SEAL-009"></a>
 ### PRO-SEAL-009 — Record or lift the response-set seal
 
-- **Outcome:** the closure of `ThermophysicalResponseSet` is a recorded
-  decision rather than an undocumented seal.
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [arch] [patch]; effort S.
+- **Outcome:** the closure of `ThermophysicalResponseSet` is a recorded decision, not an
+  undocumented seal.
 - **Scope:** `src/constitutive/temperature/law.rs:12-14,68-71` and ADR 0002.
-- **Acceptance oracle:** ADR 0002 gains a dated revision note stating that the
-  set-level seam is sealed and that consumer variation enters through the
-  unsealed `TemperatureResponse` trait; or the seal is lifted so a correlated
-  or tabulated response set can be supplied downstream.
-- **Dependencies:** none.
-- **Risk/change class:** [arch] [patch]; effort S.
-- **Status:** todo.
+- **Acceptance oracle:** ADR 0002 gains a dated revision note stating that the set-level seam is
+  sealed and that consumer variation enters through the unsealed `TemperatureResponse` trait; or
+  the seal is lifted so a correlated or tabulated response set can be supplied downstream.
+- **Next step:** write the ADR 0002 revision note unless a consumer needs a tabulated set.
 
-## Open
+<a id="PRO-VOCAB-003"></a>
+### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
 
-### PRO-GATE-004 — Reconcile CI with ADR verification claims [verification] [patch] — in progress
-
-- **Owner:** Codex; branch `fix/proteus-gates-reconcile`.
-- **milestone:** M-1.0.
-- **Scope:** `.github/workflows/ci.yml`, `docs/adr/0001-thermophysical-material-boundary.md`,
-  and `docs/adr/0002-temperature-response-law.md`.
-- **Non-goals:** shared Pages workflow, provider implementation, and release
-  publication.
-- **Acceptance:** CI runs the SemVer check claimed by ADR 0002, builds at the
-  declared Rust 1.95 MSRV floor, and executes both shipped examples; ADR
-  verification lists remain synchronized with the runnable gates.
-- **Evidence:** YAML parsing passed; Rust 1.95 all-target check, Rust 1.97
-  format/clippy/Nextest (20/20), doctests (1/1), rustdoc, both examples, and
-  `cargo-semver-checks` against `origin/main` (196 checks, 196 pass) passed
-  locally. Hosted CI remains the delivery check after the branch is pushed.
-
-- Add a direct consumer contract test when an Atlas consumer adopts the
-  constitutive-law surface. The consumer owns the acceptance oracle; Proteus
-  owns the provider implementation.
-- Re-open trigger: the `publish` policy in `Cargo.toml` (`publish = true` at
-  this revision) changes under release authority. No registry state is
-  inferred from local package checks.
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [arch] [minor]; effort L. Informs PRO-PROV-002.
+- **Outcome:** an ADR records, with a recommended option, whether the provider owns canonical
+  material identity (a validated `MaterialId`-class newtype, optionally a cited catalog) or
+  identity stays a consumer-supplied string.
+- **Scope:** a new ADR (next free number; 0003 is the release-scope ADR) and, if ownership is
+  accepted, `src/material/`. Non-goals: acoustic/optical/rheology families (consumer-owned, ADR 0001).
+- **Acceptance oracle:** the ADR is indexed in `docs/adr/README.md` and states the decision against
+  the bare `Cow<'name, str>` identity (`src/material/model.rs:10`) and the "material-identity
+  vocabulary" stack role; if ownership is accepted, a typed constructor rejects invalid
+  identifiers with a value-semantic test.
+- **Next step:** draft the ADR (Proposed) with the recommended option.

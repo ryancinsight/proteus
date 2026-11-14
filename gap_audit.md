@@ -2,7 +2,8 @@
 
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
-Two correctness findings at `1681e9a` are implemented for draft review:
+Two correctness findings at `1681e9a` are implemented and merged in
+[#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17:
 `PRO-ELASTIC-VALIDITY-RANGE` (overflow admitted negative exact bulk) and
 `PRO-ELASTIC-DERIVED-RANGE` (representable E/nu/K/M lost to intermediate range).
 Native fused linear combinations preserve the domain sign, including adjacent
@@ -20,8 +21,10 @@ The repaired source passes 73 tests per mode and 78,163 exact-rational pairs
 per O2/O3/default/no-default combination, including all independent inputs;
 zero domain/classification mismatches, E/nu/K <=1 ULP, M exact rounding. No change to the
 wave-speed multiplication/division kernels, constitutive laws or other member
-is claimed. Review and performance/resource/lifecycle acceptance remain open;
-the sparse index has no `proteus-mat` entry. See the two backlog rows and
+is claimed. Review, performance/resource and lifecycle acceptance remain open
+as post-publication acceptance: the registry lists `proteus-mat` 0.1.1
+(published 2026-10-19T03:26:46Z), packaged from `0d9931c5`, the #87 merge
+(looked up 2026-11-14T01:13Z). See the two backlog rows and
 `docs/verification/elastic-range.md`. Older planning/rescue entries below are
 preserved; this work does not claim or close them.
 
@@ -35,7 +38,10 @@ The proof covers the locked f32/f64/F32/F64 domain and cancellation; it is not
 inferred solely from the finite oracle. Ordinary outputs and existing repaired
 boundaries retain their policies. New transition/wrapper tests and renewed
 source/package/gates/cost evidence accompany the changed head. Independent
-review, resource acceptance and first-publication identity remain separate holds.
+review, resource acceptance and lifecycle remain separate holds. The integration
+is in `proteus-mat` 0.1.1 (packaged from `0d9931c5`, looked up
+2026-11-14T01:13Z), so they are post-publication acceptance; a failure is
+remedied by a yank plus a forward version.
 
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
@@ -137,27 +143,19 @@ stack role, not an undisclosed gap.
 
 ### Claim-vs-code cross-checks
 
-- ADR 0002 Verification lists "semver checks"; `.github/workflows/ci.yml` runs
-  fmt, `check --no-default-features`, clippy, nextest, doctests, rustdoc, both
-  examples (`:54-57`), a SemVer gate through the shared workflow (`:82-84`),
-  and `cargo-deny` (`:91-97`).
-- ADR 0001 Verification lists a "release codegen fixture" and ADR 0002 a
-  "code-generation fixture". `tests/codegen_equivalence.rs` asserts only
-  bitwise *value* equality (`:76-79,90-93`); no codegen or assembly comparison
-  exists in the tree or in CI, and nextest runs the default (debug) profile,
-  so the "release" qualifier is unverified.
-- `Cargo.toml:8` declares `rust-version = "1.95"` while
-  `rust-toolchain.toml:3` pins 1.97.0; the `msrv` job (`ci.yml:59-75`) runs
-  `cargo check --locked --all-targets --all-features` under
-  `RUSTUP_TOOLCHAIN: 1.95.0`, so the floor is exercised.
-- `.github/workflows/ci.yml:54-57` runs both shipped examples,
-  `constant_material` and `temperature_material`; the book workflow sets
-  `mdbook-test: true` (`.github/workflows/book-pages.yml:47`).
 - `docs/book/stack_position.md:28-31` asserts that "no duplicate
   material-property implementation exists in Hyperion, Helios, CFDrs, or
-  Kwavers". That is a cross-repository claim with no in-repo evidence, and
-  `backlog.md` Open simultaneously records that no consumer contract test
-  exists. The two statements cannot both be current.
+  Kwavers", a cross-repository claim with no in-repo evidence; PRO-DOC-008
+  replaces it. Consumer adoption at the fetched defaults of 2026-11-14:
+  Kwavers (`kwavers-physics` `thermal/properties.rs`, `kwavers-medium`
+  `temperature_dependent/thermal.rs`), CFDrs (`cfd-core` `thermophysical.rs`,
+  with a closed-form `TemperatureLaw` test) and Hyperion
+  (`tests/contracts/transport_theorems.rs`, `ConstantLaw` composed with
+  `MassAttenuation` for `f32` and `f64`). A consumer contract test therefore
+  exists.
+- `docs/book/stack_position.md:37-41` calls the provider "intentionally
+  `publish = false`"; `Cargo.toml` sets `publish = true` since 9e9609d and the
+  registry lists `proteus-mat` 0.1.1. PRO-DOC-008 corrects it.
 - Generic instantiation is partial: `tests/theorems.rs:14-18`,
   `tests/temperature_law.rs:35-39` and the calibration-bound tests at
   `tests/temperature_law.rs:196-200,250-254` instantiate `f32` and `f64`; the
@@ -195,10 +193,15 @@ constitutive-law boundary.
 
 ## Residuals
 
-- Atlas-level consumer adoption still needs a direct contract test at the
-  consuming repository; provider presence is not integration proof.
-- `Cargo.toml` sets `publish = true`. Package or documentation checks do not
-  prove release readiness.
+- `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1
+  (index `pubtime` 2026-10-19T03:26:46Z, looked up 2026-11-14T00:45Z). The
+  trigger "publish policy changes from `publish = false`" fired at 9e9609d and
+  is retired. Re-open trigger: a PR changes `version` in `Cargo.toml`, or a
+  release is requested (M-1.0 for 1.0). Review at the PR: `rust-release.yml`
+  runs a publish-pending job on push to main, and its `crates-io` environment
+  has no protection rules. The trigger cannot see same-version drift: default
+  requires eunomia 0.12.0 while the published 0.1.1 requires ^0.10.0. Package
+  or documentation checks do not prove release readiness.
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
   committed at this revision; no preserved peer work limits local
   verification, which runs on an export outside the patch overlay.
