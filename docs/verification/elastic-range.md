@@ -162,16 +162,16 @@ Independent performance/resource acceptance remains open.
 ## Review and release holds
 
 Source-baseline public API comparison, strict source gates and native feature/
-profile tests accompany the draft. Exact-head independent review and explicit
+profile tests accompany #87. Exact-head independent review and explicit
 performance/resource acceptance remain separate. Registry state, looked up
 2026-11-14T00:45Z at `https://index.crates.io/pr/ot/proteus-mat`: `proteus-mat`
-0.1.1 is published (index `pubtime` 2026-10-19T03:26:46Z). The manifest has set
-0.1.1 since 274ae85 (2026-10-17); whether the published archive matches that
-source was not compared. First-publication identity is therefore not an open
-hold. Publication of the guard integration or of any later version stays
-under release authority. No merge, tag, publish, authentication/settings
-change or service deployment is part of this draft. Iris #80's denied-read
-hold and all protected holds remain.
+0.1.1 is published (index `pubtime` 2026-10-19T03:26:46Z). Its
+`.cargo_vcs_info.json` (docs.rs source view, looked up 2026-11-14T01:13Z) names
+`0d9931c5`, the #87 merge commit, and `git log 0d9931c5..origin/main -- src
+tests` is empty at d23144bb. Review and performance/resource acceptance are
+therefore post-publication acceptance of the published code, and a failure is
+remedied by a yank plus a forward version. Iris #80's denied-read hold and all
+protected holds remain.
 
 ## Guarded residual integration
 

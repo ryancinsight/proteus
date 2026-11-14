@@ -14,9 +14,10 @@ the Atlas board.
 - Scope: `src/elastic/`, `tests/elastic/`.
 - Acceptance oracle: exact-rational domain oracle at the zero-bulk boundary and its neighbours,
   rounded-two-thirds and subnormal cases, both scalar guards.
-- Next step, open holds (none recorded as discharged in the tree): final source/package/CI
-  gates, independent exact-head correctness review, performance/resource acceptance. Re-open
-  trigger: that packet is recorded at the exact head. Publication is not part of this item.
+- Next step, post-publication acceptance of 0.1.1 (packaged from `0d9931c5`, the #87 merge; none
+  recorded as discharged in the tree): source/package/CI gates, independent exact-head review,
+  performance/resource and lifecycle acceptance. Re-open trigger: that packet is recorded at the
+  exact head. A failure is remedied by a yank plus a forward version.
 
 <a id="PRO-ELASTIC-DERIVED-RANGE"></a>
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
@@ -28,11 +29,11 @@ the Atlas board.
 - Scope: `src/elastic/`, `tests/elastic/`; `docs/verification/elastic-range.md`, `elastic-guard.md`.
 - Acceptance oracle: exact-rational oracle (78,163 pairs incl. 27,594 review inputs; 336 + 305
   fixtures): no domain/classification mismatch, E/nu/K within one ULP, exact M rounding.
-- Next step, open holds; re-open trigger: (1) and (2) recorded at the exact head. (1) Renewed
-  review of the guard integration (prior review does not approve it); (2) performance/resource
-  acceptance incl. peak stack/RSS; (3) lifecycle: `proteus-mat` 0.1.1 is on the registry (looked up
-  2026-11-14T00:45Z), so first publication is moot; releasing the guard integration needs release
-  authority; keep Iris #80's denied-read hold and all protected holds.
+- Next step, post-publication acceptance of 0.1.1 (packaged from `0d9931c5`, the #87 merge, guard
+  integration included; looked up 2026-11-14T01:13Z). Re-open trigger: (1) and (2) recorded at the
+  exact head. (1) Renewed review of the guard integration (prior review does not approve it);
+  (2) performance/resource acceptance incl. peak stack/RSS; (3) lifecycle: Iris #80's denied-read
+  hold and all protected holds stay. A failure is remedied by a yank plus a forward version.
 
 ## Gap-audit 2026-08-20 items
 

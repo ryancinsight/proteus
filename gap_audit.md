@@ -21,9 +21,10 @@ The repaired source passes 73 tests per mode and 78,163 exact-rational pairs
 per O2/O3/default/no-default combination, including all independent inputs;
 zero domain/classification mismatches, E/nu/K <=1 ULP, M exact rounding. No change to the
 wave-speed multiplication/division kernels, constitutive laws or other member
-is claimed. Review and performance/resource acceptance remain open; the
-sparse index lists `proteus-mat` 0.1.1 (published 2026-10-19T03:26:46Z, looked
-up 2026-11-14T00:45Z). See the two backlog rows and
+is claimed. Review, performance/resource and lifecycle acceptance remain open
+as post-publication acceptance: the registry lists `proteus-mat` 0.1.1
+(published 2026-10-19T03:26:46Z), packaged from `0d9931c5`, the #87 merge
+(looked up 2026-11-14T01:13Z). See the two backlog rows and
 `docs/verification/elastic-range.md`. Older planning/rescue entries below are
 preserved; this work does not claim or close them.
 
@@ -37,8 +38,10 @@ The proof covers the locked f32/f64/F32/F64 domain and cancellation; it is not
 inferred solely from the finite oracle. Ordinary outputs and existing repaired
 boundaries retain their policies. New transition/wrapper tests and renewed
 source/package/gates/cost evidence accompany the changed head. Independent
-review and resource acceptance remain separate holds; the registry already lists
-`proteus-mat` 0.1.1, so releasing this integration is a release-authority act.
+review, resource acceptance and lifecycle remain separate holds. The integration
+is in `proteus-mat` 0.1.1 (packaged from `0d9931c5`, looked up
+2026-11-14T01:13Z), so they are post-publication acceptance; a failure is
+remedied by a yank plus a forward version.
 
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
@@ -193,10 +196,12 @@ constitutive-law boundary.
 - `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1
   (index `pubtime` 2026-10-19T03:26:46Z, looked up 2026-11-14T00:45Z). The
   trigger "publish policy changes from `publish = false`" fired at 9e9609d and
-  is retired. Re-open trigger: the manifest version exceeds the registry's
-  latest or a release is requested; each needs release authority (M-1.0 for
-  the 1.0 release). Package or documentation checks do not prove release
-  readiness.
+  is retired. Re-open trigger: a PR changes `version` in `Cargo.toml`, or a
+  release is requested (M-1.0 for 1.0). Review at the PR: `rust-release.yml`
+  runs a publish-pending job on push to main, and its `crates-io` environment
+  has no protection rules. The trigger cannot see same-version drift: default
+  requires eunomia 0.12.0 while the published 0.1.1 requires ^0.10.0. Package
+  or documentation checks do not prove release readiness.
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
   committed at this revision; no preserved peer work limits local
   verification, which runs on an export outside the patch overlay.
