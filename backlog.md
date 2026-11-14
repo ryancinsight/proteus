@@ -72,36 +72,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Next step:** cite or rename, then run the oracle grep.
 
-<a id="PRO-VOCAB-003"></a>
-### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
-
-- **Status:** todo; **priority:** architecture; **milestone:** M-elastic-contracts; **needs:** none.
-- **basis:** `d23144bb`. **Class:** [arch] [minor]; effort L. Informs PRO-PROV-002.
-- **Outcome:** an ADR records, with a recommended option, whether the provider owns canonical
-  material identity (a validated `MaterialId`-class newtype, optionally a cited catalog) or
-  identity stays a consumer-supplied string.
-- **Scope:** a new ADR (next free number; 0003 is the release-scope ADR) and, if ownership is
-  accepted, `src/material/`. Non-goals: acoustic/optical/rheology families (consumer-owned, ADR 0001).
-- **Acceptance oracle:** the ADR is indexed in `docs/adr/README.md` and states the decision against
-  the bare `Cow<'name, str>` identity (`src/material/model.rs:10`) and the "material-identity
-  vocabulary" stack role; if ownership is accepted, a typed constructor rejects invalid
-  identifiers with a value-semantic test.
-- **Next step:** draft the ADR (Proposed) with the recommended option.
-
-<a id="PRO-SEMVER-006"></a>
-### PRO-SEMVER-006 — Close the public enums for forward compatibility
-
-- **Status:** todo; **priority:** architecture; **milestone:** M-thermophysical-laws; **needs:** none.
-- **basis:** `d23144bb`. **Class:** [arch] [major]; effort S. The planned 0.2.0 admits the break
-  (0.1.x to 0.2.0 is incompatible under Cargo's leftmost-nonzero rule).
-- **Outcome:** adding a property family or coefficient order is not a breaking change for consumers.
-- **Scope:** `#[non_exhaustive]` on `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,16`),
-  `CoefficientOrder` and `TemperatureRole` (`src/constitutive/temperature/error.rs:7,16`).
-  Non-goals: the already non-exhaustive `TemperatureLawError` and `TemperatureValidity`.
-- **Acceptance oracle:** all six public enums carry the attribute; in-repo matches compile;
-  `cargo-semver-checks` classifies the change as major.
-- **Next step:** add the attribute to the four enums, fix in-repo matches, run the SemVer gate.
-
 <a id="PRO-GENERIC-007"></a>
 ### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
 
@@ -132,10 +102,24 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   `publish` sentence states the registry fact. Must not land while a book CI branch is in flight.
 - **Next step:** read each adopter test at its pinned commit, then edit the two passages.
 
+<a id="PRO-SEMVER-006"></a>
+### PRO-SEMVER-006 — Close the public enums for forward compatibility
+
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [arch] [major]; effort S. The planned 0.2.0 admits the break
+  (0.1.x to 0.2.0 is incompatible under Cargo's leftmost-nonzero rule).
+- **Outcome:** adding a property family or coefficient order is not a breaking change for consumers.
+- **Scope:** `#[non_exhaustive]` on `PropertyKind`, `PropertyConstraint` (`src/property/error.rs:5,16`),
+  `CoefficientOrder` and `TemperatureRole` (`src/constitutive/temperature/error.rs:7,16`).
+  Non-goals: the already non-exhaustive `TemperatureLawError` and `TemperatureValidity`.
+- **Acceptance oracle:** all six public enums carry the attribute; in-repo matches compile;
+  `cargo-semver-checks` classifies the change as major.
+- **Next step:** add the attribute to the four enums, fix in-repo matches, run the SemVer gate.
+
 <a id="PRO-SEAL-009"></a>
 ### PRO-SEAL-009 — Record or lift the response-set seal
 
-- **Status:** todo; **priority:** architecture; **milestone:** M-thermophysical-laws; **needs:** none.
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
 - **basis:** `d23144bb`. **Class:** [arch] [patch]; effort S.
 - **Outcome:** the closure of `ThermophysicalResponseSet` is a recorded decision, not an
   undocumented seal.
@@ -144,3 +128,19 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
   sealed and that consumer variation enters through the unsealed `TemperatureResponse` trait; or
   the seal is lifted so a correlated or tabulated response set can be supplied downstream.
 - **Next step:** write the ADR 0002 revision note unless a consumer needs a tabulated set.
+
+<a id="PRO-VOCAB-003"></a>
+### PRO-VOCAB-003 — Decide whether Proteus owns a named-material vocabulary
+
+- **Status:** todo; **priority:** tightening; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `d23144bb`. **Class:** [arch] [minor]; effort L. Informs PRO-PROV-002.
+- **Outcome:** an ADR records, with a recommended option, whether the provider owns canonical
+  material identity (a validated `MaterialId`-class newtype, optionally a cited catalog) or
+  identity stays a consumer-supplied string.
+- **Scope:** a new ADR (next free number; 0003 is the release-scope ADR) and, if ownership is
+  accepted, `src/material/`. Non-goals: acoustic/optical/rheology families (consumer-owned, ADR 0001).
+- **Acceptance oracle:** the ADR is indexed in `docs/adr/README.md` and states the decision against
+  the bare `Cow<'name, str>` identity (`src/material/model.rs:10`) and the "material-identity
+  vocabulary" stack role; if ownership is accepted, a typed constructor rejects invalid
+  identifiers with a value-semantic test.
+- **Next step:** draft the ADR (Proposed) with the recommended option.
