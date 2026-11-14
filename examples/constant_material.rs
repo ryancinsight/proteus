@@ -1,4 +1,8 @@
 //! Construct and evaluate a constant thermophysical material.
+//!
+//! The property values are round arithmetic fixtures, not reference data for any
+//! physical substance; the assertion checks the diffusivity `k / (rho * c_p)` bitwise
+//! against 1.5e-7.
 
 extern crate aequitas;
 extern crate proteus;
@@ -21,13 +25,13 @@ fn main() {
         .expect("non-negative conductivity");
     let properties =
         ThermophysicalProperties::new(density, heat_capacity, conductivity).expect("positive rho");
-    let material = Material::borrowed("reference liquid", ConstantLaw::new(properties));
+    let material = Material::borrowed("arithmetic fixture", ConstantLaw::new(properties));
 
     let evaluated = material
         .properties(NoState)
         .expect("constant law is infallible");
 
-    assert_eq!(material.name(), "reference liquid");
+    assert_eq!(material.name(), "arithmetic fixture");
     assert_eq!(
         evaluated.thermal_diffusivity().into_base().to_bits(),
         1.5e-7_f64.to_bits()

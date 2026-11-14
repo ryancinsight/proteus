@@ -106,10 +106,6 @@ one bounded domain is a labelled arithmetic fixture:
   cites ASTM F138/F139 as the grade, not as the origin of its values), the
   carbon-steel entry names no grade, and no entry encodes a validity range.
   PRO-PROV-002 tracks it.
-- `examples/constant_material.rs:24` ships `"reference liquid"` with
-  1000 / 4000 / 0.6, uncited and unbounded; `README.md:52` binds it to the
-  name `water` and `docs/book/examples/constant_material.md:5` calls it
-  "water-like". PRO-PROV-010 tracks it.
 - `examples/temperature_material.rs` is a labelled `"arithmetic fixture"`
   whose values are documented as non-physical. It is built with
   `TemperatureLaw::with_validity` over an inclusive 280 K to 340 K fixture

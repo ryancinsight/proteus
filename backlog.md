@@ -56,22 +56,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch], [minor] if the domain is a public accessor; effort L.
 - **Next step:** design note for the domain encoding.
 
-<a id="PRO-PROV-010"></a>
-### PRO-PROV-010 — Cite or rename the "reference liquid" example
-
-- **Outcome:** the `"reference liquid"` example (a `ConstantLaw` over `NoState`, so no temperature
-  state to bound) is cited or renamed to a non-physical fixture; split from PRO-PROV-002.
-- **Scope:** `examples/constant_material.rs`, `README.md:52`,
-  `docs/book/examples/constant_material.md`. Non-goals: PRO-PROV-002; arithmetic-oracle fixtures.
-- **Acceptance oracle:** a source comment cites source and table locator for
-  1000 / 4000 / 0.6, or `git grep -n -i -E 'reference liquid|water' --
-  examples/constant_material.rs README.md docs/book/examples/constant_material.md`
-  is empty (it is not at `d23144bb`).
-- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none;
-  **basis:** `d23144bb`.
-- **Risk/change class:** [verification] [patch]; effort S.
-- **Next step:** cite or rename, then run the oracle grep.
-
 <a id="PRO-GENERIC-007"></a>
 ### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
 
