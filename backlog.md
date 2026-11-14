@@ -1,38 +1,38 @@
 # Proteus backlog
 
+This board records provider-owned work. Cross-repository adoption remains in
+the Atlas board.
+
 <a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 
-- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness.
-- milestone: M-elastic-contracts; needs: none; basis: `d23144bb`.
+- Status: blocked; priority: correctness; milestone: M-elastic-contracts; needs: none.
+- basis: `d23144bb`. Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
 - Outcome: bulk validity uses the exact sign of `3lambda+2mu` by native FMA, with no widened
   arithmetic, saturation or tolerance (baseline `1681e9a` accepted exact `K<0` after `2mu`
-  overflowed). Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
-- Scope: `src/elastic/`, `tests/elastic/`; detail in `docs/verification/elastic-range.md`.
+  overflowed). Detail: `docs/verification/elastic-range.md`.
+- Scope: `src/elastic/`, `tests/elastic/`.
 - Acceptance oracle: exact-rational domain oracle at the zero-bulk boundary and its neighbours,
   rounded-two-thirds and subnormal cases, both scalar guards.
 - Next step, open holds (none recorded as discharged in the tree): final source/package/CI
-  gates, independent exact-head correctness review, performance/resource and lifecycle
-  acceptance. Blocked until that packet is recorded. Publication is not part of this item.
+  gates, independent exact-head correctness review, performance/resource acceptance. Re-open
+  trigger: that packet is recorded at the exact head. Publication is not part of this item.
 
 <a id="PRO-ELASTIC-DERIVED-RANGE"></a>
 ## PRO-ELASTIC-DERIVED-RANGE — Representable derived moduli [patch]
 
-- Status: blocked; owner: Codex; target: 0.1.1; priority: correctness; milestone: M-elastic-contracts.
-- needs: none; basis: `d23144bb`. Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
+- Status: blocked; priority: correctness; milestone: M-elastic-contracts; needs: none.
+- basis: `d23144bb`. Merged in [#87](https://github.com/ryancinsight/proteus/pull/87) on 2026-10-17.
 - Outcome: derived E/nu/K/M are finite whenever the exact result fits the native scalar; true
   overflow keeps IEEE infinity; the Lame pair and public API are unchanged.
 - Scope: `src/elastic/`, `tests/elastic/`; `docs/verification/elastic-range.md`, `elastic-guard.md`.
 - Acceptance oracle: exact-rational oracle (78,163 pairs incl. 27,594 review inputs; 336 + 305
   fixtures): no domain/classification mismatch, E/nu/K within one ULP, exact M rounding.
-- Next step, open holds: (1) renewed exact-head review of the guard integration (source,
-  package/API/conformance/CI, mixed/stack evidence; prior review does not approve it);
-  (2) performance/resource acceptance incl. peak stack/RSS; (3) lifecycle: `proteus-mat` is
-  absent from the sparse index (HTTP 404), so first-publication identity, authentication and
-  dependency scope stay a separate hold; preserve Iris #80's denied-read lifecycle hold and all protected holds.
-
-This board records provider-owned work. Cross-repository adoption remains in
-the Atlas board.
+- Next step, open holds; re-open trigger: (1) and (2) recorded at the exact head. (1) Renewed
+  review of the guard integration (prior review does not approve it); (2) performance/resource
+  acceptance incl. peak stack/RSS; (3) lifecycle: `proteus-mat` 0.1.1 is on the registry (looked up
+  2026-11-14T00:45Z), so first publication is moot; releasing the guard integration needs release
+  authority; keep Iris #80's denied-read hold and all protected holds.
 
 ## PRO-DOC-BOOK-001 — Execute included book examples [patch] — closed 2026-08-20
 

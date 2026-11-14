@@ -21,8 +21,9 @@ The repaired source passes 73 tests per mode and 78,163 exact-rational pairs
 per O2/O3/default/no-default combination, including all independent inputs;
 zero domain/classification mismatches, E/nu/K <=1 ULP, M exact rounding. No change to the
 wave-speed multiplication/division kernels, constitutive laws or other member
-is claimed. Review and performance/resource/lifecycle acceptance remain open;
-the sparse index has no `proteus-mat` entry. See the two backlog rows and
+is claimed. Review and performance/resource acceptance remain open; the
+sparse index lists `proteus-mat` 0.1.1 (published 2026-10-19T03:26:46Z, looked
+up 2026-11-14T00:45Z). See the two backlog rows and
 `docs/verification/elastic-range.md`. Older planning/rescue entries below are
 preserved; this work does not claim or close them.
 
@@ -36,7 +37,8 @@ The proof covers the locked f32/f64/F32/F64 domain and cancellation; it is not
 inferred solely from the finite oracle. Ordinary outputs and existing repaired
 boundaries retain their policies. New transition/wrapper tests and renewed
 source/package/gates/cost evidence accompany the changed head. Independent
-review, resource acceptance and first-publication identity remain separate holds.
+review and resource acceptance remain separate holds; the registry already lists
+`proteus-mat` 0.1.1, so releasing this integration is a release-authority act.
 
 ## Finding 2026-08-20: proteus scope-vs-delivery audit
 
@@ -199,8 +201,13 @@ constitutive-law boundary.
 - Atlas-level consumer adoption still needs a direct contract test at the
   consuming repository (PRO-CONSUMER-011); provider presence is not
   integration proof.
-- `Cargo.toml` sets `publish = true`. Package or documentation checks do not
-  prove release readiness.
+- `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1
+  (index `pubtime` 2026-10-19T03:26:46Z, looked up 2026-11-14T00:45Z). The
+  trigger "publish policy changes from `publish = false`" fired at 9e9609d and
+  is retired. Re-open trigger: the manifest version exceeds the registry's
+  latest or a release is requested; each needs release authority (M-1.0 for
+  the 1.0 release). Package or documentation checks do not prove release
+  readiness.
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
   committed at this revision; no preserved peer work limits local
   verification, which runs on an export outside the patch overlay.
