@@ -72,21 +72,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch]; effort S.
 - **Next step:** cite or rename, then run the oracle grep.
 
-<a id="PRO-GENERIC-007"></a>
-### PRO-GENERIC-007 — Instantiate the boundary suites at every supported scalar
-
-- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
-- **basis:** `d23144bb`. **Class:** [verification] [patch]; effort S.
-- **Outcome:** the validity-boundary and calibration-domain guarantees are verified for each
-  scalar the crate ships, not only `f64`.
-- **Scope:** `tests/properties.rs`, `tests/composition.rs`, and in `tests/temperature_law.rs` the
-  `f64`-only `bounded_calibration_domain_rejects_extrapolation` and
-  `bounded_calibration_domain_rejects_invalid_bounds_and_reference`. Non-goals: the codegen
-  fixture, which is deliberately `f64`-concrete.
-- **Acceptance oracle:** each boundary assertion runs through a generic `fn assert_*<T: RealField>()`
-  instantiated at `f32` and `f64`, matching `tests/theorems.rs:7-18`.
-- **Next step:** make the `tests/properties.rs` boundary assertions generic first.
-
 <a id="PRO-DOC-008"></a>
 ### PRO-DOC-008 — Ground the cross-repository ownership claim
 
