@@ -15,8 +15,8 @@ non-standalone API fragment:
 ```rust,ignore
 use proteus::{ConstantLaw, Material, NoState};
 
-let water = Material::borrowed("reference liquid", ConstantLaw::new(properties));
-let evaluated = water.properties(NoState)?;
+let fixture = Material::borrowed("arithmetic fixture", ConstantLaw::new(properties));
+let evaluated = fixture.properties(NoState)?;
 ```
 
 ## Temperature-dependent law
