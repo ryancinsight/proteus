@@ -49,8 +49,8 @@ let properties = ThermophysicalProperties::new(
     SpecificHeatCapacity::new(HeatCapacityQuantity::from_base(4_000.0_f64))?,
     ThermalConductivity::new(ConductivityQuantity::from_base(0.6_f64))?,
 )?;
-let water = Material::borrowed("reference liquid", ConstantLaw::new(properties));
-let evaluated = match water.properties(NoState) {
+let fixture = Material::borrowed("arithmetic fixture", ConstantLaw::new(properties));
+let evaluated = match fixture.properties(NoState) {
     Ok(properties) => properties,
     Err(never) => match never {},
 };
