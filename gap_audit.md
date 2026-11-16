@@ -1,5 +1,20 @@
 # Proteus gap audit
 
+## Direct calibration-domain admission (2026-11-16) [minor]
+
+At `47632f92`, `TemperatureValidity::Bounded` is public, but
+`TemperatureLaw::with_validity` checks only the reference temperature against
+its bounds. A NaN lower bound and 340 K upper bound admit a 300 K reference;
+the unordered comparison also erases the lower calibration limit. Infinite
+and nonpositive directly supplied bounds can similarly bypass `bounded()`.
+The new regression fails on that unchanged production source.
+
+Law construction now reuses `TemperatureValidity::bounded` before checking
+the reference. `TemperatureLawError::InvalidValidity` preserves the rejected
+bounds. Four tests cover invalid admission and valid value/boundary controls
+at f32/f64/F32/F64. See `docs/verification/temperature-validity.md` and the
+backlog item for the independent-review, final-gate, and release disposition.
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented and merged in

@@ -110,6 +110,9 @@ pub enum TemperatureValidity<T> {
     /// The law accepts every finite, strictly positive thermodynamic temperature.
     Positive,
     /// The law accepts temperatures in the inclusive `[minimum, maximum]` range.
+    ///
+    /// Law construction validates these bounds even when this variant is
+    /// constructed directly instead of through [`Self::bounded`].
     Bounded {
         /// Inclusive lower bound in kelvin.
         minimum: ThermodynamicTemperature<T>,
@@ -182,7 +185,9 @@ impl<T: RealField, Responses> TemperatureLaw<T, Responses> {
     ///
     /// # Errors
     ///
-    /// Returns [`TemperatureLawError::InvalidTemperature`] when the reference
+    /// Returns [`TemperatureLawError::InvalidValidity`] when directly supplied
+    /// bounds are non-finite, non-positive, or unordered;
+    /// [`TemperatureLawError::InvalidTemperature`] when the reference
     /// temperature is non-finite or non-positive, or
     /// [`TemperatureLawError::OutsideValidityDomain`] when it is outside the
     /// supplied calibration domain.
@@ -192,6 +197,11 @@ impl<T: RealField, Responses> TemperatureLaw<T, Responses> {
         validity: TemperatureValidity<T>,
         responses: Responses,
     ) -> Result<Self, TemperatureLawError<T>> {
+        // The public enum can be constructed without `bounded`; admit a law
+        // only after enforcing the same finite, positive, ordered invariant.
+        if let TemperatureValidity::Bounded { minimum, maximum } = validity {
+            TemperatureValidity::bounded(minimum, maximum)?;
+        }
         validate_temperature(TemperatureRole::Reference, reference_temperature, &validity)?;
         Ok(Self {
             reference_properties,

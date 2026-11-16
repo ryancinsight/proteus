@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.2.0 — Unreleased
+
+### Added
+
+- `TemperatureLawError::InvalidValidity` retains the rejected calibration
+  bounds when a directly constructed `TemperatureValidity::Bounded` is invalid.
+  The error enum remains non-exhaustive.
+
+### Fixed
+
+- Validate finite, positive, ordered calibration bounds at law construction,
+  including public enum variants constructed without `TemperatureValidity::bounded`.
+  NaN comparisons and infinite or nonpositive bounds can no longer bypass
+  calibration admission. Valid domains retain their inclusive boundaries and
+  computed properties.
+
+### Breaking
+
+- Current main already exposes Eunomia 0.12 scalar traits, while published
+  `proteus-mat` 0.1.1 uses Eunomia 0.10. The new error variant is additive;
+  this inherited provider transition requires the 0.2.0 boundary and consumer
+  qualification before merge or publication. This correction does not migrate
+  consumer requirements, locks, or generic bounds. Existing scalar-generic
+  consumers must move their Eunomia bounds to the same provider as Proteus.
+
 ## 0.1.1 — Unreleased
 
 ### Fixed

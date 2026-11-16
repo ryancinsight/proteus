@@ -1,0 +1,65 @@
+# Temperature calibration-domain admission
+
+## Contract and demonstrated defect
+
+An admitted law's validity is either `Positive`, or `Bounded` with native
+scalar bounds satisfying
+
+```text
+is_finite(minimum) && is_finite(maximum)
+&& 0 < minimum <= maximum.
+```
+
+The reference must then be a finite positive temperature inside that domain.
+The public enum allows callers to construct `Bounded` without `bounded()`;
+law construction must enforce the domain invariant regardless of that route.
+
+At base `47632f92f7eec394a3a4a16bae2ec715741d0b1f`, a 300 K reference
+with directly supplied `[NaN, 340]` bounds is admitted. The existing
+`value < minimum || value > maximum` check cannot detect a NaN bound.
+Infinite and nonpositive bounds can also be admitted. The original public-API
+regression fails because `with_validity` returns a law instead of an error.
+
+## Decision
+
+`with_validity` calls the existing bounded-domain constructor before reference
+validation. This keeps one authoritative bound predicate, adds no new state,
+and performs no response evaluation or arithmetic conversion. `Positive`
+requires no bounds check. A valid bounded domain is stored unchanged, so the
+existing inclusive evaluation predicate and response computation are unchanged.
+
+The non-exhaustive `TemperatureLawError` gains `InvalidValidity`, containing
+the existing `InvalidTemperatureValidity` with both original bounds. The
+domain error takes precedence over reference errors for malformed domains;
+valid domains retain `InvalidTemperature` and `OutsideValidityDomain`.
+Removing the public enum fields would break callers. Reusing a reference-
+temperature or extrapolation error would misidentify a malformed domain.
+
+## Executable verification
+
+`tests/temperature_validity.rs` instantiates every test at `f32`, `f64`, `F32`,
+and `F64` through the same `RealField` helper. The negative cases include NaN
+in either or both bounds, both infinities, signed zero, negative bounds,
+and reversed bounds. Tests inspect the error variant, both rejected values,
+and error formatting. Positive controls compare direct and constructor domains,
+assert the full computed property bundle at both inclusive bounds and the
+reference, and reject their adjacent representable exterior temperatures.
+A singleton domain also remains valid. Invalid references retain their typed
+role and value. All whole-kelvin inputs and adjacent steps are exact in both
+native precisions; no tolerance or widened arithmetic is needed.
+
+## Version and delivery boundary
+
+The additive error variant targets 0.2.0. Current main already uses Eunomia
+0.12 where published 0.1.1 used 0.10, an inherited provider identity transition
+also recorded by the preserved diffusivity PR #94. This increment does not
+qualify consumer migration or claim compatibility with consumers requiring 0.1.
+No dependency selection is changed; only the root package version changes in
+`Cargo.lock`. Existing elastic acceptance and service holds remain separate.
+
+Merge and publication remain held for coordinator review. In the committed
+`rust-release.yml`, pushes to main and the daily schedule invoke the shared
+pending-version publisher. A draft PR does not authorize those actions.
+Independent source review, exact-head checks, required GitHub review state,
+consumer qualification, and deployment settings must be inspected before
+any later integration decision. No release or deployment is performed here.

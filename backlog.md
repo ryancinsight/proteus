@@ -3,6 +3,26 @@
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
 
+<a id="PRO-TEMPERATURE-VALIDITY-ADMISSION"></a>
+## PRO-TEMPERATURE-VALIDITY-ADMISSION — Validate supplied calibration domains [minor]
+
+- Status: blocked; priority: correctness; milestone: M-thermophysical-laws; needs: none.
+- basis: `47632f92f7eec394a3a4a16bae2ec715741d0b1f`.
+- Owner: Codex `6afb23d8-4650-8191-93aa-f6a1b375403f`;
+  branch `fix/temperature-validity-admission`.
+- Outcome: every admitted law has finite, positive, ordered calibration bounds,
+  even when its public `Bounded` variant is supplied directly.
+- Scope: temperature law admission and its typed domain error; new
+  `tests/temperature_validity.rs`. Non-goals: thermal diffusivity, elastic
+  recovery, provider/consumer migration, publication, and other service-held work.
+- Acceptance oracle: baseline accepts a NaN lower bound; candidate rejects every
+  invalid direct domain with its typed bounds and retains valid property values,
+  inclusive/adjacent boundaries, and reference errors for f32/f64/F32/F64.
+- Source correction and regression are implemented. Next step: coordinator
+  inspection of independent exact-head review and final-head gate receipts.
+  The additive error targets 0.2.0; inherited scalar-provider compatibility and
+  release acceptance remain coordinator-held. Detail: `docs/verification/temperature-validity.md`.
+
 <a id="PRO-ELASTIC-VALIDITY-RANGE"></a>
 ## PRO-ELASTIC-VALIDITY-RANGE — Exact-sign bulk validity [patch]
 
