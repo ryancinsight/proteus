@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.0
+
+### Breaking
+
+- [major] Material inputs and results use Aequitas 0.4 quantities and Eunomia 0.12 scalars. Consumers move their direct dependencies to these same registry identities. In particular, callers can pass Aequitas 0.4 mass density and thermophysical quantities directly.
+
 ## 0.1.1 — Unreleased
 
 ### Fixed

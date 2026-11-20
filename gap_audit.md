@@ -1,5 +1,10 @@
 # Proteus gap audit
 
+## Registry provider release 0.2.0
+
+- Material inputs and results use Aequitas 0.4 quantities and Eunomia 0.12 scalars. Consumers move their direct dependencies to these same registry identities. In particular, callers can pass Aequitas 0.4 mass density and thermophysical quantities directly.
+- The release gate verifies the typed API, archived dependency baseline, and fresh consumer graph.
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented and merged in
