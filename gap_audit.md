@@ -1,5 +1,13 @@
 # Proteus gap audit
 
+## proteus-mat 0.2.0 registry verification
+
+The crates.io archive matches source `5fddc638543994f5b852a63c0c9aca778e1321ed`
+at tag `v0.2.0`. Its SHA-256 matches the registry index.
+An independent consumer passes Proteus mass density into Hyperion's
+linear attenuation calculation and obtains exactly 8 m⁻¹.
+
+
 ## Registry provider release 0.2.0
 
 - Material inputs and results use Aequitas 0.4 quantities and Eunomia 0.12 scalars. Consumers move their direct dependencies to these same registry identities. In particular, callers can pass Aequitas 0.4 mass density and thermophysical quantities directly.
