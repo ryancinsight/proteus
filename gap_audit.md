@@ -1,5 +1,12 @@
 # Proteus gap audit
 
+## proteus-mat 0.3.0 provider release [major]
+
+The published 0.2.0 archive selects Aequitas 0.4. Release 0.3.0 uses
+Aequitas 0.5. Its Cargo package and consumer must agree on that source and
+version for the shared Rust types. The registry check covers the archive
+checksum, its Git revision, and the typed boundary.
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented and merged in

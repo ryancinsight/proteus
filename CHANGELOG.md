@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0] - 2026-11-20
+
+### Breaking
+
+- [major] Upgrade the public Aequitas provider from 0.4 to 0.5.
+  Pass Aequitas 0.5 mass-density and thermophysical quantities to material APIs.
+  See [ADR 0004](docs/adr/0004-registry-provider-release.md).
+
+## [0.2.0] - 2026-11-20
+
+### Breaking
+
+- [major] Release the previous public quantity boundary against Aequitas 0.4.
+
 ## 0.1.1 — Unreleased
 
 ### Fixed

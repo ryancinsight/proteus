@@ -1,5 +1,11 @@
 # Proteus backlog
 
+## proteus-mat 0.3.0 public quantity provider [major]
+
+- Publish for the Aequitas 0.5 cohort using the approved registry name.
+- Acceptance requires one Aequitas 0.5 and one Eunomia 0.12.1 in a fresh
+  registry lock and actual values exchanged across the public boundary.
+
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
 
