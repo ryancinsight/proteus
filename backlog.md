@@ -1,5 +1,15 @@
 # Proteus backlog
 
+<a id="proteus-stable-qualification"></a>
+## PROTEUS-STABLE-QUALIFICATION — proteus stable-release qualification [patch] — todo
+- priority: verification; milestone: M-elastic-contracts; basis: `f571ea6adf1c`.
+- Outcome: Close the post-publication evidence for elastic validity and derived moduli. Follow the [release scope](docs/adr/0003-release-scope-1-0.md) and [milestone exits](backlog/milestones.md).
+- Representative manifest `proteus-mat 0.1.1`. Target 1.0.0.
+- [ ] [patch] Replay PRO-ELASTIC-VALIDITY-RANGE and PRO-ELASTIC-DERIVED-RANGE using the exact-rational reference at the zero-bulk boundary, adjacent values, subnormals and true overflow.
+- [ ] [patch] Attach independent review and measured time, peak stack and memory for the guard on the selected revision. Exercise it through an Ares constitutive calculation.
+- [ ] [major] Complete the thermophysical law examples and elastic contract gates, then freeze the documented rejection behavior and validate the published material package.
+- [ ] [patch] Attach exact-revision evidence for the local exits and this member’s [Atlas qualification criteria](https://github.com/ryancinsight/atlas/blob/17b0124a7548ad81e817284afc5cb115c1d1bc78/docs/parity/repositories.json).
+
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
 
