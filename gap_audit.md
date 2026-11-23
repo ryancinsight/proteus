@@ -10,7 +10,7 @@ The reconciled tree includes [the published source](https://github.com/ryancinsi
 
 77 all-feature tests passed. Helios Solver verified linear attenuation against mass attenuation times density in both precisions. [Consumer test at the reviewed revision](https://github.com/ryancinsight/helios/blob/b7bda4cd62296a3b11869f03405cab7e6d62dffa/crates/helios-solver/src/attenuation_map.rs). A new external Cargo project resolved all five released provider crates from crates.io, with one Aequitas 0.5.0, Eunomia 0.12.1 and Leto 0.52.0. It checked typed time admission, both elastic moduli and FFT axis products, including invalid inputs.
 
-Ares and Hyperion require the older 0.1 Git line. The newer archive is outside that dependency range. The existing locks identify the old commits. Fresh unpinned Git consumers need a compatible, explicitly selected source before switching the default provider.
+Migrated consumers resolve the published provider from clean external Cargo projects pinned to their merged Git revisions. [ares #100](https://github.com/ryancinsight/ares/pull/100) (`26b32a05efa3`, proteus-mat 0.3.0), [hyperion #116](https://github.com/ryancinsight/hyperion/pull/116) (`94a46b823dd7`, proteus-mat 0.3.0).
 
 The next [patch] checkpoint uses [identities](tests/elastic/identities.rs). [Target version and acceptance criteria](backlog.md#proteus-stable-qualification).
 
