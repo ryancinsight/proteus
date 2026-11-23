@@ -3,14 +3,17 @@
 <a id="proteus-stable-qualification"></a>
 ## PROTEUS-STABLE-QUALIFICATION — proteus stable-release qualification [patch] — todo
 - priority: verification; milestone: M-elastic-contracts; basis: `1ab9ef7492c7`.
-- Outcome: Close the post-publication evidence for elastic validity and derived moduli. Follow the [release scope](docs/adr/0003-release-scope-1-0.md) and [milestone exits](backlog/milestones.md). Planning targets for `proteus-mat` are 0.3.1 after source reconciliation, then 0.4.0 only for additive material contracts, then 1.0.0. Verification alone can advance the current version.
-- Representative manifest `proteus-mat 0.1.1`. Target 1.0.0.
+- Outcome: Close the post-publication evidence for elastic validity and derived moduli. Follow the [release scope](docs/adr/0003-release-scope-1-0.md) and [milestone exits](backlog/milestones.md). Planning targets for `proteus-mat` are 0.3.1, then 0.4.0 only for additive material contracts, then 1.0.0. Verification alone can advance the current version.
+- Representative manifest `proteus-mat 0.3.0`. Target 1.0.0.
 - [ ] [patch] Replay PRO-ELASTIC-VALIDITY-RANGE and PRO-ELASTIC-DERIVED-RANGE using the exact-rational reference at the zero-bulk boundary, adjacent values, subnormals and true overflow.
 - [ ] [patch] Attach independent review and measured time, peak stack and memory for the guard on the selected revision. Exercise it through an Ares constitutive calculation.
 - [ ] [major] Complete the thermophysical law examples and elastic contract gates, then freeze the documented rejection behavior and validate the published material package.
-- [ ] [patch] **0.3.1 after source reconciliation.** Recover the 0.3.0 archive source and compare its elastic API with default-branch 0.1.1. Check derived moduli against the rational oracle at the zero-bulk boundary, its neighbors and overflow. [Source and baseline](gap_audit.md#incremental-release-baseline).
+- [ ] [patch] **0.3.1.** Check derived moduli against the rational oracle at the zero-bulk boundary, its neighbors and overflow. [Source and baseline](gap_audit.md#incremental-release-baseline).
 - [ ] [minor] **0.4.0 only for additive material contracts.** Verify the property and elastic milestones against the reconciled package in Ares. Compare recovered stress with the constitutive reference and record units, bounds and rejection behavior.
+- [ ] [major] Block 1.0 until every critical feature is fully implemented through the supported product path. Map each critical requirement, including thermophysical properties, isotropic conversions and invalid-material rejection, to implementation and passing acceptance evidence on the release candidate. Any missing implementation or required result keeps this item open.
 - [ ] [major] **1.0.0-beta.1 → 1.0.0-rc.1 → 1.0.0.** Freeze the supported surface at beta. The downstream material caller reproduces thermophysical and elastic values using the same released package and feature graph. Repeat the applicable exits on the exact RC before stable promotion. Attach exact-revision evidence for the local exits and this member’s [Atlas qualification criteria](https://github.com/ryancinsight/atlas/blob/17b0124a7548ad81e817284afc5cb115c1d1bc78/docs/parity/repositories.json).
+
+- [x] [patch] Verify the published proteus-mat 0.3.0 source and run a downstream value test. [Archive and consumer evidence](gap_audit.md#incremental-release-baseline).
 
 This board records provider-owned work. Cross-repository adoption remains in
 the Atlas board.
