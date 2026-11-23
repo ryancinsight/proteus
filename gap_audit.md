@@ -1,5 +1,11 @@
 # Proteus gap audit
 
+## Incremental release baseline
+
+Reviewed [proteus-mat 0.1.1](Cargo.toml) at [1ab9ef7492c7](https://github.com/ryancinsight/proteus/tree/1ab9ef7492c74571a3bebeb61fc2d2ec6e499e94). The exact version appears in the [registry](https://crates.io/crates/proteus-mat/0.1.1). The newer [0.3.0](https://crates.io/crates/proteus-mat/0.3.0) archive identifies source `d8674396be79e405341dd1465b56c57942ccf609`. Its SHA-256 `057668fe75d0ac7e85085309149e90e36de1747d6eba7435aa37f551b4dfb85b` matches the index. The release source and reviewed branch diverge. The archive side has 1 unique commit and the default branch has two. Reconcile both sides and replay the consumer before allocating another version. [Compare revisions](https://github.com/ryancinsight/proteus/compare/1ab9ef7492c74571a3bebeb61fc2d2ec6e499e94...d8674396be79e405341dd1465b56c57942ccf609).
+
+The next [patch] checkpoint uses [identities](tests/elastic/identities.rs). [Target version and acceptance criteria](backlog.md#proteus-stable-qualification).
+
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 
 Two correctness findings at `1681e9a` are implemented and merged in
