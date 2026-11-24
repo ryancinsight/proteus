@@ -1,19 +1,25 @@
 # Proteus gap audit
 
-## Direct calibration-domain admission (2026-11-16) [minor]
+## Incremental release baseline
 
-At `47632f92`, `TemperatureValidity::Bounded` is public, but
-`TemperatureLaw::with_validity` checks only the reference temperature against
-its bounds. A NaN lower bound and 340 K upper bound admit a 300 K reference;
-the unordered comparison also erases the lower calibration limit. Infinite
-and nonpositive directly supplied bounds can similarly bypass `bounded()`.
-The new regression fails on that unchanged production source.
+The reconciled tree includes [the published source](https://github.com/ryancinsight/proteus/commit/d8674396be79e405341dd1465b56c57942ccf609) and the default-branch planning history. Each archive’s embedded source revision equals `d8674396be79e405341dd1465b56c57942ccf609`. Each checksum below matches its non-yanked registry entry. Compared file counts cover package-authored files, including the original manifest. Cargo-generated metadata, normalized manifests and generated package lockfiles are excluded from the byte count.
 
-Law construction now reuses `TemperatureValidity::bounded` before checking
-the reference. `TemperatureLawError::InvalidValidity` preserves the rejected
-bounds. Four tests cover invalid admission and valid value/boundary controls
-at f32/f64/F32/F64. See `docs/verification/temperature-validity.md` and the
-backlog item for the independent-review, final-gate, and release disposition.
+| Package | SHA-256 | Files matching release source |
+| --- | --- | ---: |
+| [proteus-mat 0.3.0](https://crates.io/crates/proteus-mat/0.3.0) | `057668fe75d0ac7e85085309149e90e36de1747d6eba7435aa37f551b4dfb85b` | 85 |
+
+77 all-feature tests passed. Helios Solver verified linear attenuation against mass attenuation times density in both precisions. [Consumer test at the reviewed revision](https://github.com/ryancinsight/helios/blob/b7bda4cd62296a3b11869f03405cab7e6d62dffa/crates/helios-solver/src/attenuation_map.rs). A new external Cargo project resolved all five released provider crates from crates.io, with one Aequitas 0.5.0, Eunomia 0.12.1 and Leto 0.52.0. It checked typed time admission, both elastic moduli and FFT axis products, including invalid inputs.
+
+Migrated consumers resolve the published provider from clean external Cargo projects pinned to their merged Git revisions. [ares #100](https://github.com/ryancinsight/ares/pull/100) (`26b32a05efa3`, proteus-mat 0.3.0), [hyperion #116](https://github.com/ryancinsight/hyperion/pull/116) (`94a46b823dd7`, proteus-mat 0.3.0).
+
+The next [patch] checkpoint uses [identities](tests/elastic/identities.rs). [Target version and acceptance criteria](backlog.md#proteus-stable-qualification).
+
+## proteus-mat 0.3.0 provider release [major]
+
+The published 0.2.0 archive selects Aequitas 0.4. Release 0.3.0 uses
+Aequitas 0.5. Its Cargo package and consumer must agree on that source and
+version for the shared Rust types. The registry check covers the archive
+checksum, its Git revision, and the typed boundary.
 
 ## Native isotropic-elastic range audit (2026-10-17) [patch]
 

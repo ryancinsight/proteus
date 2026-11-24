@@ -50,16 +50,4 @@ native precisions; no tolerance or widened arithmetic is needed.
 
 ## Version and delivery boundary
 
-The additive error variant targets 0.2.0. Current main already uses Eunomia
-0.12 where published 0.1.1 used 0.10, an inherited provider identity transition
-also recorded by the preserved diffusivity PR #94. This increment does not
-qualify consumer migration or claim compatibility with consumers requiring 0.1.
-No dependency selection is changed; only the root package version changes in
-`Cargo.lock`. Existing elastic acceptance and service holds remain separate.
-
-Merge and publication remain held for coordinator review. In the committed
-`rust-release.yml`, pushes to main and the daily schedule invoke the shared
-pending-version publisher. A draft PR does not authorize those actions.
-Independent source review, exact-head checks, required GitHub review state,
-consumer qualification, and deployment settings must be inspected before
-any later integration decision. No release or deployment is performed here.
+The original candidate targeted 0.2.0. The integrated source uses the current 0.3 provider cohort. Independent source review, consumer qualification, hosted checks, and coordinator review of deployment settings remain open before merge.
