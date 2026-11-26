@@ -1,5 +1,7 @@
 # Proteus
 
+[Read the user manual](https://ryancinsight.github.io/proteus/) for concepts and examples.
+
 Proteus is the Atlas owner for shared material properties and constitutive-law
 contracts. Phase 1 provides validated isotropic thermophysical properties and
 statically dispatched constant, linear, and quadratic temperature response.
