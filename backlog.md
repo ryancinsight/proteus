@@ -50,6 +50,14 @@ the Atlas board.
   (2) performance/resource acceptance incl. peak stack/RSS; (3) lifecycle: Iris #80's denied-read
   hold and all protected holds stay. A failure is remedied by a yank plus a forward version.
 
+<a id="PROTEUS-RELEASE-MATRIX"></a>
+## PROTEUS-RELEASE-MATRIX — proteus-mat 0.3.0 release feature and API matrix [major] — todo
+- priority: verification; milestone: M-elastic-contracts; basis: `9bb6e29`.
+- Outcome: Complete the release feature and API matrix for the published `proteus-mat 0.3.0`. The two provider lines this item inherits are done and evidenced: the published Aequitas 0.5 and Eunomia 0.12.1 identities are selected, and the published archive plus a fresh registry consumer were verified against the released provider graph after the downstream revisions merged. Only the matrix itself is open.
+- Scope: `docs/`, `src/`, `tests/`.
+- Acceptance oracle: every critical feature in the published 0.3.0 surface maps to an implemented API and a passing acceptance test on the released package; the matrix names the file and test for each.
+- Next step: enumerate the matrix against [the incremental release baseline](gap_audit.md#incremental-release-baseline) and close each missing row.
+
 ## Gap-audit 2026-08-20 items
 
 Filed by the Atlas gap audit at `944eed05` from static evidence only; each
