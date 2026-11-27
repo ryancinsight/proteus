@@ -17,8 +17,16 @@ law construction must enforce the domain invariant regardless of that route.
 At base `47632f92f7eec394a3a4a16bae2ec715741d0b1f`, a 300 K reference
 with directly supplied `[NaN, 340]` bounds is admitted. The existing
 `value < minimum || value > maximum` check cannot detect a NaN bound.
-Infinite and nonpositive bounds can also be admitted. The original public-API
-regression fails because `with_validity` returns a law instead of an error.
+Infinite and nonpositive bounds can also be admitted.
+
+The test `direct_calibration_bounds_cannot_bypass_validation` in
+`tests/temperature_validity.rs` asserts that rejection. With the
+`if let TemperatureValidity::Bounded { .. }` block of `with_validity` removed
+from `law.rs`, it fails at the `expect_err` call on the first case, `[NaN, 340]`
+with a 300 K reference, because `with_validity` returns `Ok`.
+`invalid_domains_are_rejected_before_reference_validation` fails as well. The
+test file names `TemperatureLawError::InvalidValidity`, which does not exist at
+the base.
 
 ## Decision
 
@@ -40,14 +48,12 @@ temperature or extrapolation error would misidentify a malformed domain.
 `tests/temperature_validity.rs` instantiates every test at `f32`, `f64`, `F32`,
 and `F64` through the same `RealField` helper. The negative cases include NaN
 in either or both bounds, both infinities, signed zero, negative bounds,
-and reversed bounds. Tests inspect the error variant, both rejected values,
-and error formatting. Positive controls compare direct and constructor domains,
+negative subnormal bounds, and reversed bounds. Tests inspect the error
+variant, both rejected values including the sign of a rejected zero, and error
+formatting. A positive subnormal minimum is admitted and inclusive.
+Positive controls compare direct and constructor domains,
 assert the full computed property bundle at both inclusive bounds and the
 reference, and reject their adjacent representable exterior temperatures.
 A singleton domain also remains valid. Invalid references retain their typed
 role and value. All whole-kelvin inputs and adjacent steps are exact in both
 native precisions; no tolerance or widened arithmetic is needed.
-
-## Version and delivery boundary
-
-The original candidate targeted 0.2.0. The integrated source uses the current 0.3 provider cohort. Independent source review, consumer qualification, hosted checks, and coordinator review of deployment settings remain open before merge.

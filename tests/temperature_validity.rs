@@ -15,6 +15,7 @@ fn assert_direct_bounds_are_validated<T: RealField>() {
     let upper = T::from_f64(340.0);
     let zero = <T as NumericElement>::ZERO;
     let negative = -<T as NumericElement>::ONE;
+    let subnormal = smallest_positive_subnormal::<T>();
     let invalid = [
         (T::NAN, upper),
         (lower, T::NAN),
@@ -32,6 +33,8 @@ fn assert_direct_bounds_are_validated<T: RealField>() {
         (lower, negative),
         (zero, zero),
         (negative, negative),
+        (-subnormal, upper),
+        (lower, -subnormal),
         (upper, lower),
     ];
 
@@ -69,7 +72,53 @@ fn assert_same_value<T: RealField>(actual: T, expected: T) {
         assert!(actual.is_nan(), "rejected NaN must remain NaN: {actual:?}");
     } else {
         assert_eq!(actual, expected);
+        assert_eq!(
+            actual.is_sign_negative(),
+            expected.is_sign_negative(),
+            "rejected zero must keep its sign: {actual:?}"
+        );
     }
+}
+
+/// Smallest positive value of `T`, found by halving until the next halving
+/// underflows to zero; it is subnormal because its half is not representable.
+fn smallest_positive_subnormal<T: RealField>() -> T {
+    let half = T::from_f64(0.5);
+    let mut value = <T as NumericElement>::ONE;
+    while value * half > <T as NumericElement>::ZERO {
+        value *= half;
+    }
+    assert!(value > <T as NumericElement>::ZERO);
+    value
+}
+
+fn assert_subnormal_minimum_is_admitted<T: RealField>() {
+    let subnormal = ThermodynamicTemperature::from_base(smallest_positive_subnormal::<T>());
+    let maximum = ThermodynamicTemperature::from_base(T::from_f64(340.0));
+    let validity = TemperatureValidity::Bounded {
+        minimum: subnormal,
+        maximum,
+    };
+    let law = TemperatureLaw::with_validity(
+        common::reference(),
+        ThermodynamicTemperature::from_base(T::from_f64(300.0)),
+        validity,
+        ResponseSet::new(ConstantResponse, ConstantResponse, ConstantResponse),
+    )
+    .expect("a positive subnormal minimum is finite and above zero");
+    assert_eq!(
+        law.validity(),
+        &TemperatureValidity::bounded(subnormal, maximum).expect("valid bounds")
+    );
+    assert_eq!(law.properties(&subnormal), Ok(common::reference()));
+}
+
+#[test]
+fn positive_subnormal_minimum_is_admitted_and_inclusive() {
+    assert_subnormal_minimum_is_admitted::<f32>();
+    assert_subnormal_minimum_is_admitted::<f64>();
+    assert_subnormal_minimum_is_admitted::<F32>();
+    assert_subnormal_minimum_is_admitted::<F64>();
 }
 
 fn assert_valid_direct_domains<T: RealField>() {
