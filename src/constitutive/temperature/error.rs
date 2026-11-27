@@ -94,10 +94,12 @@ impl<T: fmt::Debug> fmt::Display for InvalidTemperatureCoefficient<T> {
 
 impl<T: fmt::Debug> core::error::Error for InvalidTemperatureCoefficient<T> {}
 
-/// Failure evaluating temperature-dependent thermophysical properties.
+/// Failure constructing or evaluating temperature-dependent thermophysical laws.
 #[derive(Clone, Copy, Debug, PartialEq)]
 #[non_exhaustive]
 pub enum TemperatureLawError<T> {
+    /// A supplied calibration domain has invalid bounds.
+    InvalidValidity(InvalidTemperatureValidity<T>),
     /// A thermodynamic temperature was non-finite or not strictly positive.
     InvalidTemperature {
         /// Role of the rejected temperature.
@@ -132,9 +134,16 @@ impl<T> From<InvalidProperty<T>> for TemperatureLawError<T> {
     }
 }
 
+impl<T> From<InvalidTemperatureValidity<T>> for TemperatureLawError<T> {
+    fn from(error: InvalidTemperatureValidity<T>) -> Self {
+        Self::InvalidValidity(error)
+    }
+}
+
 impl<T: fmt::Debug> fmt::Display for TemperatureLawError<T> {
     fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::InvalidValidity(error) => error.fmt(formatter),
             Self::InvalidTemperature { role, value } => {
                 write!(
                     formatter,

@@ -101,6 +101,9 @@ the positive-temperature domain. A calibrated law uses
 `TemperatureValidity::bounded(minimum, maximum)` with
 `TemperatureLaw::with_validity`; both bounds are inclusive and every
 evaluation outside them returns `TemperatureLawError::OutsideValidityDomain`.
+Directly constructed bounds are checked by `with_validity`, which returns
+`TemperatureLawError::InvalidValidity` with the rejected bounds when they are
+non-finite, non-positive, or reversed.
 
 ## Mathematical evidence
 

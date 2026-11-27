@@ -96,6 +96,9 @@
 
 ### Fixed
 
+- [minor] `TemperatureLaw::with_validity` rejects non-finite, non-positive, or
+  reversed directly constructed calibration bounds through the new
+  `TemperatureLawError::InvalidValidity` variant.
 - Pin Aequitas to its merged thermal-diffusivity revision so consumers resolve
   one dimensional-type identity across the Proteus boundary.
 - Advance the Aequitas pin to the merged biological-response quantity revision
