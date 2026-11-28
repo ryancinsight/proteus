@@ -198,14 +198,16 @@ constitutive-law boundary.
 ## Residuals
 
 - `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1,
-  0.2.0 and 0.3.0, none yanked (crates.io API, looked up 2026-11-28T00:07Z). The
+  0.2.0 and 0.3.0, none yanked (crates.io API, looked up 2026-11-28T00:41Z). The
   trigger "publish policy changes from `publish = false`" fired at 9e9609d and
   is retired. Re-open trigger: a PR changes `version` in `Cargo.toml`, or a
   release is requested (M-1.0 for 1.0). Review at the PR: `rust-release.yml`
   runs a publish-pending job on push to main, and its `crates-io` environment
-  has no protection rules. The trigger cannot see same-version drift: default
-  requires eunomia 0.12.0 while the published 0.1.1 requires ^0.10.0. Package
-  or documentation checks do not prove release readiness.
+  has no protection rules (gh api, looked up 2026-11-28T00:41Z). A
+  version-change trigger cannot see same-version drift; none shows at 3d83811:
+  the published 0.3.0 requires aequitas ^0.5.0 and eunomia ^0.12.1, the
+  requirements `Cargo.toml:24-25` states (crates.io dependencies API, looked up
+  2026-11-28T00:41Z).
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
   committed at this revision; no preserved peer work limits local
   verification, which runs on an export outside the patch overlay.
