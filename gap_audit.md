@@ -204,10 +204,16 @@ constitutive-law boundary.
   release is requested (M-1.0 for 1.0). Review at the PR: `rust-release.yml`
   runs a publish-pending job on push to main, and its `crates-io` environment
   has no protection rules (gh api, looked up 2026-11-28T00:41Z). A
-  version-change trigger cannot see same-version drift; none shows at 3d83811:
-  the published 0.3.0 requires aequitas ^0.5.0 and eunomia ^0.12.1, the
-  requirements `Cargo.toml:24-25` states (crates.io dependencies API, looked up
-  2026-11-28T00:41Z).
+  version-change trigger cannot see same-version drift, and source drift exists
+  at 3d83811: the published 0.3.0 was built from d8674396be79 (docs.rs source
+  view of its `.cargo_vcs_info.json`, looked up 2026-11-28T01:04Z), and
+  `git diff --numstat d8674396be79 3d83811 -- src` lists
+  `src/constitutive/temperature/error.rs` (+10/-1) and
+  `src/constitutive/temperature/law.rs` (+11/-1), fix 3136d4d, which adds
+  `TemperatureLawError::InvalidValidity`, at the same `version = "0.3.0"`.
+  Dependency requirements do not drift: the published 0.3.0 requires
+  aequitas ^0.5.0 and eunomia ^0.12.1, as `Cargo.toml:24-25` state (crates.io
+  dependencies API, looked up 2026-11-28T00:41Z).
 - `Cargo.lock`, `Cargo.toml` and `examples/temperature_material.rs` are
   committed at this revision; no preserved peer work limits local
   verification, which runs on an export outside the patch overlay.
