@@ -58,6 +58,31 @@ the Atlas board.
 - Acceptance oracle: every critical feature in the published 0.3.0 surface maps to an implemented API and a passing acceptance test on the released package; the matrix names the file and test for each.
 - Next step: enumerate the matrix against [the incremental release baseline](gap_audit.md#incremental-release-baseline) and close each missing row.
 
+<a id="PRO-DOC-009"></a>
+## PRO-DOC-009 — Link the user manual and a first example from the entry points [patch]
+
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `3d83811cd39a24a423317f0d2921dd01d6d85c22`. **Class:** [docs] [patch]; effort S.
+- **Outcome:** the README (the crates.io page) and the book index each lead a reader to the manual and the
+  Constant Material example: by absolute Pages URL in the README, by chapter link in the book index. The
+  manual root and the example page answer HTTP 200 (curl, looked up 2026-11-28).
+- **Scope:** `README.md`, `docs/book/README.md`. Source work: the commit at `refs/pull/127/head` adds a
+  README manual line and a book "Start here" list and merges cleanly onto the basis; it names no example in
+  the README. `examples/constant_material.rs` exists and `.github/workflows/ci.yml:55` runs it.
+- **Acceptance oracle:** at the fix head `<rev>`: `git show <rev>:README.md | grep -c -F https://ryancinsight.github.io/proteus/examples/constant_material.html` prints 1; `git show <rev>:docs/book/README.md | grep -c -E '\]\((validated_properties|examples/constant_material)\.md\)'` prints 2; `mdbook build docs/book -d <dir>` on an export of `<rev>` exits 0 and `grep -c 'href="examples/constant_material.html"' <dir>/index.html` prints 1. At the basis these print 0, 0 and 0 (mdbook 0.5.4). The rescued commit alone prints 0 for the first; a relative README link plus a book link without the `examples/` prefix builds with exit 0 and prints 1 and 0 for the last two.
+- **Next step:** fetch `pull/127/head`, port its commit, add the example link to the README line, run the oracle.
+
+<a id="PRO-DOC-010"></a>
+## PRO-DOC-010 — Make the stack chapter's consumer and retention claims match pinned evidence [patch]
+
+- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
+- **basis:** `3d83811cd39a24a423317f0d2921dd01d6d85c22`. **Class:** [docs] [patch]; effort S.
+- **Outcome:** `docs/book/stack_position.md` evidences Helios beside the cited consumers, calls no manifest a workspace manifest unless it is one, and pins what Kwavers, CFDrs and Helios retain.
+- **Scope:** `docs/book/stack_position.md:19-31,55-61`. Non-goals: editing consumer repositories; Kwavers adoption of the Proteus diffusivity (an Atlas or Kwavers board matter).
+- **Read at the basis:** `:29` says "Three consumers" but Helios `ea487343c0ad` also consumes `proteus-mat` (`Cargo.toml:133`, `crates/helios-solver/src/attenuation_map.rs:14`, test `:285`). `:57-58` calls Hyperion `b840f71cabb3` a workspace manifest; its `Cargo.toml` has no `[workspace]` table. `:19-27` carries no pinned link, and Kwavers `34fa3f47ae07` computes k/(rho*c) itself in production: `crates/kwavers-medium/src/homogeneous/implementation/traits_physical.rs:111`, `crates/kwavers-medium/src/heterogeneous/tissue/implementation/thermal.rs:31`, `crates/kwavers-medium/src/properties/material.rs:217`, `crates/kwavers-solver/src/multiphysics/monolithic/config/physics.rs:63`, and five liquid-phase sites under `crates/kwavers-physics/src/acoustics/bubble_dynamics/` (`energy/heat_transfer.rs:182`, `imex_integration/stiffness.rs:12`, `imex_integration/thermal_mass_transfer.rs:44,68,89`). A retention link may claim no more than the code shows.
+- **Acceptance oracle:** at the fix head `<rev>`, with `C=git show <rev>:docs/book/stack_position.md`: (1) `$C | grep -c -F 'Three consumers exercise'` prints 0 and `$C | grep -c -E 'ryancinsight/helios/blob/[0-9a-f]{40}/crates/helios-solver/src/attenuation_map\.rs'` prints 1 or more; (2) `$C | tr '\n' ' ' | grep -c -F 'workspace manifests'` prints 0 and `$C | grep -c -E 'ryancinsight/hyperion/blob/[0-9a-f]{40}/Cargo\.toml#L'` prints 1 or more; (3) `$C | python -I -c "import re,sys; b=re.search(r'- Kwavers retains.*?(?=\n\n)',sys.stdin.read(),re.S).group(0); print(sorted(set(re.findall(r'ryancinsight/(?i:kwavers|CFDrs|helios)/blob/[0-9a-f]{40}/',b))))"` prints one pinned prefix each for CFDrs, helios and kwavers. At the basis the commands print 1, 0, 1, 1 and `[]`. A wrong fix fails: "Four consumers" without a Helios link (1); deleting the publish paragraph (2); rewording with no pins, or pins outside the retention bullets (3). The links' content is judged against the cited lines.
+- **Next step:** read each retaining repository at its tip, pin one link per retention clause (remove a clause no code evidences), then edit `:29` and `:57-58`.
+
 ## Gap-audit 2026-08-20 items
 
 Filed by the Atlas gap audit at `944eed05` from static evidence only; each

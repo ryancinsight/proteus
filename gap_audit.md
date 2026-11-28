@@ -197,8 +197,8 @@ constitutive-law boundary.
 
 ## Residuals
 
-- `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1
-  (index `pubtime` 2026-10-19T03:26:46Z, looked up 2026-11-14T00:45Z). The
+- `Cargo.toml` sets `publish = true` and the registry lists `proteus-mat` 0.1.1,
+  0.2.0 and 0.3.0, none yanked (crates.io API, looked up 2026-11-28T00:07Z). The
   trigger "publish policy changes from `publish = false`" fired at 9e9609d and
   is retired. Re-open trigger: a PR changes `version` in `Cargo.toml`, or a
   release is requested (M-1.0 for 1.0). Review at the PR: `rust-release.yml`
