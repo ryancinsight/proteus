@@ -160,19 +160,6 @@ stack role, not an undisclosed gap.
 
 ### Claim-vs-code cross-checks
 
-- `docs/book/stack_position.md:28-31` asserts that "no duplicate
-  material-property implementation exists in Hyperion, Helios, CFDrs, or
-  Kwavers", a cross-repository claim with no in-repo evidence; PRO-DOC-008
-  replaces it. Consumer adoption at the fetched defaults of 2026-11-14:
-  Kwavers (`kwavers-physics` `thermal/properties.rs`, `kwavers-medium`
-  `temperature_dependent/thermal.rs`), CFDrs (`cfd-core` `thermophysical.rs`,
-  with a closed-form `TemperatureLaw` test) and Hyperion
-  (`tests/contracts/transport_theorems.rs`, `ConstantLaw` composed with
-  `MassAttenuation` for `f32` and `f64`). A consumer contract test therefore
-  exists.
-- `docs/book/stack_position.md:37-41` calls the provider "intentionally
-  `publish = false`"; `Cargo.toml` sets `publish = true` since 9e9609d and the
-  registry lists `proteus-mat` 0.1.1. PRO-DOC-008 corrects it.
 - Generic instantiation is partial: `tests/theorems.rs:14-18`,
   `tests/temperature_law.rs:35-39` and the calibration-bound tests at
   `tests/temperature_law.rs:196-200,250-254` instantiate `f32` and `f64`; the

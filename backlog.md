@@ -79,21 +79,6 @@ item cites its evidence in `gap_audit.md`. All are unclaimed.
 - **Risk/change class:** [verification] [patch], [minor] if the domain is a public accessor; effort L.
 - **Next step:** design note for the domain encoding.
 
-<a id="PRO-DOC-008"></a>
-### PRO-DOC-008 — Ground the cross-repository ownership claim
-
-- **Status:** todo; **priority:** verification; **milestone:** M-thermophysical-laws; **needs:** none.
-- **basis:** `d23144bb`. **Class:** [docs] [patch]; effort S. No book CI branch is open at the basis.
-- **Outcome:** the book states only what this repository can evidence.
-- **Scope:** `docs/book/stack_position.md:28-31` and `:37-41` (the `publish = false` rationale
-  contradicts `Cargo.toml` and the registry). Non-goals: editing consumer repositories.
-- **Acceptance oracle:** the "no duplicate material-property implementation exists in Hyperion,
-  Helios, CFDrs, or Kwavers" assertion becomes the boundary statement plus links pinned to commits
-  of the adopters' tests: Hyperion `tests/contracts/transport_theorems.rs`, CFDrs `cfd-core`
-  `thermophysical.rs` (closed-form test), Kwavers `kwavers-physics` `thermal/properties.rs`; the
-  `publish` sentence states the registry fact. Must not land while a book CI branch is in flight.
-- **Next step:** read each adopter test at its pinned commit, then edit the two passages.
-
 <a id="PRO-SEMVER-006"></a>
 ### PRO-SEMVER-006 — Close the public enums for forward compatibility
 
